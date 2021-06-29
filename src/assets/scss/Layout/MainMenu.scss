@@ -1,0 +1,40 @@
+.navbar-menu {
+  background-color: $ligherGrey;
+  box-shadow: none;
+
+  .navbar-start,
+  .navbar-end {
+    padding: 10px;
+  }
+
+  .navbar-start {
+    a.navbar-item {
+      outline: none;
+      color: #000000;
+      margin-right: 20px;
+
+      &:hover,
+      &:focus,
+      &.is-active {
+        color: #000000;
+        border-bottom: 2px solid #000000;
+        text-decoration: none;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+
+    .navbar-start,
+    .navbar-end {
+      margin-right: 0;
+      margin-left: 0;
+      justify-content: center;
+    }
+
+    .navbar-end {
+      margin-top: 20px;
+    }
+  }
+}

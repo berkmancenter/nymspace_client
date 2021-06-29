@@ -1,0 +1,54 @@
+@import "~bulma/sass/utilities/_all";
+
+// Bulma variables
+$primary: #7B1B21;
+$primary-invert: findColorInvert($primary);
+$redisher: #6C0F11;
+$lightRedish: #C20000;
+$evenStrongerBlue: #006666;
+$strongBlue: #79a7a8;
+$middleBlue: #99cccc;
+$lightBlue: #e7f3f3;
+$almostBlack: #333333;
+$black: #000000;
+$grey: #E4E5E5;
+$lightGrey: #E6E6E6;
+$darkGrey: #999999;
+$ligherGrey: #F4F4F4;
+
+// Navbar
+$navbar-breakpoint: 0;
+
+// Setup $colors to use as bulma classes (e.g. 'is-twitter')
+$colors: (
+    "white": ($white, $black),
+    "black": ($black, $white),
+    "light": ($light, $light-invert),
+    "dark": ($dark, $dark-invert),
+    "primary": ($primary, $primary-invert),
+    "info": ($info, $info-invert),
+    "success": ($success, $success-invert),
+    "warning": ($warning, $warning-invert),
+    "danger": ($danger, $danger-invert)
+);
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// Colors
+$almostBlack: #333333;
+
+// Fonts
+$family-primary: 'Roboto Slab', serif;
+
+// Main breakpoints
+$breakpointXs: 0;
+$breakpointSm: 576px;
+$breakpointMd: 768px;
+$breakpointLg: 992px;
+$breakpointXl: 1200px;
+
+// Import Bulma styles
+@import "~bulma";

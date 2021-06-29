@@ -1,0 +1,11 @@
+@mixin noselect() {
+  user-select: none;
+}
+
+.noselect {
+  @include noselect();
+}
+
+.noselect-or-maybe-select {
+  user-select: text;
+}

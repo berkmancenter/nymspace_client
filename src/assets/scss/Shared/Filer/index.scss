@@ -1,0 +1,17 @@
+.filer-container {
+  .filer-list {
+    padding-left: 0;
+
+    .filer-item {
+      list-style-type: none;
+
+      i {
+        margin-right: 10px;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+.talk-view-side-menu {
+  user-select: none;
+
+  .talk-view-side-menu-toolbox,
+  .talk-view-side-menu-threads {
+    .talk-view-side-menu-toolbox-header,
+    .talk-view-side-menu-threads-header {
+      background: rgb(2,0,36);
+      background: linear-gradient(356deg, rgba(2,0,36,1) 0%, rgba(137,3,9,0.6937149859943977) 100%);
+      padding: 10px 5%;
+      color: #ffffff;
+      text-transform: uppercase;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .talk-view-side-menu-toolbox-content,
+    .talk-view-side-menu-threads-content {
+      padding: 5%;
+      display: flex;
+      flex-flow: row wrap;
+      box-shadow: 0 4px 2px -2px gray;
+    }
+
+    .talk-view-side-menu-toolbox-item {
+      width: calc(50% - 20px);
+      text-align: center;
+      background-color: #890309;
+      color: #ffffff;
+      margin: 10px;
+      padding: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: all 0.5s;
+      box-shadow: none;
+      text-transform: uppercase;
+      white-space: nowrap;
+
+      &:hover {
+        background-color: #000000;
+      }
+    }
+  }
+}
