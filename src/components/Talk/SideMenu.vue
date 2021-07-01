@@ -1,19 +1,19 @@
 <template>
   <div class="talk-view-side-menu">
     <div class="talk-view-side-menu-toolbox">
-      <div class="talk-view-side-menu-toolbox-header" @click="toggleToolbox()">Toolbox</div>
+      <div class="talk-view-side-menu-header" @click="toggleSection($event)">Toolbox</div>
 
-      <div class="talk-view-side-menu-toolbox-content">
-        <div class="talk-view-side-menu-toolbox-item">Add Topic</div>
-        <div class="talk-view-side-menu-toolbox-item">Add Thread</div>
-        <div class="talk-view-side-menu-toolbox-item">Settings</div>
+      <div class="talk-view-side-menu-content">
+        <div class="talk-view-side-menu-content-item">Add Topic</div>
+        <div class="talk-view-side-menu-content-item">Add Thread</div>
+        <div class="talk-view-side-menu-content-item">Settings</div>
       </div>
     </div>
 
     <div class="talk-view-side-menu-threads">
-      <div class="talk-view-side-menu-threads-header" @click="toggleThreads()">Your Threads</div>
+      <div class="talk-view-side-menu-header" @click="toggleSection($event)">Your Threads</div>
 
-      <div class="talk-view-side-menu-threads-content">
+      <div class="talk-view-side-menu-content">
         You don't have any yet, search to discover and discuss. Follow a thread to list it here.
       </div>
     </div>
@@ -34,11 +34,8 @@ export default {
   mounted() {},
   computed: {},
   methods: {
-    toggleToolbox() {
-      $('.talk-view-side-menu-toolbox-content').slideToggle()
-    },
-    toggleThreads() {
-      $('.talk-view-side-menu-threads-content').slideToggle()
+    toggleSection(event) {
+      $(event.target).next('.talk-view-side-menu-content').slideToggle()
     },
   },
   beforeCreate() {

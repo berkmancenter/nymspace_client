@@ -7,13 +7,13 @@
   transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
   background-color: #ffffff;
 
-  &.switmenu-menu-from-right {
+  &-from-right {
     right: 0;
     transform: translateX(100%);
     box-shadow: inset 40px 0px 85px -50px rgba(0,0,0,0.2);
   }
 
-  &.switmenu-menu-from-left {
+  &-from-left {
     left: 0;
     transform: translateX(-100%);
     box-shadow: inset -40px 0px 85px -50px rgba(0,0,0,0.2);
@@ -31,7 +31,7 @@
     width: 100%;
   }
 
-  &.switmenu-menu-active {
+  &-active {
     transform: translateX(0%);
   }
 }

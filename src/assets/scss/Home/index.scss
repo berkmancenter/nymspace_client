@@ -1,5 +1,5 @@
 .home-view {
-  .home-view-banner {
+  &-banner {
     margin-bottom: 40px;
 
     img {
@@ -7,7 +7,7 @@
     }
   }
 
-  .home-view-who-we-are-banner {
+  &-who-we-are-banner {
     padding: 2rem 10%;
     margin: 0px -10%;
     background-image: url('~@/assets/images/triangles2.svg');
@@ -50,7 +50,7 @@
     }
   }
 
-  .home-view-trending {
+  &-trending {
     padding: 2rem 10%;
     margin: 0px -10%;
     background-image: url('~@/assets/images/triangles3.svg');
@@ -69,7 +69,7 @@
     }
   }
 
-  .home-view-privacy {
+  &-privacy {
     > div {
       position: relative;
       height: 250px;
@@ -90,7 +90,7 @@
     }
   }
 
-  .home-view-track {
+  &-track {
     > div {
       position: relative;
       height: 250px;
@@ -116,8 +116,8 @@
     }
   }
 
-  .home-view-privacy,
-  .home-view-track {
+  &-privacy,
+  &-track {
     padding: 1rem 0;
 
     img {

@@ -2,12 +2,12 @@
   background-color: $ligherGrey;
   box-shadow: none;
 
-  .navbar-start,
-  .navbar-end {
+  &-start,
+  &-end {
     padding: 10px;
   }
 
-  .navbar-start {
+  &-start {
     a.navbar-item {
       outline: none;
       color: #000000;
@@ -26,14 +26,14 @@
   @media only screen and (max-width: 600px) {
     flex-direction: column;
 
-    .navbar-start,
-    .navbar-end {
+    &-start,
+    &-end {
       margin-right: 0;
       margin-left: 0;
       justify-content: center;
     }
 
-    .navbar-end {
+    &-end {
       margin-top: 20px;
     }
   }
