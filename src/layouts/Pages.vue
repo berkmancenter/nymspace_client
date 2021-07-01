@@ -2,7 +2,11 @@
   <div>
     <div id="header">
       <div class="header-container">
-        <div class="header-logo">Nymity</div>
+        <div class="header-logo">
+          <a href="/">
+            <img alt="nymity logo" src="@/assets/images/logo.svg" />
+          </a>
+        </div>
       </div>
     </div>
 

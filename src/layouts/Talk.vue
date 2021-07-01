@@ -4,7 +4,11 @@
       <div class="header-container">
         <div class="header-hamburger" id="header-hamburger" title="Toggle menu"></div>
 
-        <div class="header-logo">Nymity</div>
+        <div class="header-logo">
+          <a href="/">
+            <img alt="nymity logo" src="@/assets/images/logo.svg" />
+          </a>
+        </div>
       </div>
     </div>
 
