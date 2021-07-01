@@ -3,7 +3,6 @@
 const { DefinePlugin } = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const ESLintPlugin = require('eslint-webpack-plugin')
 const HTMLPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 
@@ -37,12 +36,6 @@ module.exports = {
   },
 
   plugins: [
-    new ESLintPlugin({
-      emitError: true,
-      emitWarning: true,
-      extensions: ['.js', '.jsx', '.vue'],
-      formatter: require('eslint-formatter-friendly'),
-    }),
     new VueLoaderPlugin(),
     new CaseSensitivePathsPlugin(),
     new HTMLPlugin({

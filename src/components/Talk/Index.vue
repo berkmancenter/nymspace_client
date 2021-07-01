@@ -3,7 +3,7 @@
     <SwitMenu button-id="header-hamburger">
       <SideMenu></SideMenu>
     </SwitMenu>
-    No elo
+    <SessionAsk></SessionAsk>
   </div>
 </template>
 
@@ -11,12 +11,14 @@
 import styles from './../../assets/scss/Talk/index.scss'
 import SideMenu from './SideMenu'
 import SwitMenu from './../Shared/SwitMenu/Index'
+import SessionAsk from './SessionAsk'
 
 export default {
   name: 'talk-index',
   components: {
     SideMenu,
     SwitMenu,
+    SessionAsk,
   },
   data() {
     return {}
