@@ -2,7 +2,7 @@
   <div
     class="switmenu-menu"
     :class="{
-      'switmenu-menu-active': open,
+      'switmenu-menu-active': $store.state.user.sideMenuOpen,
       'switmenu-menu-from-left': moveFrom === 'left',
       'switmenu-menu-from-right': moveFrom === 'right',
     }"
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     toggleMenu() {
-      this.open = !this.open
+      this.$store.commit('user/setSideMenuOpen', !this.$store.state.user.sideMenuOpen)
 
       if (this.open === true) {
         $('.talk-view').css('padding-left', $('.switmenu-menu').outerWidth() + 'px')

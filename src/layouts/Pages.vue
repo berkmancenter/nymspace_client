@@ -42,7 +42,7 @@
               </div>
             </div>
           </div>
-          <div class="footer-column">
+          <div class="footer-column has-text-centered">
             <div class="container">
               <h5 class="is-size-5">2020 @ Berkman Klein Center</h5>
             </div>

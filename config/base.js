@@ -1,10 +1,10 @@
 'use strict'
 
-const { DefinePlugin } = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const HTMLPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 const resolveClientEnv = require('../utils/resolveClientEnv')
 const paths = require('../utils/paths')
@@ -36,6 +36,7 @@ module.exports = {
   },
 
   plugins: [
+    new Dotenv(),
     new VueLoaderPlugin(),
     new CaseSensitivePathsPlugin(),
     new HTMLPlugin({
@@ -52,13 +53,6 @@ module.exports = {
           noErrorOnMissing: true,
         },
       ],
-    }),
-    new DefinePlugin({
-      // vue3 feature flags <http://link.vuejs.org/feature-flags>
-      __VUE_OPTIONS_API__: 'true',
-      __VUE_PROD_DEVTOOLS__: 'false',
-
-      ...resolveClientEnv({ publicPath: config.dev.publicPath }),
     }),
   ],
 

@@ -78,9 +78,8 @@
 
     <div class="home-view-noreg has-text-centered pt-4 pb-4">
       <div class="columns">
-        <div class="column is-size-4">🍪 No cookies</div>
-        <div class="column is-size-4">🟢 No registration</div>
-        <div class="column is-size-4">📭 No emails</div>
+        <div class="column is-size-6">🟢 No registration</div>
+        <div class="column is-size-6">📭 No emails</div>
       </div>
     </div>
   </div>
