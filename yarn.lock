@@ -5330,6 +5330,11 @@ vfile@^4.0.0:
     unist-util-stringify-position "^2.0.0"
     vfile-message "^2.0.0"
 
+vue-cookie-next@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/vue-cookie-next/-/vue-cookie-next-1.0.3.tgz#28dd89f2901b7301db2eb3c7a2acff8f861e7fbd"
+  integrity sha512-mPG57lCXFnfo0poxq0MxY9duJupzDFcGdxLkpR/N2GVyNBqJ1oQst7O39k6kRPM8WvV1jmNGFYVzLSwp/642NA==
+
 vue-eslint-parser@^7.6.0:
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-7.6.0.tgz#01ea1a2932f581ff244336565d712801f8f72561"

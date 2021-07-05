@@ -1,29 +1,25 @@
 <template>
   <div class="talk-view">
-    <SwitMenu button-id="header-hamburger">
-      <SideMenu></SideMenu>
-    </SwitMenu>
-    <SessionAsk></SessionAsk>
+    <SessionAsk v-if="newUser"></SessionAsk>
   </div>
 </template>
 
 <script>
 import styles from './../../assets/scss/Talk/index.scss'
-import SideMenu from './SideMenu'
-import SwitMenu from './../Shared/SwitMenu/Index'
 import SessionAsk from './SessionAsk'
+import { VueCookieNext } from 'vue-cookie-next'
 
 export default {
   name: 'talk-index',
   components: {
-    SideMenu,
-    SwitMenu,
     SessionAsk,
   },
   data() {
     return {}
   },
-  created() {},
+  created() {
+    this.newUser = !VueCookieNext.getCookie('user_token')
+  },
   mounted() {},
   computed: {},
   methods: {},

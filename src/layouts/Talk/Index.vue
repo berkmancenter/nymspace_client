@@ -12,6 +12,10 @@
       </div>
     </div>
 
+    <SwitMenu button-id="header-hamburger">
+      <SideMenu></SideMenu>
+    </SwitMenu>
+
     <section id="content">
       <router-view />
     </section>
@@ -19,11 +23,16 @@
 </template>
 
 <script>
-import styles from './../assets/scss/layouts/Talk.scss'
+import styles from '@/assets/scss/layouts/Talk.scss'
+import SideMenu from './SideMenu'
+import SwitMenu from '@/components/Shared/SwitMenu/Index'
 
 export default {
   name: 'default-layout',
-  components: {},
+  components: {
+    SideMenu,
+    SwitMenu,
+  },
   data() {
     return {
       build_date: process.env.BUILD_DATE,

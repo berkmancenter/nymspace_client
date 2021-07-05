@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import PagesLayout from '@/layouts/Pages'
-import TalkLayout from '@/layouts/Talk'
+import TalkLayout from '@/layouts/Talk/Index'
 import Home from '@/components/Home/Index'
 import Talk from '@/components/Talk/Index'
+import NewTopic from '@/components/Topics/NewTopic/Index'
 import PageNotFound from '@/components/PageNotFound/Index'
 
 const routes = [
@@ -52,6 +53,30 @@ const routes = [
           ],
         },
         component: Talk,
+      },
+    ],
+  },
+  {
+    path: '/topics',
+    component: TalkLayout,
+    children: [
+      {
+        path: 'new',
+        name: 'topics.new.index',
+        meta: {
+          title: 'Nymity - simple, anonymous discussion tool',
+          metaTags: [
+            {
+              name: 'description',
+              content: 'home description',
+            },
+            {
+              property: 'og:description',
+              content: 'home description',
+            },
+          ],
+        },
+        component: NewTopic,
       },
     ],
   },

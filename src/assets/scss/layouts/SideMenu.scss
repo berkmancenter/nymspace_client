@@ -33,9 +33,18 @@
       text-transform: uppercase;
       white-space: nowrap;
 
+      a, a:hover {
+        color: #ffffff;
+        text-decoration: none;
+      }
+
       &:hover {
         background-color: #000000;
       }
     }
   }
+}
+
+.switmenu-menu {
+  top: 50px;
 }

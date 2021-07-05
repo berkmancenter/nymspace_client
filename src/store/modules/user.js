@@ -1,3 +1,5 @@
+import { VueCookieNext } from 'vue-cookie-next'
+
 // initial state
 const state = {
   userToken: null,
@@ -21,6 +23,7 @@ const mutations = {
   },
   setSideMenuOpen(state, open) {
     state.sideMenuOpen = open
+    VueCookieNext.setCookie('user_side_menu_status', open)
   },
 }
 

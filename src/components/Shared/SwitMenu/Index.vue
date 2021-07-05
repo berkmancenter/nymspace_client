@@ -14,6 +14,7 @@
 <script>
 import $ from 'jquery'
 import styles from './../../../assets/scss/Shared/SwitMenu/index.scss'
+import { VueCookieNext } from 'vue-cookie-next'
 
 export default {
   name: 'switmenu-index',
@@ -21,9 +22,14 @@ export default {
   data() {
     return {
       button: false,
-      open: false,
       moveFrom: 'left',
     }
+  },
+  created() {
+    this.$store.commit(
+      'user/setSideMenuOpen',
+      VueCookieNext.getCookie('user_side_menu_status') === 'true'
+    )
   },
   mounted() {
     if (this.side) {
@@ -40,20 +46,27 @@ export default {
 
     let that = this
     $(window).resize(function () {
-      if (that.open === true) {
-        $('.talk-view').css('padding-left', $('.switmenu-menu').outerWidth() + 'px')
+      if (that.$store.state.user.sideMenuOpen === true) {
+        that.updateMenuOpen()
       }
     })
+
+    this.updateMenuOpen()
   },
   methods: {
     toggleMenu() {
-      this.$store.commit('user/setSideMenuOpen', !this.$store.state.user.sideMenuOpen)
+      const newStatus = !this.$store.state.user.sideMenuOpen
+      this.$store.commit('user/setSideMenuOpen', newStatus)
+      VueCookieNext.setCookie('user_side_menu_status', newStatus)
 
-      if (this.open === true) {
-        $('.talk-view').css('padding-left', $('.switmenu-menu').outerWidth() + 'px')
+      if (newStatus === true) {
+        this.updateMenuOpen()
       } else {
-        $('.talk-view').css('padding-left', 0)
+        $('#content').css('padding-left', 0)
       }
+    },
+    updateMenuOpen() {
+      $('#content').css('padding-left', $('.switmenu-menu').outerWidth() + 'px')
     },
   },
   beforeCreate() {

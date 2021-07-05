@@ -36,15 +36,15 @@
             <h2 class="is-size-2 pt-0">Returning user</h2>
             <p>Enter your access key</p>
             <p class="is-flex is-align-items-center pt-2">
-              <input class="is-size-3" :value="existingToken" />
+              <input class="is-size-3" :value="existingToken" disabled />
               <button
                 id="talk-session-ask-existing-login"
                 class="button is-success ml-2"
                 @click="login($event, true)"
                 :class="{
-                  'is-loading': logging,
+                  'is-loading': false,
                 }"
-                :disabled="logging"
+                :disabled="true"
               >
                 Login
               </button>
@@ -87,13 +87,17 @@ export default {
       }
 
       setTimeout(() => {
+        this.loginScreen = false
+        this.logging = false
+
         this.$store.dispatch('user/loginUser', this.loginToken)
+        this.$store.commit('user/setSideMenuOpen', true)
+
         axios.post(`${process.env.API_SERVER_URL}/v1/users`, {
           user_token: this.loginToken,
         })
-        this.loginScreen = false
-        this.logging = false
-        this.$store.commit('user/setSideMenuOpen', true)
+
+        this.$cookie.setCookie('user_token', this.loginToken)
       }, 1000)
     },
     async setNewUserToken() {

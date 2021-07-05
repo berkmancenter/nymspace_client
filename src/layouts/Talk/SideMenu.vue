@@ -4,7 +4,9 @@
       <div class="talk-view-side-menu-header" @click="toggleSection($event)">Toolbox</div>
 
       <div class="talk-view-side-menu-content">
-        <div class="talk-view-side-menu-content-item">Add Topic</div>
+        <div class="talk-view-side-menu-content-item">
+          <router-link to="/topics/new">Add Topic</router-link>
+        </div>
         <div class="talk-view-side-menu-content-item">Add Thread</div>
         <div class="talk-view-side-menu-content-item">Settings</div>
       </div>
@@ -21,7 +23,7 @@
 </template>
 
 <script>
-import styles from './../../assets/scss/Talk/SideMenu.scss'
+import styles from '@/assets/scss/layouts/SideMenu.scss'
 import $ from 'jquery'
 
 export default {
