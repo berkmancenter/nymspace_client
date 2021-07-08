@@ -14,7 +14,7 @@
             <p>You can use it later to use the same identity.</p>
             <p>Click on the code to copy it to your clipboard.</p>
             <p class="is-flex is-align-items-center pt-4">
-              <input class="is-size-3" disabled :value="newToken" />
+              <input type="text" class="is-size-3" disabled :value="newToken" />
               <button
                 id="talk-session-ask-new-login"
                 class="button is-success ml-2"
@@ -27,7 +27,6 @@
                 Login
               </button>
             </p>
-            <label class="checkbox"> <input type="checkbox" /> Remember me </label>
           </section>
 
           <hr class="my-4" />
@@ -36,7 +35,7 @@
             <h2 class="is-size-2 pt-0">Returning user</h2>
             <p>Enter your access key</p>
             <p class="is-flex is-align-items-center pt-2">
-              <input class="is-size-3" :value="existingToken" disabled />
+              <input type="text" class="is-size-3" :value="existingToken" disabled />
               <button
                 id="talk-session-ask-existing-login"
                 class="button is-success ml-2"
@@ -92,12 +91,6 @@ export default {
 
         this.$store.dispatch('user/loginUser', this.loginToken)
         this.$store.commit('user/setSideMenuOpen', true)
-
-        axios.post(`${process.env.API_SERVER_URL}/v1/users`, {
-          user_token: this.loginToken,
-        })
-
-        this.$cookie.setCookie('user_token', this.loginToken)
       }, 1000)
     },
     async setNewUserToken() {

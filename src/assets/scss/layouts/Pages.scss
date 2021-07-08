@@ -88,11 +88,6 @@ body, html {
       display: inline-block;
     }
 
-    li {
-      list-style-type: disc;
-      margin-left: 40px;
-    }
-
     .footer-column {
       flex: 1;
       height: 200px;
@@ -108,6 +103,21 @@ body, html {
       > .container {
         align-items: center;
         justify-content: center;
+      }
+    }
+
+    &-about-list {
+      li {
+        list-style-type: none;
+        padding-left: 0;
+
+        a {
+          vertical-align: middle;
+        }
+
+        img {
+          max-height: 20px;
+        }
       }
     }
   }

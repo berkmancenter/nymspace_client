@@ -23,10 +23,12 @@
             <div class="container">
               <h5 class="is-size-5">
                 We are:
-                <ul>
+                <ul class="footer-about-list">
                   <li>
                     open source 🤲
-                    <a href="https://github.com/berkmancenter/threads" target="_blank">[github]</a>
+                    <a href="https://github.com/berkmancenter/threads" target="_blank"
+                      ><img alt="nymity logo" src="@/assets/images/github.png"
+                    /></a>
                   </li>
                   <li>transparent 🧐</li>
                   <li>non-profit 👍</li>
@@ -38,7 +40,9 @@
           <div class="footer-column">
             <div class="container">
               <div class="footer-bkc-logo">
-                <img alt="bkc logo" src="@/assets/images/bkc.svg" />
+                <a href="https://cyber.harvard.edu" target="_blank"
+                  ><img alt="bkc logo" src="@/assets/images/bkc.svg"
+                /></a>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ export default {
     return {}
   },
   created() {
-    this.newUser = !VueCookieNext.getCookie('user_token')
+    this.newUser = !VueCookieNext.getCookie('user_access_token')
   },
   mounted() {},
   computed: {},

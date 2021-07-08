@@ -1,45 +1,79 @@
 .talk-view-side-menu {
   user-select: none;
 
-  &-header {
+  &-item-header,
+  &-topics-item {
     background: rgba(35, 110, 130, 1);
-    padding: 10px 5%;
+    padding: 5px 10px;
     color: #ffffff;
     text-transform: uppercase;
     font-weight: bold;
-    text-align: center;
-    cursor: pointer;
+    text-align: left;
     border-bottom: 1px solid #ffffff;
+    display: flex;
+    align-items: center;
+
+    &-button {
+      > div {
+        cursor: pointer;
+        border-radius: 3px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 5px;
+
+        &:hover {
+          background: #ffffff;
+          color: rgba(35, 110, 130, 1);
+        }
+      }
+
+      .fa-arrow-down {
+        transform: rotate(180deg);
+        transition: transform 0.2s linear;
+      }
+    }
+
+    &-actions {
+      margin-left: auto;
+    }
   }
 
-  &-content {
-    padding: 5%;
-    display: flex;
-    flex-flow: row wrap;
-    box-shadow: 0 4px 2px -2px gray;
+  &-item-content {
+    display: none;
+    font-size: 0.9rem;
+  }
 
+  &-item-active {
+    .talk-view-side-menu-item-content {
+      display: block;
+    }
+
+    .fa-arrow-down {
+      transform: rotate(0deg);
+      transition: transform 0.2s linear;
+    }
+  }
+
+  &-topics {
     &-item {
-      width: calc(50% - 20px);
-      text-align: center;
-      background-color: rgba(35, 110, 130, 1);
-      color: #ffffff;
-      margin: 10px;
-      padding: 0.5rem;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: bold;
-      transition: all 0.5s;
-      box-shadow: none;
-      text-transform: uppercase;
-      white-space: nowrap;
+      width: 100%;
+      text-transform: none;
+      font-weight: normal;
+      background-color: inherit;
+      color: #000000;
+      border-bottom: 1px solid rgba(35, 110, 130, 1);
 
-      a, a:hover {
-        color: #ffffff;
-        text-decoration: none;
+      i {
+        display: none;
       }
 
       &:hover {
-        background-color: #000000;
+        i {
+          display: inline-block;
+        }
       }
     }
   }

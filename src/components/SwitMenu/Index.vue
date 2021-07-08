@@ -13,7 +13,7 @@
 
 <script>
 import $ from 'jquery'
-import styles from './../../../assets/scss/Shared/SwitMenu/index.scss'
+import styles from '@/assets/scss/SwitMenu/index.scss'
 import { VueCookieNext } from 'vue-cookie-next'
 
 export default {

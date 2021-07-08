@@ -9,6 +9,10 @@
             <img alt="nymity logo" src="@/assets/images/logo.svg" />
           </a>
         </div>
+
+        <div class="header-toolbox">
+          <HeaderCurrentTopic></HeaderCurrentTopic>
+        </div>
       </div>
     </div>
 
@@ -24,14 +28,20 @@
 
 <script>
 import styles from '@/assets/scss/layouts/Talk.scss'
+import fontAwesome from 'font-awesome/css/font-awesome.css'
 import SideMenu from './SideMenu'
-import SwitMenu from '@/components/Shared/SwitMenu/Index'
+import SwitMenu from '@/components/SwitMenu/Index'
+import HeaderCurrentTopic from '@/components/HeaderCurrentTopic/Index'
+import 'jquery-contextmenu/dist/jquery.contextMenu'
+import 'jquery-contextmenu/dist/jquery.ui.position'
+import jqueryContextMenuCss from 'jquery-contextmenu/dist/jquery.contextMenu.css'
 
 export default {
   name: 'default-layout',
   components: {
     SideMenu,
     SwitMenu,
+    HeaderCurrentTopic,
   },
   data() {
     return {
@@ -41,9 +51,13 @@ export default {
   },
   beforeCreate() {
     styles.use()
+    fontAwesome.use()
+    jqueryContextMenuCss.use()
   },
   unmounted() {
     styles.unuse()
+    fontAwesome.unuse()
+    jqueryContextMenuCss.unuse()
   },
 }
 </script>

@@ -8,10 +8,12 @@
     "lint": "eslint --ext .js,.vue src --fix && stylelint \"./src/**/*.vue\" \"./src/**/*.scss\" --fix"
   },
   "dependencies": {
-    "@babel/runtime": "^7.14.6",
     "axios": "^0.21.1",
     "bulma": "^0.9.3",
     "core-js": "^3.15.1",
+    "font-awesome": "4.7",
+    "jquery-contextmenu": "^2.9.2",
+    "socket.io-client": "^4.1.2",
     "vue": "^3.1.2",
     "vue-cookie-next": "^1.0.3",
     "vue-router": "^4.0.10",
@@ -21,6 +23,7 @@
     "@babel/core": "^7.14.6",
     "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/preset-env": "^7.14.7",
+    "@babel/runtime": "^7.14.6",
     "@types/webpack-env": "^1.16.0",
     "@vue/compiler-sfc": "^3.1.2",
     "autoprefixer": "^10.2.6",
@@ -67,5 +70,9 @@
   },
   "engines": {
     "node": ">=12.13.0"
+  },
+  "browser": {
+    "crypto": false,
+    "path": false
   }
 }
