@@ -1,6 +1,10 @@
 import { VueCookieNext } from 'vue-cookie-next'
 import axios from 'axios'
 
+axios.defaults.headers.common['Authorization'] = `Bearer ${VueCookieNext.getCookie(
+  'user_access_token'
+)}`
+
 // initial state
 const state = {
   userToken: null,
@@ -24,11 +28,7 @@ const actions = {
     VueCookieNext.setCookie('user_refresh_token', res.data.tokens.refresh.token)
   },
   async reloadUserTopics(context) {
-    const res = await axios.get(`${process.env.API_SERVER_URL}/v1/topics/userTopics`, {
-      headers: {
-        Authorization: `Bearer ${VueCookieNext.getCookie('user_access_token')}`,
-      },
-    })
+    const res = await axios.get(`${process.env.API_SERVER_URL}/v1/topics/userTopics`)
     context.commit('setUserTopics', res.data)
   },
 }
