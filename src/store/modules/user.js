@@ -1,10 +1,6 @@
 import { VueCookieNext } from 'vue-cookie-next'
 import axios from 'axios'
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${VueCookieNext.getCookie(
-  'user_access_token'
-)}`
-
 // initial state
 const state = {
   userToken: null,
@@ -12,6 +8,8 @@ const state = {
   currentTopic: {},
   userTopics: [],
   userThreads: [],
+  refreshingCall: false,
+  isRefreshing: false,
 }
 
 // getters
@@ -47,6 +45,12 @@ const mutations = {
   },
   setUserTopics(state, topics) {
     state.userTopics = topics
+  },
+  setRefreshingState(state, value) {
+    state.isRefreshing = value
+  },
+  setRefreshingCall(state, call) {
+    state.refreshingCall = call
   },
 }
 
