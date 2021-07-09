@@ -1,11 +1,10 @@
 <template>
   <div class="header-current-topic">
-    {{ $store.state.user.currentTopic.name }}
   </div>
 </template>
 
 <script>
-import styles from './../../assets/scss/HeaderCurrentTopic/index.scss'
+import styles from '@/assets/scss/HeaderCurrentTopic/index.scss'
 
 export default {
   name: 'header-current-topic-index',

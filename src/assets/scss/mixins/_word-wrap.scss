@@ -1,0 +1,10 @@
+@mixin word-wrap() {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  word-break: break-word;
+}
+
+.word-wrap {
+  @include word-wrap();
+}

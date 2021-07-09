@@ -6,7 +6,7 @@
       <div class="field">
         <label class="label">Name</label>
         <div class="control">
-          <input class="input" type="text" required v-model="topicName" />
+          <input class="input" type="text" required v-model="topicName" ref="topicName" />
         </div>
       </div>
 
@@ -33,7 +33,9 @@ export default {
     }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.$refs.topicName.focus()
+  },
   computed: {},
   methods: {
     createNewTopic(e) {
@@ -47,7 +49,7 @@ export default {
         .then((response) => {
           this.topicName = ''
           this.$store.commit('user/setCurrentTopic', response.data)
-          this.$router.push({ name: 'topic.index', params: { topic: response.data.slug } })
+          this.$router.push({ name: 'topic.index', params: { topic: response.data.id } })
           this.$store.dispatch('user/reloadUserTopics')
         })
     },
