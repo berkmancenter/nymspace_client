@@ -3,7 +3,11 @@
     <SideMenuItem>
       <template v-slot:header-title> Your Topics </template>
       <template v-slot:header-actions>
-        <div class="talk-view-side-menu-item-header-button" ref="sideMenuTopicsContentMenuButton">
+        <div
+          class="talk-view-side-menu-item-header-button"
+          ref="sideMenuTopicsContentMenuButton"
+          @click="setupAndShowTopicsContextMenu()"
+        >
           <div><i class="fa fa-bars"></i></div>
         </div>
       </template>
@@ -15,8 +19,10 @@
     <SideMenuItem>
       <template v-slot:header-title>Your Threads</template>
       <template v-slot:content>
-        You don't have any threads yet, search to discover and discuss. Follow or create a thread to
-        list it here.
+        <div class="p-2">
+          You don't have any threads yet, search to discover and discuss. Follow or create a thread
+          to list it here.
+        </div>
       </template>
     </SideMenuItem>
   </div>
@@ -39,22 +45,24 @@ export default {
   },
   created() {},
   mounted() {
-    this.setupTopicsContextMenu()
     this.$store.dispatch('user/reloadUserTopics')
   },
   computed: {},
   methods: {
-    setupTopicsContextMenu() {
-      $(this.$refs.sideMenuTopicsContentMenuButton).contextMenu({
+    setupAndShowTopicsContextMenu() {
+      $.contextMenu('destroy')
+      const elem = $(this.$refs.sideMenuTopicsContentMenuButton)
+      elem.contextMenu({
         selector: '> div',
         trigger: 'left',
         items: {
-          foo: {
+          newTopic: {
             name: 'Create new topic',
             callback: () => this.$router.push({ name: 'topics.new.index' }),
           },
         },
       })
+      elem.find('> div').contextMenu()
     },
   },
   beforeCreate() {

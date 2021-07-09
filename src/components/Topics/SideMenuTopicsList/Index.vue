@@ -21,7 +21,11 @@
             >{{ topic.name }}
           </router-link>
           <div class="talk-view-side-menu-item-header-actions">
-            <div class="talk-view-side-menu-item-header-button">
+            <div
+              class="talk-view-side-menu-item-header-button"
+              :ref="`header-button${topic.id}`"
+              @click="setupAndShowTopicContextMenu(`header-button${topic.id}`)"
+            >
               <div><i class="fa fa-bars"></i></div>
             </div>
           </div>
@@ -32,6 +36,8 @@
 </template>
 
 <script>
+import $ from 'jquery'
+
 export default {
   name: 'side-menu-topics-list-index',
   components: {},
@@ -41,6 +47,22 @@ export default {
   created() {},
   mounted() {},
   computed: {},
-  methods: {},
+  methods: {
+    setupAndShowTopicContextMenu(elementRefId) {
+      $.contextMenu('destroy')
+      const elem = $(this.$refs[elementRefId])
+      elem.contextMenu({
+        selector: '> div',
+        trigger: 'left',
+        items: {
+          newThread: {
+            name: 'Create new topic',
+            callback: () => this.$router.push({ name: 'topics.new.index' }),
+          },
+        },
+      })
+      elem.find('> div').contextMenu()
+    },
+  },
 }
 </script>
