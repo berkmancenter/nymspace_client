@@ -1,23 +1,22 @@
 <template>
   <div class="topic-view">
-    <div class="topic-view-topic-header">
-      <h5 class="is-size-5 is-flex is-align-items-flex-start">
-        <span class="topic-view-topic-header-icon">TOPIC</span>
-        <div class="topic-view-topic-header-title word-wrap">
-          {{ $store.state.user.currentTopic.name }}
-        </div>
-      </h5>
-    </div>
+    <ContentHeader
+      viewTitle="Topic"
+      :contentTitle="$store.state.user.currentTopic.name"
+    ></ContentHeader>
   </div>
 </template>
 
 <script>
 import styles from '@/assets/scss/Topics/Topic/index.scss'
 import axios from 'axios'
+import ContentHeader from '@/components/Shared/ContentHeader/Index'
 
 export default {
   name: 'new-topic-index',
-  components: {},
+  components: {
+    ContentHeader,
+  },
   data() {
     return {
       topicName: '',

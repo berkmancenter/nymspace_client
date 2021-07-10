@@ -22,9 +22,11 @@
           </router-link>
           <div class="talk-view-side-menu-item-header-actions">
             <div
-              class="talk-view-side-menu-item-header-button"
+              class="
+                talk-view-side-menu-item-header-button talk-view-side-menu-item-sub-header-button
+              "
               :ref="`header-button${topic.id}`"
-              @click="setupAndShowTopicContextMenu(`header-button${topic.id}`)"
+              @click="setupAndShowTopicContextMenu(topic.id)"
             >
               <div><i class="fa fa-bars"></i></div>
             </div>
@@ -48,16 +50,18 @@ export default {
   mounted() {},
   computed: {},
   methods: {
-    setupAndShowTopicContextMenu(elementRefId) {
+    setupAndShowTopicContextMenu(topicId) {
       $.contextMenu('destroy')
+      let elementRefId = `header-button${topicId}`
       const elem = $(this.$refs[elementRefId])
       elem.contextMenu({
         selector: '> div',
         trigger: 'left',
         items: {
           newThread: {
-            name: 'Create new topic',
-            callback: () => this.$router.push({ name: 'topics.new.index' }),
+            name: 'Create new thread',
+            callback: () =>
+              this.$router.push({ name: 'threads.new.index', params: { topicId: topicId } }),
           },
         },
       })

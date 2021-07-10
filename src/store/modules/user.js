@@ -8,8 +8,10 @@ const state = {
   currentTopic: {},
   userTopics: [],
   userThreads: [],
-  refreshingCall: false,
-  isRefreshing: false,
+  auth: {
+    refreshingCall: false,
+    isRefreshing: false,
+  },
 }
 
 // getters
@@ -47,10 +49,10 @@ const mutations = {
     state.userTopics = topics
   },
   setRefreshingState(state, value) {
-    state.isRefreshing = value
+    state.auth.isRefreshing = value
   },
   setRefreshingCall(state, call) {
-    state.refreshingCall = call
+    state.auth.refreshingCall = call
   },
 }
 

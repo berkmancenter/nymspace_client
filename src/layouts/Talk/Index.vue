@@ -10,9 +10,7 @@
           </a>
         </div>
 
-        <div class="header-toolbox">
-          <HeaderCurrentTopic></HeaderCurrentTopic>
-        </div>
+        <div class="header-toolbox"></div>
       </div>
     </div>
 
@@ -31,7 +29,6 @@ import styles from '@/assets/scss/layouts/Talk.scss'
 import fontAwesome from 'font-awesome/css/font-awesome.css'
 import SideMenu from './SideMenu'
 import SwitMenu from '@/components/SwitMenu/Index'
-import HeaderCurrentTopic from '@/components/Topics/HeaderCurrentTopic/Index'
 import 'jquery-contextmenu/dist/jquery.contextMenu'
 import 'jquery-contextmenu/dist/jquery.ui.position'
 import jqueryContextMenuCss from 'jquery-contextmenu/dist/jquery.contextMenu.css'
@@ -41,7 +38,6 @@ export default {
   components: {
     SideMenu,
     SwitMenu,
-    HeaderCurrentTopic,
   },
   data() {
     return {

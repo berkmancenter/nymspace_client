@@ -1,8 +1,8 @@
 <template>
-  <div class="new-topic-view">
-    <form @submit="createNewTopic">
-      <h1 class="is-size-2">Create new topic</h1>
+  <ContentHeader viewTitle="Create new topic"></ContentHeader>
 
+  <div class="new-topic-view p-5">
+    <form @submit="createNewTopic">
       <div class="field">
         <label class="label">Name</label>
         <div class="control">
@@ -23,10 +23,13 @@
 import styles from '@/assets/scss/Topics/NewTopic/index.scss'
 import { VueCookieNext } from 'vue-cookie-next'
 import axios from 'axios'
+import ContentHeader from '@/components/Shared/ContentHeader/Index'
 
 export default {
   name: 'new-topic-index',
-  components: {},
+  components: {
+    ContentHeader,
+  },
   data() {
     return {
       topicName: '',

@@ -6,6 +6,7 @@ import Home from '@/components/Home/Index'
 import Talk from '@/components/Talk/Index'
 import NewTopic from '@/components/Topics/NewTopic/Index'
 import Topic from '@/components/Topics/Topic/Index'
+import NewThread from '@/components/Threads/NewThread/Index'
 import PageNotFound from '@/components/PageNotFound/Index'
 
 const routes = [
@@ -96,6 +97,30 @@ const routes = [
           ],
         },
         component: NewTopic,
+      },
+    ],
+  },
+  {
+    path: '/threads',
+    component: TalkLayout,
+    children: [
+      {
+        path: 'new/:topicId',
+        name: 'threads.new.index',
+        meta: {
+          title: 'Nymity - simple, anonymous discussion tool',
+          metaTags: [
+            {
+              name: 'description',
+              content: 'home description',
+            },
+            {
+              property: 'og:description',
+              content: 'home description',
+            },
+          ],
+        },
+        component: NewThread,
       },
     ],
   },
