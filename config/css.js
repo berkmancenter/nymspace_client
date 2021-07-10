@@ -66,6 +66,7 @@ const genStyleRules = () => {
     createCSSRule(/\.scss$/, 'sass-loader', {
       additionalData: `
         @import "src/assets/scss/Variables.scss";
+        @import "src/assets/scss/Mixins.scss";
       `,
     }),
   ]
