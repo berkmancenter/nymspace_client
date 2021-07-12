@@ -2,7 +2,8 @@
   <div>
     <notifications group="main" />
 
-    <router-view v-cloak />
+    <router-view v-cloak name="sidebar" />
+    <router-view v-cloak name="content" />
   </div>
 </template>
 

@@ -49,9 +49,11 @@ export default {
       axios
         .post(`${process.env.API_SERVER_URL}/v1/threads`, {
           name: this.threadName,
+          topicId: this.topic.id,
         })
         .then(() => {
-          this.topicName = ''
+          this.threadName = ''
+          this.$store.dispatch('user/reloadUserThreads')
         })
     },
     loadTopic() {

@@ -52,7 +52,7 @@ export default {
         .then((response) => {
           this.topicName = ''
           this.$store.commit('user/setCurrentTopic', response.data)
-          this.$router.push({ name: 'topic.index', params: { topic: response.data.id } })
+          this.$router.push({ name: 'topic.index', params: { topicId: response.data.id } })
           this.$store.dispatch('user/reloadUserTopics')
         })
     },

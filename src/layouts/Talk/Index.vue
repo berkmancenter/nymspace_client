@@ -14,10 +14,6 @@
       </div>
     </div>
 
-    <SwitMenu button-id="header-hamburger">
-      <SideMenu></SideMenu>
-    </SwitMenu>
-
     <section id="content">
       <router-view />
     </section>
@@ -27,23 +23,15 @@
 <script>
 import styles from '@/assets/scss/layouts/Talk.scss'
 import fontAwesome from 'font-awesome/css/font-awesome.css'
-import SideMenu from './SideMenu'
-import SwitMenu from '@/components/SwitMenu/Index'
 import 'jquery-contextmenu/dist/jquery.contextMenu'
 import 'jquery-contextmenu/dist/jquery.ui.position'
 import jqueryContextMenuCss from 'jquery-contextmenu/dist/jquery.contextMenu.css'
 
 export default {
   name: 'default-layout',
-  components: {
-    SideMenu,
-    SwitMenu,
-  },
+  components: {},
   data() {
-    return {
-      build_date: process.env.BUILD_DATE,
-      build_version: process.env.BUILD_VERSION,
-    }
+    return {}
   },
   beforeCreate() {
     styles.use()

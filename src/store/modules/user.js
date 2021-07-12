@@ -6,6 +6,7 @@ const state = {
   userToken: null,
   sideMenuOpen: false,
   currentTopic: {},
+  currentThread: {},
   userTopics: [],
   userThreads: [],
   auth: {
@@ -31,6 +32,10 @@ const actions = {
     const res = await axios.get(`${process.env.API_SERVER_URL}/v1/topics/userTopics`)
     context.commit('setUserTopics', res.data)
   },
+  async reloadUserThreads(context) {
+    const res = await axios.get(`${process.env.API_SERVER_URL}/v1/threads/userThreads`)
+    context.commit('setUserThreads', res.data)
+  },
 }
 
 // mutations
@@ -53,6 +58,12 @@ const mutations = {
   },
   setRefreshingCall(state, call) {
     state.auth.refreshingCall = call
+  },
+  setUserThreads(state, threads) {
+    state.userThreads = threads
+  },
+  setCurrentThread(state, thread) {
+    state.currentThread = thread
   },
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="side-menu-topics-list">
-    <div v-if="$store.state.user.userTopics.length == 0">
+    <div v-if="$store.state.user.userTopics.length == 0" class="p-2">
       You don't have any topics yet, search to discover and discuss. Follow or create a topic to
       list it here.
     </div>

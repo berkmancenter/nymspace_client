@@ -1,6 +1,11 @@
 <template>
   <div class="talk-view-side-menu-item" :class="{ 'talk-view-side-menu-item-active': open }">
-    <div class="talk-view-side-menu-item-header">
+    <div
+      class="talk-view-side-menu-item-header"
+      :style="{
+        background: headerBackgroundColor,
+      }"
+    >
       <div
         class="talk-view-side-menu-item-header-button talk-view-side-menu-item-header-toggler"
         @click="toggleSection()"
@@ -25,6 +30,7 @@
 export default {
   name: 'talk-side-menu-item-index',
   components: {},
+  props: ['headerBackgroundColor'],
   data() {
     return {
       open: true,

@@ -2,17 +2,21 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import PagesLayout from '@/layouts/Pages'
 import TalkLayout from '@/layouts/Talk/Index'
+import SideMenuTalk from '@/layouts/Talk/SideMenu'
 import Home from '@/components/Home/Index'
 import Talk from '@/components/Talk/Index'
 import NewTopic from '@/components/Topics/NewTopic/Index'
 import Topic from '@/components/Topics/Topic/Index'
 import NewThread from '@/components/Threads/NewThread/Index'
+import Thread from '@/components/Threads/Thread/Index'
 import PageNotFound from '@/components/PageNotFound/Index'
 
 const routes = [
   {
     path: '/',
-    component: PagesLayout,
+    components: {
+      content: PagesLayout,
+    },
     children: [
       {
         path: '',
@@ -36,7 +40,10 @@ const routes = [
   },
   {
     path: '/t',
-    component: TalkLayout,
+    components: {
+      content: TalkLayout,
+      sidebar: SideMenuTalk,
+    },
     children: [
       {
         path: '',
@@ -57,7 +64,25 @@ const routes = [
         component: Talk,
       },
       {
-        path: ':topic',
+        path: 't/:threadId',
+        name: 'thread.index',
+        meta: {
+          title: 'Nymity - simple, anonymous discussion tool',
+          metaTags: [
+            {
+              name: 'description',
+              content: 'home description',
+            },
+            {
+              property: 'og:description',
+              content: 'home description',
+            },
+          ],
+        },
+        component: Thread,
+      },
+      {
+        path: ':topicId',
         name: 'topic.index',
         meta: {
           title: 'Nymity - simple, anonymous discussion tool',
@@ -74,12 +99,6 @@ const routes = [
         },
         component: Topic,
       },
-    ],
-  },
-  {
-    path: '/topics',
-    component: TalkLayout,
-    children: [
       {
         path: 'new',
         name: 'topics.new.index',
@@ -98,14 +117,8 @@ const routes = [
         },
         component: NewTopic,
       },
-    ],
-  },
-  {
-    path: '/threads',
-    component: TalkLayout,
-    children: [
       {
-        path: 'new/:topicId',
+        path: 't/new/:topicId',
         name: 'threads.new.index',
         meta: {
           title: 'Nymity - simple, anonymous discussion tool',

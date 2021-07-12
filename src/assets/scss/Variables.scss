@@ -1,20 +1,11 @@
 @import "~bulma/sass/utilities/_all";
 
-// Bulma variables
-$primary: #7B1B21;
-$primary-invert: findColorInvert($primary);
-$redisher: #6C0F11;
-$lightRedish: #C20000;
-$evenStrongerBlue: #006666;
-$strongBlue: #79a7a8;
-$middleBlue: #99cccc;
-$lightBlue: #e7f3f3;
-$almostBlack: #333333;
-$black: #000000;
-$grey: #E4E5E5;
-$lightGrey: #E6E6E6;
-$darkGrey: #999999;
-$ligherGrey: #F4F4F4;
+// App colors
+$topicsColor: #236e82;
+$threadsColor: #268067;
+
+// Bulma colors
+$primary: $topicsColor;
 
 // Navbar
 $navbar-breakpoint: 0;
@@ -36,9 +27,6 @@ $colors: (
 $link: $primary;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
-
-// Colors
-$almostBlack: #333333;
 
 // Fonts
 $family-primary: 'Roboto Slab', serif;

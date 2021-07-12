@@ -29,16 +29,20 @@ export default {
   computed: {},
   methods: {
     reloadTopic() {
-      axios
-        .get(`${process.env.API_SERVER_URL}/v1/topics/${this.$route.params.topic}`)
-        .then((response) => {
-          this.$store.commit('user/setCurrentTopic', response.data)
-        })
+      if (this.$route.params.topicId) {
+        axios
+          .get(`${process.env.API_SERVER_URL}/v1/topics/${this.$route.params.topicId}`)
+          .then((response) => {
+            this.$store.commit('user/setCurrentTopic', response.data)
+          })
+      }
     },
   },
   watch: {
-    '$route.params.topic': function () {
-      this.reloadTopic()
+    '$route.params.topicId': function (prev, next) {
+      if (next) {
+        this.reloadTopic()
+      }
     },
   },
   beforeCreate() {
