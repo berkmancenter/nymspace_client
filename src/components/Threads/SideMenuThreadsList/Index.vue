@@ -17,7 +17,7 @@
               talk-view-side-menu-item-header-title talk-view-side-menu-item-sub-title
               word-wrap
             "
-            :to="'/t/t/' + thread.id"
+            :to="{ name: 'thread.index', params: { threadId: thread.id } }"
             >{{ thread.name }}
           </router-link>
           <div class="talk-view-side-menu-item-header-actions"></div>

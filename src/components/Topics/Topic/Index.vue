@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import styles from '@/assets/scss/Topics/Topic/index.scss'
 import axios from 'axios'
 import ContentHeader from '@/components/Shared/ContentHeader/Index'
 
@@ -39,17 +38,13 @@ export default {
     },
   },
   watch: {
-    '$route.params.topicId': function (prev, next) {
-      if (next) {
-        this.reloadTopic()
-      }
+    '$route.params.topicId': function () {
+      this.reloadTopic()
     },
-  },
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
   },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/Topics/Topic/index.scss';
+</style>

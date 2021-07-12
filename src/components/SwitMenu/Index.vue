@@ -13,7 +13,6 @@
 
 <script>
 import $ from 'jquery'
-import styles from '@/assets/scss/SwitMenu/index.scss'
 import { VueCookieNext } from 'vue-cookie-next'
 
 export default {
@@ -69,11 +68,9 @@ export default {
       $('#content').css('padding-left', $('.switmenu-menu').outerWidth() + 'px')
     },
   },
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/SwitMenu/index.scss';
+</style>

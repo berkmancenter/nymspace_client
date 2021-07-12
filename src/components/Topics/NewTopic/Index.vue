@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import styles from '@/assets/scss/Topics/NewTopic/index.scss'
-import { VueCookieNext } from 'vue-cookie-next'
 import axios from 'axios'
 import ContentHeader from '@/components/Shared/ContentHeader/Index'
 
@@ -47,7 +45,6 @@ export default {
       axios
         .post(`${process.env.API_SERVER_URL}/v1/topics`, {
           name: this.topicName,
-          owner: VueCookieNext.getCookie('user_token'),
         })
         .then((response) => {
           this.topicName = ''
@@ -57,11 +54,9 @@ export default {
         })
     },
   },
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/Topics/NewTopic/index.scss';
+</style>

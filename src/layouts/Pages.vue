@@ -58,22 +58,21 @@
 </template>
 
 <script>
-import styles from './../assets/scss/layouts/Pages.scss'
-
 export default {
-  name: 'default-layout',
+  name: 'pages-layout',
   components: {},
   data() {
-    return {
-      build_date: process.env.BUILD_DATE,
-      build_version: process.env.BUILD_VERSION,
-    }
+    return {}
   },
   beforeCreate() {
-    styles.use()
+    document.querySelector('html').classList.add('pages-layout')
   },
-  unmounted() {
-    styles.unuse()
+  destroy() {
+    document.querySelector('html').classList.remove('pages-layout')
   },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/layouts/Pages.scss';
+</style>

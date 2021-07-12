@@ -86,8 +86,6 @@
 </template>
 
 <script>
-import styles from './../../assets/scss/Home/index.scss'
-
 export default {
   name: 'home-index',
   components: {},
@@ -97,11 +95,9 @@ export default {
   mounted() {},
   computed: {},
   methods: {},
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/Home/index.scss';
+</style>

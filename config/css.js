@@ -39,9 +39,6 @@ const genStyleRules = () => {
   }
   const vueStyleLoader = {
     loader: 'style-loader',
-    options: {
-      injectType: 'lazySingletonStyleTag',
-    },
   }
 
   function createCSSRule(test, loader, loaderOptions) {

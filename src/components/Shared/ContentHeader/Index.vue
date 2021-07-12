@@ -12,8 +12,6 @@
 </template>
 
 <script>
-import styles from '@/assets/scss/Shared/ContentHeader/index.scss'
-
 export default {
   name: 'content-header-index',
   props: ['viewTitle', 'contentTitle'],
@@ -23,11 +21,9 @@ export default {
   created() {},
   mounted() {},
   methods: {},
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/Shared/ContentHeader/index.scss';
+</style>

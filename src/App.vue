@@ -1,22 +1,14 @@
 <template>
-  <div>
-    <notifications group="main" />
-
-    <router-view v-cloak name="sidebar" />
-    <router-view v-cloak name="content" />
-  </div>
+  <router-view v-cloak name="sidebar" />
+  <router-view v-cloak name="layoutContent" />
 </template>
 
 <script>
-import styles from './assets/scss/App.scss'
-
 export default {
   name: 'app-homepage',
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/App.scss';
+</style>

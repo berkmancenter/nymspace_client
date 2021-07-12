@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import styles from '@/assets/scss/layouts/SideMenu.scss'
 import SwitMenu from '@/components/SwitMenu/Index'
 import SideMenuItem from './SideMenuItem'
 import SideMenuTopicsList from '@/components/Topics/SideMenuTopicsList/Index'
@@ -69,11 +68,9 @@ export default {
       elem.find('> div').contextMenu()
     },
   },
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/layouts/SideMenu.scss';
+</style>

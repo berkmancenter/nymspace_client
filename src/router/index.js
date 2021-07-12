@@ -15,25 +15,12 @@ const routes = [
   {
     path: '/',
     components: {
-      content: PagesLayout,
+      layoutContent: PagesLayout,
     },
     children: [
       {
         path: '',
         name: 'home.index',
-        meta: {
-          title: 'Nymity - simple, anonymous discussion tool',
-          metaTags: [
-            {
-              name: 'description',
-              content: 'home description',
-            },
-            {
-              property: 'og:description',
-              content: 'home description',
-            },
-          ],
-        },
         component: Home,
       },
     ],
@@ -41,98 +28,33 @@ const routes = [
   {
     path: '/t',
     components: {
-      content: TalkLayout,
+      layoutContent: TalkLayout,
       sidebar: SideMenuTalk,
     },
     children: [
       {
         path: '',
         name: 'app.index',
-        meta: {
-          title: 'Nymity - simple, anonymous discussion tool',
-          metaTags: [
-            {
-              name: 'description',
-              content: 'home description',
-            },
-            {
-              property: 'og:description',
-              content: 'home description',
-            },
-          ],
-        },
         component: Talk,
-      },
-      {
-        path: 't/:threadId',
-        name: 'thread.index',
-        meta: {
-          title: 'Nymity - simple, anonymous discussion tool',
-          metaTags: [
-            {
-              name: 'description',
-              content: 'home description',
-            },
-            {
-              property: 'og:description',
-              content: 'home description',
-            },
-          ],
-        },
-        component: Thread,
       },
       {
         path: ':topicId',
         name: 'topic.index',
-        meta: {
-          title: 'Nymity - simple, anonymous discussion tool',
-          metaTags: [
-            {
-              name: 'description',
-              content: 'home description',
-            },
-            {
-              property: 'og:description',
-              content: 'home description',
-            },
-          ],
-        },
         component: Topic,
       },
       {
         path: 'new',
         name: 'topics.new.index',
-        meta: {
-          title: 'Nymity - simple, anonymous discussion tool',
-          metaTags: [
-            {
-              name: 'description',
-              content: 'home description',
-            },
-            {
-              property: 'og:description',
-              content: 'home description',
-            },
-          ],
-        },
         component: NewTopic,
+      },
+      {
+        path: 't/:threadId',
+        name: 'thread.index',
+        component: Thread,
       },
       {
         path: 't/new/:topicId',
         name: 'threads.new.index',
-        meta: {
-          title: 'Nymity - simple, anonymous discussion tool',
-          metaTags: [
-            {
-              name: 'description',
-              content: 'home description',
-            },
-            {
-              property: 'og:description',
-              content: 'home description',
-            },
-          ],
-        },
         component: NewThread,
       },
     ],
@@ -140,37 +62,11 @@ const routes = [
   {
     path: '/404',
     name: 'pagenotfound.index',
-    meta: {
-      title: 'Nymity - 404',
-      metaTags: [
-        {
-          name: 'description',
-          content: 'page not found',
-        },
-        {
-          property: 'og:description',
-          content: 'page not found',
-        },
-      ],
-    },
     component: PagesLayout,
     children: [
       {
         path: '/',
         name: '404.index',
-        meta: {
-          title: 'Nymity - simple, anonymous discussion tool',
-          metaTags: [
-            {
-              name: 'description',
-              content: 'home description',
-            },
-            {
-              property: 'og:description',
-              content: 'home description',
-            },
-          ],
-        },
         component: PageNotFound,
       },
     ],

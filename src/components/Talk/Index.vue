@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import styles from './../../assets/scss/Talk/index.scss'
 import SessionAsk from './SessionAsk'
 import { VueCookieNext } from 'vue-cookie-next'
 
@@ -23,11 +22,9 @@ export default {
   mounted() {},
   computed: {},
   methods: {},
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/Talk/index.scss';
+</style>

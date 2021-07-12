@@ -21,27 +21,26 @@
 </template>
 
 <script>
-import styles from '@/assets/scss/layouts/Talk.scss'
-import fontAwesome from 'font-awesome/css/font-awesome.css'
 import 'jquery-contextmenu/dist/jquery.contextMenu'
 import 'jquery-contextmenu/dist/jquery.ui.position'
-import jqueryContextMenuCss from 'jquery-contextmenu/dist/jquery.contextMenu.css'
 
 export default {
-  name: 'default-layout',
+  name: 'talk-layout',
   components: {},
   data() {
     return {}
   },
   beforeCreate() {
-    styles.use()
-    fontAwesome.use()
-    jqueryContextMenuCss.use()
+    document.querySelector('html').classList.add('talk-layout')
   },
-  unmounted() {
-    styles.unuse()
-    fontAwesome.unuse()
-    jqueryContextMenuCss.unuse()
+  destroy() {
+    document.querySelector('html').classList.remove('talk-layout')
   },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/layouts/Talk.scss';
+@import 'font-awesome/css/font-awesome.css';
+@import 'jquery-contextmenu/dist/jquery.contextMenu.css';
+</style>

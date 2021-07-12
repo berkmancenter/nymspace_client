@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import styles from '@/assets/scss/Threads/Thread/index.scss'
 import axios from 'axios'
 import ContentHeader from '@/components/Shared/ContentHeader/Index'
 
@@ -43,11 +42,9 @@ export default {
       this.reloadThread()
     },
   },
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/Threads/Thread/index.scss';
+</style>

@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import styles from './../../assets/scss/Talk/SessionAsk.scss'
 import axios from 'axios'
 
 export default {
@@ -98,11 +97,9 @@ export default {
       this.newToken = res.data
     },
   },
-  beforeCreate() {
-    styles.use()
-  },
-  unmounted() {
-    styles.unuse()
-  },
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/Talk/SessionAsk.scss';
+</style>
