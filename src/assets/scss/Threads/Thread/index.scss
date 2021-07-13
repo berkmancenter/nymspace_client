@@ -1,1 +1,18 @@
-.thread-view {}
+.thread-view {
+  height: calc(100vh - 70px);
+
+  &-messages {
+    margin-bottom: auto;
+  }
+
+  &-message-input {
+    margin-top: auto;
+    
+
+    textarea {
+      width: 100%;
+      resize: none;
+      height: 250px;
+    }
+  }
+}

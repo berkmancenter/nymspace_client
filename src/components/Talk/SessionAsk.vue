@@ -5,7 +5,7 @@
       <div class="modal-content">
         <div class="box">
           <div class="is-flex is-justify-content-center">
-            <img class="" alt="nymity logo" src="@/assets/images/logo.svg" />
+            <img class="" alt="threads logo" src="@/assets/images/logo.svg" />
           </div>
 
           <section class="pt-4 pb-2">

@@ -57,6 +57,7 @@ export default {
       elem.contextMenu({
         selector: '> div',
         trigger: 'left',
+        hideOnSecondTrigger: true,
         items: {
           newThread: {
             name: 'Create new thread',

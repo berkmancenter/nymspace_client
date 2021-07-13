@@ -58,6 +58,7 @@ export default {
       elem.contextMenu({
         selector: '> div',
         trigger: 'left',
+        hideOnSecondTrigger: true,
         items: {
           newTopic: {
             name: 'Create new topic',

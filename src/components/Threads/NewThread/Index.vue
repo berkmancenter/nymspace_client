@@ -1,5 +1,9 @@
 <template>
-  <ContentHeader viewTitle="Create new thread" :contentTitle="topic.name"></ContentHeader>
+  <ContentHeader
+    viewTitle="Create new thread"
+    :contentTitle="topic.name"
+    :color="appVariables.threadsColor"
+  ></ContentHeader>
 
   <div class="new-thread-view p-5">
     <form @submit="createNewThread">

@@ -4,7 +4,7 @@
       <div class="header-container">
         <div class="header-logo">
           <a href="/">
-            <img alt="nymity logo" src="@/assets/images/logo.svg" />
+            <img alt="threads logo" src="@/assets/images/logo.svg" />
           </a>
         </div>
       </div>
@@ -27,7 +27,7 @@
                   <li>
                     open source 🤲
                     <a href="https://github.com/berkmancenter/threads" target="_blank"
-                      ><img alt="nymity logo" src="@/assets/images/github.png"
+                      ><img alt="threads logo" src="@/assets/images/github.png"
                     /></a>
                   </li>
                   <li>transparent 🧐</li>

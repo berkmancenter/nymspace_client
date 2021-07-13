@@ -26,6 +26,8 @@ axios.interceptors.response.use(
           VueCookieNext.setCookie('user_access_token', res.data.access.token)
           VueCookieNext.setCookie('user_refresh_token', res.data.refresh.token)
 
+          axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.access.token}`
+
           store.commit('user/setRefreshingState', false)
           store.commit('user/setRefreshingCall', undefined)
           return Promise.resolve(true)
@@ -36,6 +38,12 @@ axios.interceptors.response.use(
     }
 
     if (status === 401) {
+      if (error.request.responseURL.includes('refresh-token')) {
+        VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))
+
+        return Promise.reject(error)
+      }
+
       return refreshToken().then(() => {
         error.config.headers['Authorization'] = `Bearer ${VueCookieNext.getCookie(
           'user_access_token'

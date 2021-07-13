@@ -1,20 +1,23 @@
 <template>
-  <div>
-    <div class="content-header">
-      <h5 class="is-size-5 is-flex is-align-items-flex-start">
-        <span class="content-header-icon">{{ viewTitle }}</span>
-        <div class="content-header-title word-wrap">
-          {{ contentTitle }}
-        </div>
-      </h5>
-    </div>
+  <div class="content-header">
+    <h5 class="is-size-5 is-flex is-align-items-flex-start">
+      <span
+        class="content-header-icon"
+        :style="{ borderTopColor: color, borderLeftColor: color, color: color }"
+      >
+        {{ viewTitle }}
+      </span>
+      <div class="content-header-title word-wrap">
+        {{ contentTitle }}
+      </div>
+    </h5>
   </div>
 </template>
 
 <script>
 export default {
   name: 'content-header-index',
-  props: ['viewTitle', 'contentTitle'],
+  props: ['viewTitle', 'contentTitle', 'color'],
   data() {
     return {}
   },

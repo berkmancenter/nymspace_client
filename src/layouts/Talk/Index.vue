@@ -6,7 +6,7 @@
 
         <div class="header-logo">
           <a href="/">
-            <img alt="nymity logo" src="@/assets/images/logo.svg" />
+            <img alt="threads logo" src="@/assets/images/logo.svg" />
           </a>
         </div>
 
