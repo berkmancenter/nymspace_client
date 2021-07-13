@@ -6,9 +6,16 @@
       :color="appVariables.threadsColor"
     ></ContentHeader>
 
-    <div class="thread-view-messages m-2 is-flex is-flex-grow-1">
-      <div v-if="messages.length > 0">
-        <div v-for="(message, index) in messages" :key="index">
+    <div class="thread-view-messages is-flex-grow-1" ref="messages">
+      <div
+        v-if="messages.length > 0"
+        class="is-flex is-flex-direction-column is-align-items-flex-start"
+      >
+        <div
+          v-for="(message, index) in messages"
+          :key="index"
+          class="thread-view-messages-item p-3 my-3 mx-4"
+        >
           {{ message.body }}
         </div>
       </div>
@@ -23,6 +30,7 @@
 <script>
 import axios from 'axios'
 import ContentHeader from '@/components/Shared/ContentHeader/Index'
+import { nextTick } from 'vue'
 
 export default {
   name: 'thread-index',
@@ -37,8 +45,7 @@ export default {
     }
   },
   created() {
-    this.reloadThread()
-    this.preloadMessages()
+    this.prepareNewThread()
   },
   mounted() {},
   computed: {},
@@ -57,6 +64,8 @@ export default {
         return
       }
 
+      event.preventDefault()
+
       axios.post(`${process.env.API_SERVER_URL}/v1/messages`, {
         body: this.messageBody,
         thread: this.$store.state.user.currentThread.id,
@@ -69,12 +78,21 @@ export default {
         .get(`${process.env.API_SERVER_URL}/v1/messages/${this.$route.params.threadId}`)
         .then((response) => {
           this.messages = response.data
+          this.scrollToLastMessage()
         })
+    },
+    async scrollToLastMessage() {
+      await nextTick()
+      this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight
+    },
+    prepareNewThread() {
+      this.reloadThread()
+      this.preloadMessages()
     },
   },
   watch: {
     '$route.params.threadId': function () {
-      this.reloadThread()
+      this.prepareNewThread()
     },
   },
 }

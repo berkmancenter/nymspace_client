@@ -3,6 +3,12 @@
 
   &-messages {
     margin-bottom: auto;
+    height: calc(100vh - 70px - 250px);
+    overflow-y: auto;
+
+    &-item {
+      background: #fafafa;
+    }
   }
 
   &-message-input {
