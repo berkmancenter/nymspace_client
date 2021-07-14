@@ -7,6 +7,7 @@ const state = {
   sideMenuOpen: false,
   currentTopic: {},
   currentThread: {},
+  currentTopicThreads: [],
   userTopics: [],
   userThreads: [],
   auth: {
@@ -64,6 +65,9 @@ const mutations = {
   },
   setCurrentThread(state, thread) {
     state.currentThread = thread
+  },
+  setCurrentTopicThreads(state, threads) {
+    state.currentTopicThreads = threads
   },
 }
 

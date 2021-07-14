@@ -34,13 +34,18 @@
               {{ message.createdAt }}
             </div>
           </div>
-          <div class="thread-view-messages-item-body mt-2 p-1">{{ message.body }}</div>
+          <div class="thread-view-messages-item-body mt-2 p-1 word-wrap">{{ message.body }}</div>
         </div>
       </div>
     </div>
 
     <div class="thread-view-message-input m-2 is-flex">
-      <textarea class="p-2 is-size-6" @keyup.enter="sendMessage" v-model="messageBody"></textarea>
+      <textarea
+        class="p-2 is-size-6"
+        @keyup.enter="sendMessage"
+        v-model="messageBody"
+        ref="messageBox"
+      ></textarea>
     </div>
   </div>
 </template>
@@ -67,7 +72,9 @@ export default {
   created() {
     this.prepareNewThread()
   },
-  mounted() {},
+  mounted() {
+    this.$refs.messageBox.focus()
+  },
   computed: {},
   methods: {
     reloadThread() {
@@ -143,7 +150,7 @@ export default {
       if (this.socket) {
         this.socket.disconnect()
       }
-    }
+    },
   },
   watch: {
     '$route.params.threadId': function () {

@@ -54,8 +54,9 @@ export default {
           name: this.threadName,
           topicId: this.topic.id,
         })
-        .then(() => {
+        .then((response) => {
           this.threadName = ''
+          this.$router.push({ name: 'thread.index', params: { threadId: response.data.id } })
           this.$store.dispatch('user/reloadUserThreads')
         })
     },

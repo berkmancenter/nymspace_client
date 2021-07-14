@@ -16,6 +16,10 @@
       &:first-child {
         margin-top: auto !important;
       }
+
+      &-body {
+        white-space: pre-wrap;
+      }
     }
   }
 

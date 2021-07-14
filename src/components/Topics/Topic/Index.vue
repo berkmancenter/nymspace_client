@@ -4,6 +4,31 @@
       viewTitle="Topic"
       :contentTitle="$store.state.user.currentTopic.name"
     ></ContentHeader>
+
+    <div class="topic-view-threads p-4">
+      <h5 class="is-size-5">Threads</h5>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Messages</th>
+            <th>Followers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(thread, index) in $store.state.user.currentTopicThreads" :key="index">
+            <td>
+              <router-link :to="{ name: 'thread.index', params: { threadId: thread.id } }">
+                {{ thread.name }}
+              </router-link>
+            </td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -22,11 +47,15 @@ export default {
     }
   },
   created() {
-    this.reloadTopic()
+    this.reloadComponent()
   },
   mounted() {},
   computed: {},
   methods: {
+    reloadComponent() {
+      this.reloadTopic()
+      this.reloadTopicThreads()
+    },
     reloadTopic() {
       if (this.$route.params.topicId) {
         axios
@@ -36,10 +65,19 @@ export default {
           })
       }
     },
+    reloadTopicThreads() {
+      if (this.$route.params.topicId) {
+        axios
+          .get(`${process.env.API_SERVER_URL}/v1/threads/topic/${this.$route.params.topicId}`)
+          .then((response) => {
+            this.$store.commit('user/setCurrentTopicThreads', response.data)
+          })
+      }
+    },
   },
   watch: {
     '$route.params.topicId': function () {
-      this.reloadTopic()
+      this.reloadComponent()
     },
   },
 }
