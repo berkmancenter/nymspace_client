@@ -9,14 +9,32 @@
     <div class="thread-view-messages is-flex-grow-1" ref="messages">
       <div
         v-if="messages.length > 0"
-        class="is-flex is-flex-direction-column is-align-items-flex-start"
+        class="
+          thread-view-messages-container
+          is-flex is-flex-direction-column is-align-items-flex-start
+        "
       >
         <div
           v-for="(message, index) in messages"
           :key="index"
-          class="thread-view-messages-item p-3 my-3 mx-4"
+          class="thread-view-messages-item p-3 my-3 mx-4 is-flex is-flex-direction-column"
         >
-          {{ message.body }}
+          <div class="thread-view-messages-item-meta is-flex is-align-items-center">
+            <div class="thread-view-messages-item-meta-author has-text-weight-bold is-size-7 p-1">
+              {{ message.owner }}
+            </div>
+            <div
+              class="
+                thread-view-messages-item-meta-created
+                has-text-weight-bold has-text-grey-light
+                is-size-7
+                ml-2
+              "
+            >
+              {{ message.createdAt }}
+            </div>
+          </div>
+          <div class="thread-view-messages-item-body mt-2 p-1">{{ message.body }}</div>
         </div>
       </div>
     </div>
@@ -31,6 +49,8 @@
 import axios from 'axios'
 import ContentHeader from '@/components/Shared/ContentHeader/Index'
 import { nextTick } from 'vue'
+import { io } from 'socket.io-client'
+import { VueCookieNext } from 'vue-cookie-next'
 
 export default {
   name: 'thread-index',
@@ -56,6 +76,8 @@ export default {
           .get(`${process.env.API_SERVER_URL}/v1/threads/${this.$route.params.threadId}`)
           .then((response) => {
             this.$store.commit('user/setCurrentThread', response.data)
+            this.connectToSocket()
+            this.handleNewMessages()
           })
       }
     },
@@ -66,9 +88,12 @@ export default {
 
       event.preventDefault()
 
-      axios.post(`${process.env.API_SERVER_URL}/v1/messages`, {
-        body: this.messageBody,
-        thread: this.$store.state.user.currentThread.id,
+      this.socket.emit('message:create', {
+        message: {
+          body: this.messageBody,
+          thread: this.$store.state.user.currentThread.id,
+        },
+        token: VueCookieNext.getCookie('user_access_token'),
       })
 
       this.messageBody = ''
@@ -81,19 +106,52 @@ export default {
           this.scrollToLastMessage()
         })
     },
+    connectToSocket() {
+      this.disconnectSocket()
+
+      this.socket = io(process.env.WEBSOCKET_SERVER_URL)
+
+      this.socket.on('connect', () => {
+        this.socket.emit('thread:join', {
+          threadId: this.$route.params.threadId,
+          token: VueCookieNext.getCookie('user_access_token'),
+        })
+      })
+    },
     async scrollToLastMessage() {
       await nextTick()
       this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight
     },
+    handleNewMessages() {
+      this.socket.on('message:new', (payload) => {
+        this.messages.push(payload)
+        this.scrollToLastMessage()
+      })
+    },
+    preparePingRequest() {
+      setInterval(function () {
+        axios.defaults.headers.common['Authorization'] = ''
+        axios.get(`${process.env.API_SERVER_URL}/v1/auth/ping`)
+      }, 50000)
+    },
     prepareNewThread() {
       this.reloadThread()
       this.preloadMessages()
+      this.preparePingRequest()
     },
+    disconnectSocket() {
+      if (this.socket) {
+        this.socket.disconnect()
+      }
+    }
   },
   watch: {
     '$route.params.threadId': function () {
       this.prepareNewThread()
     },
+  },
+  unmounted() {
+    this.disconnectSocket()
   },
 }
 </script>
