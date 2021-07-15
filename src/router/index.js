@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { VueCookieNext } from 'vue-cookie-next'
+
 import PagesLayout from '@/layouts/Pages'
 import TalkLayout from '@/layouts/Talk/Index'
 import SideMenuTalk from '@/layouts/Talk/SideMenu'
+import Login from '@/components/Login/Index'
 import Home from '@/components/Home/Index'
 import Talk from '@/components/Talk/Index'
 import NewTopic from '@/components/Topics/NewTopic/Index'
@@ -23,6 +26,11 @@ const routes = [
         name: 'home.index',
         component: Home,
       },
+      {
+        path: 'login',
+        name: 'login.index',
+        component: Login,
+      },
     ],
   },
   {
@@ -34,7 +42,7 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'app.index',
+        name: 'talk.index',
         component: Talk,
       },
       {
@@ -80,6 +88,21 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  const allowedViews = ['home.index', 'login.index']
+  const tokenExists = VueCookieNext.getCookie('user_access_token')
+
+  if (tokenExists && to.name === 'login.index') {
+    next({ name: 'talk.index' })
+  }
+
+  if (!allowedViews.includes(to.name) && !VueCookieNext.getCookie('user_access_token')) {
+    next({ name: 'login.index' })
+  } else {
+    next()
+  }
 })
 
 export default router

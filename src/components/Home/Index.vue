@@ -6,9 +6,9 @@
     </div>
 
     <div class="has-text-centered mt-4 mb-4">
-      <a class="button button-ok" href="/t">
+      <router-link class="button button-ok" :to="{ name: 'talk.index' }">
         <h2 class="is-size-2 has-text-weight-bold">Start</h2>
-      </a>
+      </router-link>
     </div>
 
     <div class="home-view-who-we-are-banner has-text-centered">

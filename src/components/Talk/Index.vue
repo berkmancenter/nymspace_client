@@ -1,24 +1,15 @@
 <template>
-  <div class="talk-view">
-    <SessionAsk v-if="newUser"></SessionAsk>
-  </div>
+  <div class="talk-view"></div>
 </template>
 
 <script>
-import SessionAsk from './SessionAsk'
-import { VueCookieNext } from 'vue-cookie-next'
-
 export default {
   name: 'talk-index',
-  components: {
-    SessionAsk,
-  },
+  components: {},
   data() {
     return {}
   },
-  created() {
-    this.newUser = !VueCookieNext.getCookie('user_access_token')
-  },
+  created() {},
   mounted() {},
   computed: {},
   methods: {},

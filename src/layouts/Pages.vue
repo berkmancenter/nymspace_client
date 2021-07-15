@@ -10,18 +10,18 @@
       </div>
     </div>
 
-    <section id="content">
+    <div id="content" class="pb-6">
       <transition name="fade">
         <router-view />
       </transition>
-    </section>
+    </div>
 
     <div id="footer">
       <footer class="footer">
         <div class="container">
-          <div class="footer-column">
-            <div class="container">
-              <h5 class="is-size-5">
+          <div class="footer-columns columns">
+            <div class="footer-column column">
+              <h5 class="is-size-5 p-4">
                 We are:
                 <ul class="footer-about-list">
                   <li>
@@ -36,19 +36,17 @@
                 </ul>
               </h5>
             </div>
-          </div>
-          <div class="footer-column">
-            <div class="container">
-              <div class="footer-bkc-logo">
-                <a href="https://cyber.harvard.edu" target="_blank"
-                  ><img alt="bkc logo" src="@/assets/images/bkc.svg"
-                /></a>
+            <div class="footer-column column">
+              <div class="footer-bkc-logo p-4">
+                <a href="https://cyber.harvard.edu" target="_blank">
+                  <img alt="bkc logo" src="@/assets/images/bkc.svg" />
+                </a>
               </div>
             </div>
           </div>
-          <div class="footer-column has-text-centered">
-            <div class="container">
-              <h5 class="is-size-5">2020 @ Berkman Klein Center</h5>
+          <div class="footer-columns columns">
+            <div class="footer-column column has-text-centered">
+              <h5 class="is-size-5 p-4">2020 @ Berkman Klein Center</h5>
             </div>
           </div>
         </div>
@@ -67,7 +65,7 @@ export default {
   beforeCreate() {
     document.querySelector('html').classList.add('pages-layout')
   },
-  destroy() {
+  unmounted() {
     document.querySelector('html').classList.remove('pages-layout')
   },
 }

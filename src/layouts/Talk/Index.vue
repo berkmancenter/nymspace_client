@@ -5,9 +5,9 @@
         <div class="header-hamburger" id="header-hamburger" title="Toggle menu"></div>
 
         <div class="header-logo">
-          <a href="/">
+          <router-link :to="{ name: 'home.index' }">
             <img alt="threads logo" src="@/assets/images/logo.svg" />
-          </a>
+          </router-link>
         </div>
 
         <div class="header-toolbox"></div>
@@ -27,13 +27,21 @@ import 'jquery-contextmenu/dist/jquery.ui.position'
 export default {
   name: 'talk-layout',
   components: {},
+  created() {
+    this.preparePingRequest()
+  },
   data() {
     return {}
+  },
+  methods: {
+    preparePingRequest() {
+      this.$store.dispatch('user/setPingRequest')
+    },
   },
   beforeCreate() {
     document.querySelector('html').classList.add('talk-layout')
   },
-  destroy() {
+  unmounted() {
     document.querySelector('html').classList.remove('talk-layout')
   },
 }

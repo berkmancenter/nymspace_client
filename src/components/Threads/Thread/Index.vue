@@ -69,10 +69,9 @@ export default {
       messages: [],
     }
   },
-  created() {
-    this.prepareNewThread()
-  },
+  created() {},
   mounted() {
+    this.prepareNewThread()
     this.$refs.messageBox.focus()
   },
   computed: {},
@@ -135,16 +134,9 @@ export default {
         this.scrollToLastMessage()
       })
     },
-    preparePingRequest() {
-      setInterval(function () {
-        axios.defaults.headers.common['Authorization'] = ''
-        axios.get(`${process.env.API_SERVER_URL}/v1/auth/ping`)
-      }, 50000)
-    },
     prepareNewThread() {
       this.reloadThread()
       this.preloadMessages()
-      this.preparePingRequest()
     },
     disconnectSocket() {
       if (this.socket) {
@@ -153,12 +145,13 @@ export default {
     },
   },
   watch: {
-    '$route.params.threadId': function () {
-      this.prepareNewThread()
+    '$route.params.threadId': function (next) {
+      if (next) {
+        this.prepareNewThread()
+      } else {
+        this.disconnectSocket()
+      }
     },
-  },
-  unmounted() {
-    this.disconnectSocket()
   },
 }
 </script>

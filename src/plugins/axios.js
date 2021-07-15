@@ -39,7 +39,8 @@ axios.interceptors.response.use(
 
     if (status === 401) {
       if (error.request.responseURL.includes('refresh-token')) {
-        VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))
+        console.log(error)
+        //VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))
 
         return Promise.reject(error)
       }

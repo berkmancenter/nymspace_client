@@ -4,14 +4,6 @@ html.pages-layout, html.pages-layout body {
 }
 
 html.pages-layout {
-  .columns {
-    width: 100%;
-  }
-
-  .container {
-    display: flex;
-  }
-
   #header {
     position: fixed;
     top: 0;
@@ -45,12 +37,10 @@ html.pages-layout {
   }
 
   #content {
-    padding: 0 5%;
     margin-top: 60px;
   }
 
   #footer {
-    padding: 1rem 5%;
     background-image: url('~@/assets/images/triangles.svg');
     background-repeat: no-repeat;
     background-size: cover;
@@ -60,51 +50,24 @@ html.pages-layout {
     position: relative;
 
     .footer {
-      padding: 10px 0;
       background-color: transparent;
 
-      @media (max-width: $breakpointLg) {
-        > .container {
-          flex-direction: column;
+      .footer-columns {
+        .footer-column {
+          display: flex;
+
+          > * {
+            color: #000000;
+            background: #ffffff;
+            margin: 0 auto;
+            border-radius: 10px;
+            display: inline-block;
+          }
         }
       }
 
       .footer-bkc-logo {
         width: 200px;
-        padding: 20px;
-        background: #ffffff;
-        border-radius: 10px;
-      }
-
-      a {
-        color: #000000;
-      }
-
-      h5 {
-        padding: 20px;
-        color: #000000;
-        background: #ffffff;
-        border-radius: 10px;
-        vertical-align: top;
-        display: inline-block;
-      }
-
-      .footer-column {
-        flex: 1;
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 10px;
-
-        li {
-          margin-top: 10px;
-        }
-
-        > .container {
-          align-items: center;
-          justify-content: center;
-        }
       }
 
       &-about-list {

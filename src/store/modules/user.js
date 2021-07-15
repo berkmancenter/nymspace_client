@@ -13,6 +13,7 @@ const state = {
   auth: {
     refreshingCall: false,
     isRefreshing: false,
+    pingInterval: null,
   },
 }
 
@@ -22,10 +23,12 @@ const getters = {}
 // actions
 const actions = {
   async loginUser(context, userToken) {
-    context.commit('setUserToken', userToken)
     const res = await axios.post(`${process.env.API_SERVER_URL}/v1/auth/register`, {
       password: userToken,
     })
+
+    context.commit('setUserToken', userToken)
+    context.commit('setSideMenuOpen', true)
     VueCookieNext.setCookie('user_access_token', res.data.tokens.access.token)
     VueCookieNext.setCookie('user_refresh_token', res.data.tokens.refresh.token)
   },
@@ -36,6 +39,9 @@ const actions = {
   async reloadUserThreads(context) {
     const res = await axios.get(`${process.env.API_SERVER_URL}/v1/threads/userThreads`)
     context.commit('setUserThreads', res.data)
+  },
+  setPingRequest(context) {
+    context.commit('setPingRequest')
   },
 }
 
@@ -68,6 +74,16 @@ const mutations = {
   },
   setCurrentTopicThreads(state, threads) {
     state.currentTopicThreads = threads
+  },
+  setPingRequest(state) {
+    if (state.auth.pingInterval === null) {
+      const pingInterval = setInterval(function () {
+        axios.defaults.headers.common['Authorization'] = ''
+        axios.get(`${process.env.API_SERVER_URL}/v1/auth/ping`)
+      }, 50000)
+
+      state.auth.pingInterval = pingInterval
+    }
   },
 }
 
