@@ -3,14 +3,14 @@
     <div id="header">
       <div class="header-container">
         <div class="header-logo">
-          <a href="/">
+          <router-link :to="{ name: 'talk.index' }">
             <img alt="threads logo" src="@/assets/images/logo.svg" />
-          </a>
+          </router-link>
         </div>
       </div>
     </div>
 
-    <div id="content" class="pb-6">
+    <div id="content">
       <transition name="fade">
         <router-view />
       </transition>

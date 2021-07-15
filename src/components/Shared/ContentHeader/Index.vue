@@ -10,6 +10,9 @@
       <div class="content-header-title word-wrap">
         {{ contentTitle }}
       </div>
+      <div class="content-header-actions">
+        <slot name="actions"></slot>
+      </div>
     </h5>
   </div>
 </template>

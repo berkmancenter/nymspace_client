@@ -5,7 +5,7 @@
         <div class="header-hamburger" id="header-hamburger" title="Toggle menu"></div>
 
         <div class="header-logo">
-          <router-link :to="{ name: 'home.index' }">
+          <router-link :to="{ name: 'talk.index' }">
             <img alt="threads logo" src="@/assets/images/logo.svg" />
           </router-link>
         </div>

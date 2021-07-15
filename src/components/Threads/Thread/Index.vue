@@ -4,7 +4,26 @@
       viewTitle="Thread"
       :contentTitle="$store.state.user.currentThread.name"
       :color="appVariables.threadsColor"
-    ></ContentHeader>
+    >
+      <template v-slot:actions>
+        <div
+          class="content-header-actions-icon"
+          title="Follow thread"
+          v-if="!$store.state.user.currentThread.followed"
+          @click="toggleFollow(true)"
+        >
+          <i class="fa fa-heart-o" aria-hidden="true"></i>
+        </div>
+        <div
+          class="content-header-actions-icon"
+          title="Unfollow thread"
+          v-if="$store.state.user.currentThread.followed"
+          @click="toggleFollow(false)"
+        >
+          <i class="fa fa-heart" aria-hidden="true"></i>
+        </div>
+      </template>
+    </ContentHeader>
 
     <div class="thread-view-messages is-flex-grow-1" ref="messages">
       <div
@@ -97,7 +116,7 @@ export default {
       this.socket.emit('message:create', {
         message: {
           body: this.messageBody,
-          thread: this.$store.state.user.currentThread.id,
+          thread: this.$store.state.user.currentThread._id,
         },
         token: VueCookieNext.getCookie('user_access_token'),
       })
@@ -142,6 +161,12 @@ export default {
       if (this.socket) {
         this.socket.disconnect()
       }
+    },
+    toggleFollow(value) {
+      this.$store.dispatch('user/setCurrentThreadFollowed', {
+        status: value,
+        threadId: this.$store.state.user.currentThread._id,
+      })
     },
   },
   watch: {

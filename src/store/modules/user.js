@@ -43,6 +43,15 @@ const actions = {
   setPingRequest(context) {
     context.commit('setPingRequest')
   },
+  setCurrentThreadFollowed(context, data) {
+    context.commit('setCurrentThreadFollowed', data.status)
+    axios
+      .post(`${process.env.API_SERVER_URL}/v1/threads/follow`, {
+        status: data.status,
+        threadId: data.threadId,
+      })
+      .then(() => context.dispatch('reloadUserThreads'))
+  },
 }
 
 // mutations
@@ -84,6 +93,9 @@ const mutations = {
 
       state.auth.pingInterval = pingInterval
     }
+  },
+  setCurrentThreadFollowed(state, value) {
+    state.currentThread.followed = value
   },
 }
 
