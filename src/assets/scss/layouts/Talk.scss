@@ -37,8 +37,6 @@ html.talk-layout {
       }
 
       .header-logo {
-        height: 50px;
-
         a {
           padding-left: 60px;
           width: 250px;
@@ -50,6 +48,24 @@ html.talk-layout {
             width: 250px;
             max-height: 40px;
           }
+        }
+      }
+    }
+
+    .header-toolbox {
+      margin-left: auto;
+      margin-right: 1rem;
+
+      &-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        width: 50px;
+        cursor: pointer;
+
+        &:hover {
+          background: #ffffff;
         }
       }
     }

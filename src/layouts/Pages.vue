@@ -3,7 +3,7 @@
     <div id="header">
       <div class="header-container">
         <div class="header-logo">
-          <router-link :to="{ name: 'talk.index' }">
+          <router-link :to="{ name: 'home.index' }">
             <img alt="threads logo" src="@/assets/images/logo.svg" />
           </router-link>
         </div>

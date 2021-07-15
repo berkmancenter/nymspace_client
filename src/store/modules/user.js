@@ -32,6 +32,9 @@ const actions = {
     VueCookieNext.setCookie('user_access_token', res.data.tokens.access.token)
     VueCookieNext.setCookie('user_refresh_token', res.data.tokens.refresh.token)
   },
+  logout() {
+    VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))
+  },
   async reloadUserTopics(context) {
     const res = await axios.get(`${process.env.API_SERVER_URL}/v1/topics/userTopics`)
     context.commit('setUserTopics', res.data)

@@ -10,7 +10,11 @@
           </router-link>
         </div>
 
-        <div class="header-toolbox"></div>
+        <div class="header-toolbox">
+          <div class="header-toolbox-item" @click="logout()" title="Logout">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -36,6 +40,10 @@ export default {
   methods: {
     preparePingRequest() {
       this.$store.dispatch('user/setPingRequest')
+    },
+    logout() {
+      this.$store.dispatch('user/logout')
+      this.$router.push({ name: 'login.index' })
     },
   },
   beforeCreate() {
