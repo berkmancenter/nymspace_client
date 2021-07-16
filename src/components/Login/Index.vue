@@ -34,13 +34,13 @@
       <h2 class="is-size-2 pt-0">Returning user</h2>
       <p>Enter your access key</p>
       <p class="is-flex is-align-items-center pt-2">
-        <input type="text" class="is-size-3" :value="existingToken" :disabled="logging" />
+        <input type="text" class="is-size-3" v-model="existingToken" :disabled="logging" />
         <button
           id="talk-session-ask-existing-login"
           class="button is-success ml-2"
           @click="login($event, true)"
           :class="{
-            'is-loading': false,
+            'is-loading': logging,
           }"
           :disabled="logging"
         >
