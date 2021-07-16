@@ -22,15 +22,31 @@ const getters = {}
 
 // actions
 const actions = {
-  async loginUser(context, userToken) {
+  async register(context, userToken) {
     const res = await axios.post(`${process.env.API_SERVER_URL}/v1/auth/register`, {
       password: userToken,
     })
 
-    context.commit('setUserToken', userToken)
+    context.dispatch('afterLoginRegister', {
+      res: res,
+      userToken: userToken,
+    })
+  },
+  async login(context, userToken) {
+    const res = await axios.post(`${process.env.API_SERVER_URL}/v1/auth/login`, {
+      password: userToken,
+    })
+
+    context.dispatch('afterLoginRegister', {
+      res: res,
+      userToken: userToken,
+    })
+  },
+  afterLoginRegister(context, data) {
+    context.commit('setUserToken', data.userToken)
     context.commit('setSideMenuOpen', true)
-    VueCookieNext.setCookie('user_access_token', res.data.tokens.access.token)
-    VueCookieNext.setCookie('user_refresh_token', res.data.tokens.refresh.token)
+    VueCookieNext.setCookie('user_access_token', data.res.data.tokens.access.token)
+    VueCookieNext.setCookie('user_refresh_token', data.res.data.tokens.refresh.token)
   },
   logout() {
     VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))

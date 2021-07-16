@@ -4,9 +4,16 @@
       <h2 class="is-size-2">New user</h2>
       <p>If you want to use this user in the future note/copy the access key.</p>
       <p>You can use it later to use the same identity.</p>
-      <p>Click on the code to copy it to your clipboard.</p>
+      <p>Click on the clipboard button to copy it to your clipboard.</p>
       <p class="is-flex is-align-items-center pt-4">
-        <input type="text" class="is-size-3" disabled :value="newToken" />
+        <input type="text" class="is-size-3" readonly :value="newToken" />
+        <button
+          class="login-view-copy-to-clipboard"
+          ref="newTokenCopyToClipboard"
+          title="Copy to clipboard"
+        >
+          <i class="fa fa-clipboard" aria-hidden="true"></i>
+        </button>
         <button
           id="talk-session-ask-new-login"
           class="button is-success ml-2"
@@ -27,7 +34,7 @@
       <h2 class="is-size-2 pt-0">Returning user</h2>
       <p>Enter your access key</p>
       <p class="is-flex is-align-items-center pt-2">
-        <input type="text" class="is-size-3" :value="existingToken" disabled />
+        <input type="text" class="is-size-3" :value="existingToken" :disabled="logging" />
         <button
           id="talk-session-ask-existing-login"
           class="button is-success ml-2"
@@ -35,7 +42,7 @@
           :class="{
             'is-loading': false,
           }"
-          :disabled="true"
+          :disabled="logging"
         >
           Login
         </button>
@@ -46,6 +53,8 @@
 
 <script>
 import axios from 'axios'
+import ClipboardJS from 'clipboard/dist/clipboard'
+import { nextTick } from 'vue'
 
 export default {
   name: 'login-index',
@@ -55,13 +64,15 @@ export default {
       logging: false,
       newToken: '',
       existingToken: '',
-      loginScreen: true,
+      clipboard: false,
     }
   },
   created() {
     this.setNewUserToken()
   },
-  mounted() {},
+  mounted() {
+    this.setupClipboardCopy()
+  },
   computed: {},
   methods: {
     login(event) {
@@ -69,22 +80,29 @@ export default {
 
       if (event.target.id === 'talk-session-ask-existing-login') {
         this.loginToken = this.existingToken
+        this.action = 'login'
       } else {
         this.loginToken = this.newToken
+        this.action = 'register'
       }
 
       setTimeout(() => {
-        this.loginScreen = false
         this.logging = false
 
         this.$store
-          .dispatch('user/loginUser', this.loginToken)
+          .dispatch(`user/${this.action}`, this.loginToken)
           .then(() => this.$router.push({ name: 'talk.index' }))
       }, 1000)
     },
     async setNewUserToken() {
       const res = await axios(`${process.env.API_SERVER_URL}/v1/users/newToken`)
       this.newToken = res.data
+    },
+    async setupClipboardCopy() {
+      await nextTick()
+      this.clipboard = new ClipboardJS(this.$refs.newTokenCopyToClipboard, {
+        text: () => this.newToken,
+      })
     },
   },
 }

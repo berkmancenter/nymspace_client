@@ -74,6 +74,13 @@ html.talk-layout {
   #content {
     padding: 0;
     margin-bottom: 25px;
-    margin-top: 70px;
+    margin-top: 50px;
+    padding-top: 20px;
+    overflow-y: auto;
+    height: calc(100vh - 50px);
+  }
+
+  table {
+    width: 100%;
   }
 }

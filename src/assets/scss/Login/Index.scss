@@ -2,4 +2,13 @@
   input[type=text] {
     width: 100%;
   }
+
+  &-copy-to-clipboard {
+    font-size: 1rem;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    margin-left: -32px;
+    cursor: pointer;
+  }
 }
