@@ -25,7 +25,7 @@
       </template>
     </ContentHeader>
 
-    <div class="thread-view-messages is-flex-grow-1" ref="messages">
+    <div class="thread-view-messages is-flex-grow-1 pt-2" ref="messages">
       <div
         v-if="messages.length > 0"
         class="

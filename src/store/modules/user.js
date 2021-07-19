@@ -77,6 +77,11 @@ const actions = {
       })
       .then(() => context.dispatch('reloadUserThreads'))
   },
+  deleteThread(context, threadId) {
+    axios
+      .delete(`${process.env.API_SERVER_URL}/v1/threads/deleteThread/${threadId}`)
+      .then(() => context.dispatch('reloadUserThreads'))
+  },
 }
 
 // mutations

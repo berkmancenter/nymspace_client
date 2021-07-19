@@ -22,7 +22,17 @@
             :to="{ name: 'thread.index', params: { threadId: thread.id } }"
             >{{ thread.name }}
           </router-link>
-          <div class="talk-view-side-menu-item-header-actions"></div>
+          <div class="talk-view-side-menu-item-header-actions">
+            <div
+              class="
+                talk-view-side-menu-item-header-button talk-view-side-menu-item-sub-header-button
+              "
+              :ref="`header-button${thread.id}`"
+              @click="setupAndShowThreadContextMenu(thread.id)"
+            >
+              <div><i class="fa fa-bars"></i></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -30,6 +40,8 @@
 </template>
 
 <script>
+import $ from 'jquery'
+
 export default {
   name: 'side-menu-threads-list-index',
   components: {},
@@ -39,6 +51,24 @@ export default {
   created() {},
   mounted() {},
   computed: {},
-  methods: {},
+  methods: {
+    setupAndShowThreadContextMenu(threadId) {
+      $.contextMenu('destroy')
+      let elementRefId = `header-button${threadId}`
+      const elem = $(this.$refs[elementRefId])
+      elem.contextMenu({
+        selector: '> div',
+        trigger: 'left',
+        hideOnSecondTrigger: true,
+        items: {
+          newThread: {
+            name: 'Delete thread',
+            callback: () => this.$store.dispatch('user/deleteThread', threadId),
+          },
+        },
+      })
+      elem.find('> div').contextMenu()
+    },
+  },
 }
 </script>

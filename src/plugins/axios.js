@@ -37,7 +37,7 @@ axios.interceptors.response.use(
       return refreshingCall
     }
 
-    if (status === 401) {
+    if (status === 401 && !error.config.repeating) {
       if (error.request.responseURL.includes('refresh-token')) {
         console.log(error)
         //VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))
@@ -50,6 +50,7 @@ axios.interceptors.response.use(
           'user_access_token'
         )}`
         error.config.baseURL = undefined
+        error.config.repeating = true
         return axios.request(error.config)
       })
     }
