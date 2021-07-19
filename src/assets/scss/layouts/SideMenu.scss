@@ -102,6 +102,21 @@
 
       &-active {
         border-left: 10px solid #000000;
+        border-left-color: $topicsColor;
+      }
+
+      &-thread {
+        border-left-color: $threadsColor;
+
+        > div {
+          > div {
+            > div {
+              > div:hover {
+                background: $threadsColor;
+              }
+            }
+          }
+        }
       }
     }
   }
