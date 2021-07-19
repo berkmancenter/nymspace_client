@@ -1,5 +1,5 @@
 <template>
-  <div class="login-view container">
+  <div class="login-view container px-4">
     <section class="pt-4 pb-2">
       <h2 class="is-size-2">New user</h2>
       <p>If you want to use this user in the future note/copy the access key.</p>

@@ -2,20 +2,24 @@ import { VueCookieNext } from 'vue-cookie-next'
 import axios from 'axios'
 
 // initial state
-const state = {
-  userToken: null,
-  sideMenuOpen: false,
-  currentTopic: {},
-  currentThread: {},
-  currentTopicThreads: [],
-  userTopics: [],
-  userThreads: [],
-  auth: {
-    refreshingCall: false,
-    isRefreshing: false,
-    pingInterval: null,
-  },
+const getDefaultState = () => {
+  return {
+    userToken: null,
+    sideMenuOpen: false,
+    currentTopic: {},
+    currentThread: {},
+    currentTopicThreads: [],
+    userTopics: [],
+    userThreads: [],
+    auth: {
+      refreshingCall: false,
+      isRefreshing: false,
+      pingInterval: null,
+    },
+  }
 }
+
+const state = getDefaultState()
 
 // getters
 const getters = {}
@@ -48,8 +52,10 @@ const actions = {
     VueCookieNext.setCookie('user_access_token', data.res.data.tokens.access.token)
     VueCookieNext.setCookie('user_refresh_token', data.res.data.tokens.refresh.token)
   },
-  logout() {
+  logout(context) {
     VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))
+    axios.defaults.headers.common['Authorization'] = ''
+    context.commit('resetState')
   },
   async reloadUserTopics(context) {
     const res = await axios.get(`${process.env.API_SERVER_URL}/v1/topics/userTopics`)
@@ -115,6 +121,9 @@ const mutations = {
   },
   setCurrentThreadFollowed(state, value) {
     state.currentThread.followed = value
+  },
+  resetState(state) {
+    Object.assign(state, getDefaultState())
   },
 }
 

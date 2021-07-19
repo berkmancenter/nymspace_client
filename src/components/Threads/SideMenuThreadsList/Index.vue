@@ -10,6 +10,8 @@
         v-for="(thread, index) in $store.state.user.userThreads"
         :key="index"
         class="talk-view-side-menu-item talk-view-side-menu-item-sub"
+        :class="{ 'talk-view-side-menu-item-sub-active': thread.id == $route.params.threadId }"
+        :style="{ borderLeftColor: appVariables.threadsColor }"
       >
         <div class="talk-view-side-menu-item-header talk-view-side-menu-item-sub-header">
           <router-link

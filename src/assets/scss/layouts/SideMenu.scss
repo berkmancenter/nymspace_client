@@ -8,7 +8,6 @@
       text-transform: uppercase;
       font-weight: bold;
       text-align: left;
-      border-bottom: 1px solid #ffffff;
       display: flex;
       align-items: center;
 
@@ -99,6 +98,10 @@
         &:hover {
           background-color: #fafafa;
         }
+      }
+
+      &-active {
+        border-left: 10px solid #000000;
       }
     }
   }

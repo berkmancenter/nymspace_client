@@ -10,6 +10,8 @@
         v-for="(topic, index) in $store.state.user.userTopics"
         :key="index"
         class="talk-view-side-menu-item talk-view-side-menu-item-sub"
+        :class="{ 'talk-view-side-menu-item-sub-active': topic.id == $route.params.topicId }"
+        :style="{ borderLeftColor: appVariables.topicsColor }"
       >
         <div class="talk-view-side-menu-item-header talk-view-side-menu-item-sub-header">
           <router-link
