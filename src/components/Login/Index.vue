@@ -86,13 +86,13 @@ export default {
         this.action = 'register'
       }
 
-      setTimeout(() => {
-        this.logging = false
+      this.$store.dispatch(`user/${this.action}`, this.loginToken).then(() => {
+        setTimeout(() => {
+          this.logging = false
 
-        this.$store
-          .dispatch(`user/${this.action}`, this.loginToken)
-          .then(() => this.$router.push({ name: 'talk.index' }))
-      }, 1000)
+          this.$router.push({ name: 'talk.index' })
+        }, 1000)
+      })
     },
     async setNewUserToken() {
       const res = await axios(`${process.env.API_SERVER_URL}/v1/users/newToken`)
