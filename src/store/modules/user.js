@@ -26,24 +26,36 @@ const getters = {}
 
 // actions
 const actions = {
-  async register(context, userToken) {
-    const res = await axios.post(`${process.env.API_SERVER_URL}/v1/auth/register`, {
-      password: userToken,
-    })
+  register(context, userToken) {
+    return new Promise((resolve) => {
+      axios
+        .post(`${process.env.API_SERVER_URL}/v1/auth/register`, {
+          password: userToken,
+        })
+        .then((res) => {
+          context.dispatch('afterLoginRegister', {
+            res: res,
+            userToken: userToken,
+          })
 
-    context.dispatch('afterLoginRegister', {
-      res: res,
-      userToken: userToken,
+          resolve()
+        })
     })
   },
-  async login(context, userToken) {
-    const res = await axios.post(`${process.env.API_SERVER_URL}/v1/auth/login`, {
-      password: userToken,
-    })
+  login(context, userToken) {
+    return new Promise((resolve) => {
+      axios
+        .post(`${process.env.API_SERVER_URL}/v1/auth/login`, {
+          password: userToken,
+        })
+        .then((res) => {
+          context.dispatch('afterLoginRegister', {
+            res: res,
+            userToken: userToken,
+          })
 
-    context.dispatch('afterLoginRegister', {
-      res: res,
-      userToken: userToken,
+          resolve()
+        })
     })
   },
   afterLoginRegister(context, data) {
