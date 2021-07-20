@@ -134,7 +134,18 @@ export default {
     connectToSocket() {
       this.disconnectSocket()
 
-      this.socket = io(process.env.WEBSOCKET_SERVER_URL)
+      const socketServerUrl = new URL(process.env.WEBSOCKET_SERVER_URL)
+
+      let path = ''
+      if (socketServerUrl.pathname) {
+        path = socketServerUrl.pathname.replace(/\/+$/, '') + '/socket.io'
+      } else {
+        path: '/socket.io'
+      }
+
+      this.socket = io(`${socketServerUrl.protocol}//${socketServerUrl.host}`, {
+        path: path,
+      })
 
       this.socket.on('connect', () => {
         this.socket.emit('thread:join', {
