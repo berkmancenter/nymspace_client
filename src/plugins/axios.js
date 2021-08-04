@@ -39,9 +39,6 @@ axios.interceptors.response.use(
 
     if (status === 401 && !error.config.repeating) {
       if (error.request.responseURL.includes('refresh-token')) {
-        console.log(error)
-        //VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))
-
         return Promise.reject(error)
       }
 

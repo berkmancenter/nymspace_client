@@ -69,6 +69,7 @@ const actions = {
     context.commit('setSideMenuOpen', true)
     VueCookieNext.setCookie('user_access_token', data.res.data.tokens.access.token)
     VueCookieNext.setCookie('user_refresh_token', data.res.data.tokens.refresh.token)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${data.res.data.tokens.access.token}`
   },
   logout(context) {
     VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie))
