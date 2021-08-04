@@ -27,7 +27,7 @@ const getters = {}
 // actions
 const actions = {
   register(context, userToken) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       axios
         .post(`${process.env.API_SERVER_URL}/v1/auth/register`, {
           password: userToken,
@@ -40,10 +40,13 @@ const actions = {
 
           resolve()
         })
+        .catch(() => {
+          reject()
+        })
     })
   },
   login(context, userToken) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       axios
         .post(`${process.env.API_SERVER_URL}/v1/auth/login`, {
           password: userToken,
@@ -55,6 +58,9 @@ const actions = {
           })
 
           resolve()
+        })
+        .catch(() => {
+          reject()
         })
     })
   },

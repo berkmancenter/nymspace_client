@@ -15,6 +15,7 @@
     "font-awesome": "4.7",
     "jquery-contextmenu": "^2.9.2",
     "socket.io-client": "^4.1.2",
+    "timeago.js": "^4.0.2",
     "vue": "^3.1.2",
     "vue-cookie-next": "^1.0.3",
     "vue-router": "^4.0.10",

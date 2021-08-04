@@ -50,7 +50,7 @@
                 ml-2
               "
             >
-              {{ message.createdAt }}
+              {{ formattedTime(message.createdAt) }}
             </div>
           </div>
           <div class="thread-view-messages-item-body mt-2 p-1 word-wrap">{{ message.body }}</div>
@@ -75,6 +75,7 @@ import ContentHeader from '@/components/Shared/ContentHeader/Index'
 import { nextTick } from 'vue'
 import { io } from 'socket.io-client'
 import { VueCookieNext } from 'vue-cookie-next'
+import { format as timeago } from 'timeago.js'
 
 export default {
   name: 'thread-index',
@@ -178,6 +179,9 @@ export default {
         status: value,
         threadId: this.$store.state.user.currentThread._id,
       })
+    },
+    formattedTime(datetime) {
+      return timeago(datetime)
     },
   },
   watch: {
