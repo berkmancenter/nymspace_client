@@ -1,14 +1,5 @@
+<script setup></script>
+
 <template>
-  <router-view v-cloak name="sidebar" />
-  <router-view v-cloak name="layoutContent" />
+  <router-view></router-view>
 </template>
-
-<script>
-export default {
-  name: 'app-homepage',
-}
-</script>
-
-<style lang="scss">
-@import '@/assets/scss/App.scss';
-</style>
