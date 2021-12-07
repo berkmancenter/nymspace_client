@@ -31,14 +31,31 @@ export default {
     return await axios.get(`/threads/${id}`).then((x) => x.data);
   },
 
-  getNewToken: async function () {
-    return await axios.get("/users/newToken").then((x) => x.data);
+  getNewPseudonym: async function () {
+    return await axios.get("/auth/newPseudonym").then((x) => x.data);
   },
 
   registerToken: async function (token) {
     return await axios
       .post(`/auth/register`, {
         password: token,
+      })
+      .then((x) => x.data);
+  },
+  loginUser: async function (username, password) {
+    return await axios
+      .post(`/auth/login`, {
+        username,
+        password,
+      })
+      .then((x) => x.data);
+  },
+  registerUser: async function (username, password, auth) {
+    return await axios
+      .post(`/auth/register`, {
+        username,
+        password,
+        ...auth,
       })
       .then((x) => x.data);
   },
