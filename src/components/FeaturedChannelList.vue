@@ -14,7 +14,10 @@
         </select>
       </div>
     </div>
-    <ChannelList :items="sortedItems" />
+    <ChannelList v-show="sortedItems.length > 0" :items="sortedItems" />
+    <div class="text-red-600" v-show="sortedItems.length === 0">
+      No channles available
+    </div>
   </div>
 </template>
 
