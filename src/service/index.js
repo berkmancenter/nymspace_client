@@ -16,10 +16,6 @@ axios.defaults.headers.common[
 
 export default {
   getThreads: async function () {
-    // BEGIN HERE: testing done to call unauthorized api
-    // TODO: leverage use of axios interceptor to inject authorization header
-    // TODO: change all script tag in vue to script setup
-    // TODO: Login page
     return await axios.get("/threads").then((x) => x.data);
   },
 

@@ -1,11 +1,9 @@
 import { VueCookieNext } from "vue-cookie-next";
 import store from "../composables/global/useStore";
-const { loadNewPseudonym } = store;
-export default async (to, from, next) => {
-  // if homepage check pseudonym
-  // if login and register page check access token
-  // if channels page check access token
 
+const { loadNewPseudonym } = store;
+
+export default async (to, from, next) => {
   const accessToken = VueCookieNext.getCookie("access_token");
 
   if (accessToken && ["home.login", "home.createAccount"].includes(to.name)) {
