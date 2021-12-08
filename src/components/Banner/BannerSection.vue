@@ -10,7 +10,7 @@
     </div>
     <component
       :is="
-        getLoggedInStatus()
+        getLoggedInStatus
           ? defineAsyncComponent(() => import('./LoggedInBanner.vue'))
           : defineAsyncComponent(() => import('./GuestBanner.vue'))
       "

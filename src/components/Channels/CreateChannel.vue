@@ -3,7 +3,7 @@
     v-model="channelType"
     @change="openModal"
     class="border-2 border-gray-400 p-1"
-    v-if="getLoggedInStatus()"
+    v-if="getLoggedInStatus"
   >
     <option disabled selected value="">Create new channel</option>
     <option value="public">Public</option>

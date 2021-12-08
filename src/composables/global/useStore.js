@@ -11,7 +11,7 @@ const state = reactive({
       active: true,
     },
   ],
-  isLoggedIn: true,
+  isLoggedIn: VueCookieNext.getCookie("access_token") !== null,
   channels: [],
   userChannels: [],
   threads: [],
@@ -86,6 +86,7 @@ async function loginUser(username, password) {
   return await ThreadService.loginUser(username, password).then((x) => {
     updateUserToken(x.tokens);
     updateAuth(x.user.pseudonyms);
+    state.isLoggedIn = true;
   });
 }
 
@@ -96,6 +97,7 @@ async function registerUser(username, password) {
   }).then((x) => {
     updateUserToken(x.tokens);
     updateAuth(x.user.pseudonyms);
+    state.isLoggedIn = true;
   });
 }
 
@@ -112,6 +114,8 @@ async function registerOnce() {
 async function logout() {
   VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie));
   state.auth = [...[]];
+  state.isLoggedIn = false;
+
   return await loadNewPseudonym();
 }
 
@@ -124,8 +128,10 @@ const getUserToken = computed(() => VueCookieNext.getCookie("access_token"));
 
 const getChannels = computed(() => state.channels);
 
-const getLoggedInStatus = () =>
-  VueCookieNext.getCookie("pseudonym") && VueCookieNext.getCookie("token");
+const getLoggedInStatus = computed(() => {
+  console.log(state);
+  return state.isLoggedIn;
+});
 
 const getPseudonym = computed(() =>
   state.auth.filter((x) => x.active === true).pop()
