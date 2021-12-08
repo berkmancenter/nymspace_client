@@ -23,27 +23,27 @@
 
 <script setup>
 import ChannelList from "./ChannelList.vue";
-import useChannels from "../composables/useChannels";
-import userSorting from "../composables/userSorting";
+import useChannels from "../../composables/useChannels";
+import userSorting from "../../composables/userSorting";
 
 const sortByItems = [
   {
     name: "Default",
-    value: "default",
+    value: "defaultSortAverage",
   },
   {
     name: "Recent",
-    value: "recent",
+    value: "latestMessageCreatedAt",
   },
   {
     name: "Activity",
-    value: "activity",
+    value: "messageCount",
   },
   {
     name: "Starred",
-    value: "starred",
+    value: "follows",
   },
 ];
-const { channels } = useChannels();
+const { channels } = await useChannels();
 const { sortedItems, sortBy } = userSorting(channels);
 </script>

@@ -29,7 +29,7 @@ export default {
 
   computed: {
     threadLink() {
-      return "/threads/" + this.$route.params.channel + "/" + this.item.title;
+      return "/threads/" + this.$route.params.channel + "/" + this.item.name;
     },
   },
 };

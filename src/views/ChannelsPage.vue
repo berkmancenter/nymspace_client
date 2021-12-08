@@ -19,7 +19,7 @@
 
 <script>
 import SearchBox from "../components/SearchBox.vue";
-import ThreadList from "../components/ThreadList.vue";
+import ThreadList from "../components/Threads/ThreadList.vue";
 import { defineComponent } from "@vue/runtime-core";
 import ThreadService from "../service";
 export default defineComponent({

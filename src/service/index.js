@@ -15,6 +15,10 @@ axios.defaults.headers.common[
 ] = `Bearer ${VueCookieNext.getCookie("access_token")}`;
 
 export default {
+  getChannels: async function () {
+    return await axios.get("/topics").then((x) => x.data);
+  },
+
   getThreads: async function () {
     return await axios.get("/threads").then((x) => x.data);
   },

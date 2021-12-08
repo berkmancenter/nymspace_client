@@ -1,6 +1,6 @@
 <template>
   <transition-group name="flip-list" tag="div">
-    <template v-for="item in items" :key="item.title">
+    <template v-for="item in items" :key="item.name">
       <ChannelListItem :item="item" />
     </template>
   </transition-group>

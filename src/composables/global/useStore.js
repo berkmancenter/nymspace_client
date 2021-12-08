@@ -11,29 +11,11 @@ const state = reactive({
       active: true,
     },
   ],
-  userThreads: [],
-  threads: [],
   isLoggedIn: true,
-  channels: [
-    {
-      title: "Welcome to class of 2020",
-      thread_count: 30,
-      comment_count: 200,
-      default: 2779817052,
-      recent: 2582008951,
-      activity: 387093808,
-      starred: 124871588,
-    },
-    {
-      title: "Welcome to class of 2021",
-      thread_count: 31,
-      comment_count: 201,
-      default: 128551075,
-      recent: 1697155068,
-      activity: 2025152521,
-      starred: 3801509991,
-    },
-  ],
+  channels: [],
+  userChannels: [],
+  threads: [],
+  userThreads: [],
   majorError: "",
 });
 
@@ -50,7 +32,16 @@ function setAuth(response) {
   state.auth = [{ ...response }];
 }
 
+function setChannels(channels) {
+  state.channels = [...channels];
+}
+
 // Actions
+async function loadChannels() {
+  const channels = await ThreadService.getChannels();
+  setChannels(channels);
+}
+
 async function loadThreads() {
   const threads = await ThreadService.getThreads();
   setThreads(threads);
@@ -113,9 +104,8 @@ const getUserThreads = computed(() => state.userThreads);
 
 const getThreads = computed(() => state.threads);
 
-const getUserToken = computed(() =>
-  VueCookieNext.getCookie("access_user_token")
-);
+const getUserToken = computed(() => VueCookieNext.getCookie("access_token"));
+
 const getChannels = computed(() => state.channels);
 
 const getLoggedInStatus = () =>
@@ -140,12 +130,13 @@ export default {
   loadNewPseudonym,
   registerUser,
   logout,
+  loadChannels,
+  getLoggedInStatus,
 
   getUserThreads,
   getThreads,
   getUserToken,
   getChannels,
-  getLoggedInStatus,
   getPseudonym,
   getMajorError,
 };

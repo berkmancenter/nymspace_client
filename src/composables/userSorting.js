@@ -1,5 +1,5 @@
 import { computed, ref } from "vue";
-export default function (items = [], by = "default", order = "asc") {
+export default function (items = [], by = "defaultSortAverage", order = "asc") {
   const sortBy = ref(by);
 
   const sortedItems = computed(() => {
@@ -13,7 +13,6 @@ export default function (items = [], by = "default", order = "asc") {
         return -1 * multiplier;
       }
     });
-
     return items;
   });
 
