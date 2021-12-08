@@ -59,4 +59,11 @@ export default {
       })
       .then((x) => x.data);
   },
+  registerOnce: async function (auth) {
+    return await axios
+      .post(`/auth/register`, {
+        ...auth,
+      })
+      .then((x) => x.data);
+  },
 };
