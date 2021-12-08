@@ -37,6 +37,12 @@ function setChannels(channels) {
 }
 
 // Actions
+
+async function createChannel(payload) {
+  const channels = await ThreadService.createChannel(payload);
+  loadChannels();
+}
+
 async function loadChannels() {
   const channels = await ThreadService.getChannels();
   setChannels(channels);
@@ -143,6 +149,7 @@ export default {
   loadChannels,
   getLoggedInStatus,
   registerOnce,
+  createChannel,
 
   getUserThreads,
   getThreads,

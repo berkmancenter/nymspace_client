@@ -4,6 +4,6 @@ export default async function () {
   const { loadChannels, getChannels } = store;
   await loadChannels();
   return {
-    channels: getChannels.value,
+    channels: getChannels,
   };
 }

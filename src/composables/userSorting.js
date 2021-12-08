@@ -3,7 +3,7 @@ export default function (items = [], by = "defaultSortAverage", order = "asc") {
   const sortBy = ref(by);
 
   const sortedItems = computed(() => {
-    items.sort((a, b) => {
+    items.value.sort((a, b) => {
       const multiplier = order === "asc" ? 1 : -1;
       if (a[sortBy.value] == b[sortBy.value]) {
         return 0;
@@ -13,7 +13,7 @@ export default function (items = [], by = "defaultSortAverage", order = "asc") {
         return -1 * multiplier;
       }
     });
-    return items;
+    return items.value;
   });
 
   return {
