@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto w-11/12 lg:w-3/5">
     <div class="lg:w-1/2 lg:inline-block p-3 text-lg">
-      <button class="btn" @click="login">
+      <button class="btn" @click="$emit('login')">
         Use this pseudonym for one session
       </button>
     </div>
@@ -19,13 +19,6 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  userToken: {
-    type: String,
-    required: true,
-  },
-});
-
 const emit = defineEmits(["login"]);
 </script>
 

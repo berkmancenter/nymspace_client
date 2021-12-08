@@ -93,6 +93,16 @@ async function registerUser(username, password) {
   });
 }
 
+async function registerOnce() {
+  return await ThreadService.registerOnce({
+    pseudonym: getPseudonym.value.pseudonym,
+    token: getPseudonym.value.token,
+  }).then((x) => {
+    updateUserToken(x.tokens);
+    updateAuth(x.user.pseudonyms);
+  });
+}
+
 async function logout() {
   VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie));
   state.auth = [...[]];
@@ -132,6 +142,7 @@ export default {
   logout,
   loadChannels,
   getLoggedInStatus,
+  registerOnce,
 
   getUserThreads,
   getThreads,

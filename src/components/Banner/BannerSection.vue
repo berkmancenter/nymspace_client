@@ -14,15 +14,22 @@
           ? defineAsyncComponent(() => import('./LoggedInBanner.vue'))
           : defineAsyncComponent(() => import('./GuestBanner.vue'))
       "
-      :user-token="getUserToken"
+      @login="registerOneTime"
     ></component>
   </div>
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
 import useStore from "../../composables/global/useStore";
 import { computed } from "@vue/reactivity";
 import { defineAsyncComponent } from "@vue/runtime-core";
 
-const { getLoggedInStatus, getUserToken, getPseudonym } = useStore;
+const router = useRouter();
+const { getLoggedInStatus, getUserToken, getPseudonym, registerOnce } =
+  useStore;
+
+function registerOneTime() {
+  registerOnce();
+}
 </script>
