@@ -108,6 +108,7 @@ async function registerOnce() {
   }).then((x) => {
     updateUserToken(x.tokens);
     updateAuth(x.user.pseudonyms);
+    state.isLoggedIn = true;
   });
 }
 
