@@ -1,21 +1,19 @@
 <template>
   <div class="mx-auto w-11/12 lg:w-3/5">
     <div class="lg:w-1/2 lg:inline-block p-3 text-lg">
-      <input type="radio" name="action" id="action-1" checked />
-      <label for="action-1" @click="login">
+      <button class="btn" @click="login">
         Use this pseudonym for one session
-      </label>
+      </button>
     </div>
     <div class="lg:w-1/2 lg:inline-block p-3 text-lg">
-      <router-link to="/login">
-        <input type="radio" name="action" id="action-2" />
-        <label for="action-2">
+      <button class="btn">
+        <router-link to="/login">
           Login
-          <span class="text-gray-600 text-sm ml-2"
+          <span class="text-gray-600 text-sm"
             >retain a pseudonym across sessions</span
           >
-        </label>
-      </router-link>
+        </router-link>
+      </button>
     </div>
   </div>
 </template>
@@ -30,3 +28,9 @@ const props = defineProps({
 
 const emit = defineEmits(["login"]);
 </script>
+
+<style scoped>
+.btn {
+  @apply w-full md:w-auto  bg-white border-2 border-gray-500 text-lg px-10 h-10 leading-3 hover:bg-gray-100 cursor-pointer;
+}
+</style>

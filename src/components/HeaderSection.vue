@@ -8,5 +8,10 @@
       />
       <p class="inline-block text-red-600">Threads</p>
     </router-link>
+    <div v-if="getMajorError?.trim().length > 0">{{ getMajorError }}</div>
   </div>
 </template>
+<script setup>
+import store from "../composables/global/useStore";
+const { getMajorError } = store;
+</script>

@@ -29,7 +29,14 @@ axios.interceptors.response.use(
       return refreshingCall;
     }
 
-    if (status === 401 && !error.config.repeating) {
+    if (
+      status === 401 &&
+      !error.config.repeating &&
+      !(
+        error.response.request.responseURL.endsWith("login") ||
+        error.response.request.responseURL.endsWith("register")
+      )
+    ) {
       if (error.request.responseURL.includes("refresh-token")) {
         return Promise.reject(error);
       }
