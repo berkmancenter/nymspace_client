@@ -1,7 +1,7 @@
 <template>
   <p :class="getMessageClass(item)">
-    <b>{{ item.username }}</b
-    >: {{ item.message }}
+    <b :title="item.createdAt">{{ item.owner }}</b
+    >: {{ item.body }}
   </p>
   <br />
 </template>

@@ -27,14 +27,14 @@ export default {
     getThreadClass(item) {
       var className =
         "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
-      if (item.name == this.$route.params.thread) className += " bg-gray-100";
+      if (item.name == this.$route.params.threadId) className += " bg-gray-100";
       return className;
     },
   },
 
   computed: {
     threadLink() {
-      return "/threads/" + this.$route.params.channel + "/" + this.item.name;
+      return `/channels/${this.$route.params.channelId}/threads/${this.item.id}`;
     },
   },
 };

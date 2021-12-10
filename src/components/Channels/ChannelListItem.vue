@@ -29,13 +29,14 @@ export default {
     getChannelClass(item) {
       var className =
         "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
-      if (item.name == this.$route.params.channel) className += " bg-gray-100";
+      if (item.name == this.$route.params.channelId)
+        className += " bg-gray-100";
       return className;
     },
   },
   computed: {
     channelLink() {
-      return "/channels/" + this.item.name;
+      return `/channels/${this.item.id}/`;
     },
     channel() {
       return this.$route.params.channel;

@@ -23,14 +23,16 @@ export default [
             component: LandingPage,
           },
           {
-            path: "channels/:channel?",
+            path: "channels/:channelId?",
             name: "home.channels",
             component: ChannelsPage,
-          },
-          {
-            path: "threads/:channel?/:thread?",
-            name: "home.threads",
-            component: ThreadsPage,
+            children: [
+              {
+                path: "threads/:threadId?",
+                name: "home.threads",
+                component: ThreadsPage,
+              },
+            ],
           },
         ],
       },

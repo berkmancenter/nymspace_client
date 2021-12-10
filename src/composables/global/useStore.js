@@ -21,11 +21,11 @@ const state = reactive({
 
 // Mutations
 function setUserThreads(userThreads) {
-  state.value.userThreads = userThreads;
+  state.userThreads = userThreads;
 }
 
 function setThreads(threads) {
-  state.value.threads = threads;
+  state.threads = [...threads];
 }
 
 function setAuth(response) {
@@ -36,6 +36,23 @@ function setChannels(channels) {
   state.channels = [...channels];
 }
 
+function setMessages(messages) {
+  state.messages = [...messages];
+}
+
+function setMessage(message) {
+  state.messages.push(message);
+}
+
+function addChannel(channel) {
+  const channelId = state.channels.indexOf((x) => x.id === channel.id);
+  if (channelId > -1) {
+    state.channels.splice(channelId, 1, channel);
+  } else {
+    state.channels.push(channel);
+  }
+}
+
 // Actions
 
 async function createChannel(payload) {
@@ -43,13 +60,22 @@ async function createChannel(payload) {
   loadChannels();
 }
 
+async function createThread(payload) {
+  const threads = await ThreadService.createThread(payload);
+  loadThreads(payload.topicId);
+}
+
+async function loadChannel(id) {
+  return await ThreadService.getChannel(id);
+}
+
 async function loadChannels() {
   const channels = await ThreadService.getChannels();
   setChannels(channels);
 }
 
-async function loadThreads() {
-  const threads = await ThreadService.getThreads();
+async function loadThreads(channelId) {
+  const threads = await ThreadService.getThreads(channelId);
   setThreads(threads);
 }
 
@@ -57,6 +83,22 @@ async function loadUserThreads() {
   const userThreads = await ThreadService.getThreads();
   setUserThreads(userThreads);
 }
+
+async function loadMessages(threadId) {
+  const messages = await ThreadService.getMessages(threadId);
+  setMessages(messages);
+}
+
+async function postMessage(payload) {
+  const message = await ThreadService.postMessage(payload);
+  setMessage(message);
+}
+
+const getThread = (id) => state.threads[id];
+const getChannel = (id) => {
+  const channelId = state.channels.indexOf((x) => x.id === id);
+  return channelId > -1 ? state.channels[channelId] : {};
+};
 
 function updateUserToken(tokens) {
   VueCookieNext.setCookie("access_token", tokens.access.token);
@@ -128,9 +170,9 @@ const getThreads = computed(() => state.threads);
 const getUserToken = computed(() => VueCookieNext.getCookie("access_token"));
 
 const getChannels = computed(() => state.channels);
+const getMessages = computed(() => state.messages);
 
 const getLoggedInStatus = computed(() => {
-  console.log(state);
   return state.isLoggedIn;
 });
 
@@ -154,12 +196,19 @@ export default {
   registerUser,
   logout,
   loadChannels,
-  getLoggedInStatus,
+  loadChannel,
+  loadMessages,
+
   registerOnce,
   createChannel,
+  createThread,
+  postMessage,
 
   getUserThreads,
   getThreads,
+  getLoggedInStatus,
+  getThread,
+  getChannel,
   getUserToken,
   getChannels,
   getPseudonym,

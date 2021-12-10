@@ -23,12 +23,36 @@ export default {
       .then((x) => x.data);
   },
 
+  createThread: async function (payload) {
+    return await axios
+      .post("/threads", {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
+  createMessage: async function (payload) {
+    return await axios
+      .post("/messages/", {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
+  getChannel: async function (id) {
+    return await axios.get(`/topics/${id}`).then((x) => x.data);
+  },
+
   getChannels: async function () {
     return await axios.get("/topics").then((x) => x.data);
   },
 
-  getThreads: async function () {
-    return await axios.get("/threads").then((x) => x.data);
+  getThreads: async function (channelId) {
+    return await axios.get(`/threads/topic/${channelId}`).then((x) => x.data);
+  },
+
+  getMessages: async function (threadId) {
+    return await axios.get(`/messages/${threadId}`).then((x) => x.data);
   },
 
   getUserThreads: async function () {
@@ -50,6 +74,7 @@ export default {
       })
       .then((x) => x.data);
   },
+
   loginUser: async function (username, password) {
     return await axios
       .post(`/auth/login`, {
@@ -58,6 +83,7 @@ export default {
       })
       .then((x) => x.data);
   },
+
   registerUser: async function (username, password, auth) {
     return await axios
       .post(`/auth/register`, {
@@ -67,6 +93,7 @@ export default {
       })
       .then((x) => x.data);
   },
+
   registerOnce: async function (auth) {
     return await axios
       .post(`/auth/register`, {
