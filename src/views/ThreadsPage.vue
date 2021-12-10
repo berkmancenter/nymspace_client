@@ -1,54 +1,48 @@
 <template>
-  <h2 class="text-red-500 text-2xl my-4">{{ threadId }}</h2>
-  <ThreadView :items="threadItems" />
-  <textarea
-    v-model="message"
-    @keydown.enter.prevent="sendMessage"
-    class="w-full block border-2 border-gray-500 text-lg p-2 h-40 mt-4"
-    placeholder="Message (hit enter to end)"
-  ></textarea>
+  <div class="mx-auto w-11/12 lg:w-3/5">
+    <div class="w-1/2 float-left">
+      <div class="mr-2">
+        <h2 class="text-red-500 text-2xl my-4">{{ channel.name }}</h2>
+        <ThreadList :items="items" />
+        <CreateThread />
+      </div>
+    </div>
+    <div class="w-1/2 float-right">
+      <div class="ml-2">
+        <router-view></router-view>
+      </div>
+    </div>
+    <div class="clear-both"></div>
+  </div>
 </template>
 
-<script>
-import SearchBox from "../components/SearchBox.vue";
+<script setup>
 import ThreadList from "../components/Threads/ThreadList.vue";
-import ThreadView from "../components/Threads/ThreadView.vue";
-import { defineComponent } from "@vue/runtime-core";
-import ThreadService from "../service";
 import CreateThread from "../components/Threads/CreateThread.vue";
-export default defineComponent({
-  components: { SearchBox, ThreadList, ThreadView, CreateThread },
+import useStore from "../composables/global/useStore";
+import { onErrorCaptured, onMounted, reactive, ref } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
 
-  computed: {
-    channel() {
-      return this.$route.params.channelId;
-    },
-    threadId() {
-      return this.$route.params.threadId;
-    },
-  },
+const messagesRef = ref(null);
 
-  async created() {
-    this.threadItems = await ThreadService.getMessages(this.threadId);
-  },
-
-  data() {
-    return {
-      threadItems: [],
-      message: "",
-    };
-  },
-
-  methods: {
-    sendMessage: function () {
-      if (this.message.trim().length > 0) {
-        const msg = {
-          body: this.message,
-          thread: this.threadId,
-        };
-        ThreadService.createMessage(msg);
-      }
-    },
-  },
+onErrorCaptured((e) => {
+  console.error(e);
 });
+
+const { getThreads, loadThreads, getChannel, loadChannel } = useStore;
+
+const items = getThreads;
+
+const channel = ref([]);
+
+onMounted(async () => {
+  if (Object.keys(channel.value).length == 0) {
+    channel.value = { ...(await loadChannel(route.params.channelId)) };
+  } else {
+    channel.value = getChannel(route.params.channelId);
+  }
+});
+
+loadThreads(route.params.channelId);
 </script>

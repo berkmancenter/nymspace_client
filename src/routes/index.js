@@ -2,8 +2,8 @@ import HomePageLayout from "../layout/HomePageLayout.vue";
 import LoginPage from "../views/LoginPage.vue";
 import CreateAccountPage from "../views/CreateAccountPage.vue";
 import LandingPageLayout from "../layout/LandingPageLayout.vue";
-import ChannelsPage from "../views/ChannelsPage.vue";
-import ThreadsPage from "../views/ThreadsPage.vue";
+import ChannelsPage from "../views/ThreadsPage.vue";
+import ThreadsPage from "../views/MessagesPage.vue";
 import LandingPage from "../views/LandingPage.vue";
 
 export default [

@@ -1,6 +1,6 @@
 <template>
-  <p :class="getMessageClass(item)">
-    <b :title="item.createdAt">{{ item.owner }}</b
+  <p :class="getMessageClass(item)" :title="item.createdAt">
+    <b>{{ item.owner }}</b
     >: {{ item.body }}
   </p>
   <br />
