@@ -22,7 +22,7 @@ import { onMounted, ref, nextTick, watch } from "vue";
 import ThreadView from "../components/Threads/ThreadView.vue";
 import useStore from "../composables/global/useStore";
 const route = useRoute();
-const { loadMessages, postMessage, getMessages } = useStore;
+const { loadMessages, postMessage, getMessages, clearMessages } = useStore;
 
 const messages = getMessages;
 const message = ref("");
@@ -57,7 +57,7 @@ watch(
   () => route.params.threadId,
   async (threadId, prevThreadId) => {
     if (threadId !== prevThreadId) {
-      messages.value = [];
+      clearMessages();
       await fetchMessages(threadId);
     }
   }

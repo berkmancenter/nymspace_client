@@ -17,6 +17,7 @@ const state = reactive({
   threads: [],
   userThreads: [],
   majorError: "",
+  messages: [],
 });
 
 // Mutations
@@ -59,6 +60,10 @@ function addChannel(channel) {
 }
 
 // Actions
+
+function clearMessages() {
+  setMessages([]);
+}
 
 async function createChannel(payload) {
   const channels = await ThreadService.createChannel(payload);
@@ -203,6 +208,8 @@ export default {
   loadChannels,
   loadChannel,
   loadMessages,
+
+  clearMessages,
 
   registerOnce,
   createChannel,
