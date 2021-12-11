@@ -2,7 +2,9 @@
   <div class="mx-auto w-11/12 lg:w-3/5">
     <div class="w-1/2 float-left">
       <div class="mr-2">
-        <h2 class="text-red-500 text-2xl my-4">{{ channel.name }}</h2>
+        <h2 class="text-red-500 text-2xl mt-4 mb-2 font-bold">
+          {{ channel.name }}
+        </h2>
         <ThreadList :items="items" />
         <CreateThread />
       </div>

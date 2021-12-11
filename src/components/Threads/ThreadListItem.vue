@@ -27,8 +27,7 @@ export default {
     getThreadClass(item) {
       var className =
         "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
-      if (item.id == this.$route.params.threadId)
-        className += " bg-gray-100 text-red-500";
+      if (item.id == this.$route.params.threadId) className += "  text-red-500";
       return className;
     },
   },

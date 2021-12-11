@@ -4,6 +4,7 @@
     style="min-height: 400px"
   >
     <div class="grid">
+      <span class="px-2 py-1 text-xl font-bold">All Threads:</span>
       <template v-for="item in items" :key="item.id">
         <ThreadListItem :item="item" />
       </template>

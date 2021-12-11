@@ -41,7 +41,12 @@ function setMessages(messages) {
 }
 
 function setMessage(message) {
-  state.messages.push(message);
+  state.messages.push({
+    body: message.body,
+    created: message.createdAt,
+    id: message.id,
+    owner: message.owner.id,
+  });
 }
 
 function addChannel(channel) {
@@ -90,7 +95,7 @@ async function loadMessages(threadId) {
 }
 
 async function postMessage(payload) {
-  const message = await ThreadService.postMessage(payload);
+  const message = await ThreadService.createMessage(payload);
   setMessage(message);
 }
 
@@ -212,5 +217,6 @@ export default {
   getUserToken,
   getChannels,
   getPseudonym,
+  getMessages,
   getMajorError,
 };

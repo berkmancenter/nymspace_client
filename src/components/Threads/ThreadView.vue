@@ -4,6 +4,9 @@
     style="min-height: 400px"
   >
     <div class="grid">
+      <span class="text-red-500" v-if="items.length === 0"
+        >No messages. Start a conversation.</span
+      >
       <template v-for="item in items" :key="item.id">
         <ThreadViewItem :item="item" />
       </template>
