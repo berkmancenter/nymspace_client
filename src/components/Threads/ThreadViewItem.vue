@@ -1,7 +1,7 @@
 <template>
-  <p :class="getMessageClass(item)">
-    <b>{{ item.username }}</b
-    >: {{ item.message }}
+  <p :class="getMessageClass(item)" :title="item.createdAt">
+    <b>{{ item.owner }}</b
+    >: {{ item.body }}
   </p>
   <br />
 </template>
@@ -29,7 +29,7 @@ export default {
 
   computed: {
     threadLink() {
-      return "/threads/" + this.$route.params.channel + "/" + this.item.title;
+      return "/threads/" + this.$route.params.channel + "/" + this.item.name;
     },
   },
 };

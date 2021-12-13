@@ -32,12 +32,6 @@
 import { useRouter } from "vue-router";
 import store from "../../composables/global/useStore";
 import { RefreshIcon } from "@heroicons/vue/outline";
-const props = defineProps({
-  userToken: {
-    type: String,
-    required: true,
-  },
-});
 const router = useRouter();
 const { logout } = store;
 async function signout() {

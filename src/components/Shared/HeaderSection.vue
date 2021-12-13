@@ -12,6 +12,6 @@
   </div>
 </template>
 <script setup>
-import store from "../composables/global/useStore";
+import store from "../../composables/global/useStore";
 const { getMajorError } = store;
 </script>

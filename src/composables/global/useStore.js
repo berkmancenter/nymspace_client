@@ -11,48 +11,81 @@ const state = reactive({
       active: true,
     },
   ],
-  userThreads: [],
+  isLoggedIn: VueCookieNext.getCookie("access_token") !== null,
+  channels: [],
+  userChannels: [],
   threads: [],
-  isLoggedIn: true,
-  channels: [
-    {
-      title: "Welcome to class of 2020",
-      thread_count: 30,
-      comment_count: 200,
-      default: 2779817052,
-      recent: 2582008951,
-      activity: 387093808,
-      starred: 124871588,
-    },
-    {
-      title: "Welcome to class of 2021",
-      thread_count: 31,
-      comment_count: 201,
-      default: 128551075,
-      recent: 1697155068,
-      activity: 2025152521,
-      starred: 3801509991,
-    },
-  ],
+  userThreads: [],
   majorError: "",
+  messages: [],
 });
 
 // Mutations
 function setUserThreads(userThreads) {
-  state.value.userThreads = userThreads;
+  state.userThreads = userThreads;
 }
 
 function setThreads(threads) {
-  state.value.threads = threads;
+  state.threads = [...threads];
 }
 
 function setAuth(response) {
   state.auth = [{ ...response }];
 }
 
+function setChannels(channels) {
+  state.channels = [...channels];
+}
+
+function setMessages(messages) {
+  state.messages = [...messages];
+}
+
+function setMessage(message) {
+  state.messages.push({
+    body: message.body,
+    created: message.createdAt,
+    id: message.id,
+    owner: message.owner.id,
+  });
+}
+
+function addChannel(channel) {
+  const channelId = state.channels.indexOf((x) => x.id === channel.id);
+  if (channelId > -1) {
+    state.channels.splice(channelId, 1, channel);
+  } else {
+    state.channels.push(channel);
+  }
+}
+
 // Actions
-async function loadThreads() {
-  const threads = await ThreadService.getThreads();
+
+function clearMessages() {
+  setMessages([]);
+}
+
+async function createChannel(payload) {
+  const channels = await ThreadService.createChannel(payload);
+  loadChannels();
+}
+
+async function createThread(payload) {
+  const threads = await ThreadService.createThread(payload);
+  loadThreads(payload.topicId);
+}
+
+async function loadChannel(id) {
+  return await ThreadService.getChannel(id);
+}
+
+async function loadChannels() {
+  const channels = await ThreadService.getChannels();
+  setChannels(channels);
+}
+
+async function loadThreads(channelId) {
+  const threads = await ThreadService.getThreads(channelId);
   setThreads(threads);
 }
 
@@ -60,6 +93,22 @@ async function loadUserThreads() {
   const userThreads = await ThreadService.getThreads();
   setUserThreads(userThreads);
 }
+
+async function loadMessages(threadId) {
+  const messages = await ThreadService.getMessages(threadId);
+  setMessages(messages);
+}
+
+async function postMessage(payload) {
+  const message = await ThreadService.createMessage(payload);
+  setMessage(message);
+}
+
+const getThread = (id) => state.threads[id];
+const getChannel = (id) => {
+  const channelId = state.channels.indexOf((x) => x.id === id);
+  return channelId > -1 ? state.channels[channelId] : {};
+};
 
 function updateUserToken(tokens) {
   VueCookieNext.setCookie("access_token", tokens.access.token);
@@ -89,6 +138,7 @@ async function loginUser(username, password) {
   return await ThreadService.loginUser(username, password).then((x) => {
     updateUserToken(x.tokens);
     updateAuth(x.user.pseudonyms);
+    state.isLoggedIn = true;
   });
 }
 
@@ -99,12 +149,26 @@ async function registerUser(username, password) {
   }).then((x) => {
     updateUserToken(x.tokens);
     updateAuth(x.user.pseudonyms);
+    state.isLoggedIn = true;
+  });
+}
+
+async function registerOnce() {
+  return await ThreadService.registerOnce({
+    pseudonym: getPseudonym.value.pseudonym,
+    token: getPseudonym.value.token,
+  }).then((x) => {
+    updateUserToken(x.tokens);
+    updateAuth(x.user.pseudonyms);
+    state.isLoggedIn = true;
   });
 }
 
 async function logout() {
   VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie));
   state.auth = [...[]];
+  state.isLoggedIn = false;
+
   return await loadNewPseudonym();
 }
 
@@ -113,13 +177,14 @@ const getUserThreads = computed(() => state.userThreads);
 
 const getThreads = computed(() => state.threads);
 
-const getUserToken = computed(() =>
-  VueCookieNext.getCookie("access_user_token")
-);
-const getChannels = computed(() => state.channels);
+const getUserToken = computed(() => VueCookieNext.getCookie("access_token"));
 
-const getLoggedInStatus = () =>
-  VueCookieNext.getCookie("pseudonym") && VueCookieNext.getCookie("token");
+const getChannels = computed(() => state.channels);
+const getMessages = computed(() => state.messages);
+
+const getLoggedInStatus = computed(() => {
+  return state.isLoggedIn;
+});
 
 const getPseudonym = computed(() =>
   state.auth.filter((x) => x.active === true).pop()
@@ -140,12 +205,25 @@ export default {
   loadNewPseudonym,
   registerUser,
   logout,
+  loadChannels,
+  loadChannel,
+  loadMessages,
+
+  clearMessages,
+
+  registerOnce,
+  createChannel,
+  createThread,
+  postMessage,
 
   getUserThreads,
   getThreads,
+  getLoggedInStatus,
+  getThread,
+  getChannel,
   getUserToken,
   getChannels,
-  getLoggedInStatus,
   getPseudonym,
+  getMessages,
   getMajorError,
 };

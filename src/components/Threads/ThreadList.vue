@@ -4,19 +4,20 @@
     style="min-height: 400px"
   >
     <div class="grid">
+      <span class="px-2 py-1 text-xl font-bold">All Threads:</span>
       <template v-for="item in items" :key="item.id">
-        <ThreadViewItem :item="item" />
+        <ThreadListItem :item="item" />
       </template>
     </div>
   </div>
 </template>
 
 <script>
-import ThreadViewItem from "./ThreadViewItem.vue";
+import ThreadListItem from "./ThreadListItem.vue";
 
 export default {
   components: {
-    ThreadViewItem,
+    ThreadListItem,
   },
   props: {
     items: {

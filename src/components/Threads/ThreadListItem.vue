@@ -1,9 +1,7 @@
 <template>
-  <router-link :to="channelLink" :class="getChannelClass(item)">
-    <div class="col-span-8 text-lg">{{ item.title }}</div>
-    <div class="col-span-2 font-semibold justify-self-end">
-      {{ item.thread_count }} threads
-    </div>
+  <router-link :to="threadLink" :class="getThreadClass(item)">
+    <div class="col-span-8 text-lg">{{ item.name }}</div>
+    <div class="col-span-2 font-semibold justify-self-end"></div>
     <div class="col-span-2 font-semibold justify-self-end">
       {{ item.comment_count }}
       <ChatAltIcon class="h-5 w-5 inline-block" />
@@ -26,19 +24,17 @@ export default {
     },
   },
   methods: {
-    getChannelClass(item) {
+    getThreadClass(item) {
       var className =
         "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
-      if (item.title == this.$route.params.channel) className += " bg-gray-100";
+      if (item.id == this.$route.params.threadId) className += "  text-red-500";
       return className;
     },
   },
+
   computed: {
-    channelLink() {
-      return "/channels/" + this.item.title;
-    },
-    channel() {
-      return this.$route.params.channel;
+    threadLink() {
+      return `/channels/${this.$route.params.channelId}/threads/${this.item.id}`;
     },
   },
 };
