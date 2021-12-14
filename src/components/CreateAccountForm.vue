@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="register">
+    <h1 class="text-center text-3xl font-bold">Signup</h1>
     <p class="mt-4">
       Create an account to be able to login on this application:
     </p>
@@ -21,17 +22,23 @@
       placeholder="confirm password"
       v-model="password2"
     />
-    <input class="log-in-btn" type="submit" value="create account" />
-    <div
-      v-show="showError"
-      class="text-red-500 float-left md:ml-5 mt-5 text-center w-full md:w-auto"
-    >
+    <div class="flex gap-4 flex-col mt-4">
+      <div>
+        <input class="signup-btn" type="submit" value="Signup" />
+      </div>
+      <div>
+        Already have a username?
+        <router-link to="login" class="text-red-500 hover:underline font-bold"
+          >Login</router-link
+        >
+      </div>
+    </div>
+
+    <div v-show="showError" class="text-red-500 mt-5 w-full">
+      *
       {{ message }}
     </div>
-    <div
-      v-show="showSuccess"
-      class="text-green-500 float-left md:ml-5 mt-5 text-center w-full md:w-auto"
-    >
+    <div v-show="showSuccess" class="text-green-500 mt-5 w-full">
       {{ message }}
     </div>
     <div class="clear-both"></div>
@@ -60,7 +67,7 @@ function register() {
         showSuccess.value = true;
         setTimeout(() => {
           router.push({ name: "home.featured" });
-        }, 3000);
+        }, 2000);
       })
       .catch((x) => setError(x.response.data.message, true));
   }
@@ -92,7 +99,7 @@ function checkPasswordsMatch() {
 }
 </script>
 <style scoped>
-.log-in-btn {
-  @apply w-full md:w-auto text-center float-left bg-white border-2 border-gray-500 text-lg px-10 h-10 mt-4 leading-3 hover:bg-gray-100 cursor-pointer;
+.signup-btn {
+  @apply w-full text-center  bg-white border-2 border-gray-500 text-lg px-10 h-10 leading-3 hover:bg-gray-100 cursor-pointer;
 }
 </style>
