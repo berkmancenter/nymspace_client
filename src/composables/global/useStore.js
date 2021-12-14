@@ -12,6 +12,7 @@ const state = reactive({
     },
   ],
   isLoggedIn: VueCookieNext.getCookie("access_token") !== null,
+  isGuest: VueCookieNext.getCookie("is_guest") !== null,
   channels: [],
   userChannels: [],
   threads: [],
@@ -130,6 +131,8 @@ function updateAuth(pseudonyms) {
   VueCookieNext.setCookie("pseudonym", getPseudonym.value.pseudonym);
   VueCookieNext.setCookie("token", getPseudonym.value.token);
   VueCookieNext.setCookie("active", getPseudonym.value.active);
+  VueCookieNext.removeCookie("is_guest");
+  state.isGuest = false;
 }
 
 async function loadNewPseudonym(username, password) {
@@ -142,11 +145,15 @@ async function loadNewPseudonym(username, password) {
   );
 }
 
+async function updateAuthTokens(data) {
+  updateUserToken(data.tokens);
+  updateAuth(data.user.pseudonyms);
+  state.isLoggedIn = true;
+}
+
 async function loginUser(username, password) {
-  return await ThreadService.loginUser(username, password).then((x) => {
-    updateUserToken(x.tokens);
-    updateAuth(x.user.pseudonyms);
-    state.isLoggedIn = true;
+  return await ThreadService.loginUser(username, password).then((data) => {
+    updateAuthTokens(data);
   });
 }
 
@@ -154,10 +161,8 @@ async function registerUser(username, password) {
   return await ThreadService.registerUser(username, password, {
     pseudonym: getPseudonym.value.pseudonym,
     token: getPseudonym.value.token,
-  }).then((x) => {
-    updateUserToken(x.tokens);
-    updateAuth(x.user.pseudonyms);
-    state.isLoggedIn = true;
+  }).then((data) => {
+    updateAuthTokens(data);
   });
 }
 
@@ -165,10 +170,10 @@ async function registerOnce() {
   return await ThreadService.registerOnce({
     pseudonym: getPseudonym.value.pseudonym,
     token: getPseudonym.value.token,
-  }).then((x) => {
-    updateUserToken(x.tokens);
-    updateAuth(x.user.pseudonyms);
-    state.isLoggedIn = true;
+  }).then((data) => {
+    updateAuthTokens(data);
+    VueCookieNext.setCookie("is_guest", "true");
+    state.isGuest = true;
   });
 }
 
@@ -176,7 +181,7 @@ async function logout() {
   VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie));
   state.auth = [...[]];
   state.isLoggedIn = false;
-
+  state.isGuest = null;
   return await loadNewPseudonym();
 }
 
@@ -192,6 +197,10 @@ const getMessages = computed(() => state.messages);
 
 const getLoggedInStatus = computed(() => {
   return state.isLoggedIn;
+});
+
+const getGuestStatus = computed(() => {
+  return state.isGuest;
 });
 
 const getPseudonym = computed(() =>
@@ -228,6 +237,7 @@ export default {
   getUserThreads,
   getThreads,
   getLoggedInStatus,
+  getGuestStatus,
   getThread,
   getChannel,
   getUserToken,

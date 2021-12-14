@@ -1,30 +1,17 @@
 <template>
-  <div class="mx-auto w-11/12 lg:w-3/5 grid lg:grid-flow-col sm:grid-col-row">
-    <div class="px-1 py-3 text-lg self-start">
-      <button class="btn" @click="signout">
-        Create a new pseudonym for one session (log out)
-      </button>
-    </div>
-    <div class="px-1 py-3 text-lg grid grid-flow-row">
-      <div>
-        <button class="btn">
-          <router-link to="/login">
-            Stay logged in
-            <span class="text-gray-600 text-sm ml-2"
-              >retain a pseudonym across sessions</span
-            >
-          </router-link>
-        </button>
-      </div>
-      <div>
-        <button class="btn">
-          <router-link to="/login">
-            <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new
-            pseudonym on your account
-          </router-link>
-        </button>
-      </div>
-    </div>
+  <div class="mx-auto w-11/12 lg:w-3/5 flex gap-2 md:gap-4">
+    <button class="btn" @click="signout">
+      <template v-if="getGuestStatus">Exit session</template>
+      <template v-else
+        >Create a new pseudonym for one session (log out)</template
+      >
+    </button>
+    <button class="btn" v-if="!getGuestStatus">
+      <router-link to="/login">
+        <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym
+        on your account
+      </router-link>
+    </button>
   </div>
 </template>
 
@@ -33,7 +20,7 @@ import { useRouter } from "vue-router";
 import store from "../../composables/global/useStore";
 import { RefreshIcon } from "@heroicons/vue/outline";
 const router = useRouter();
-const { logout } = store;
+const { logout, getGuestStatus } = store;
 async function signout() {
   await logout();
   router.push({ name: "home.featured" });
@@ -42,6 +29,6 @@ async function signout() {
 
 <style scoped>
 .btn {
-  @apply min-w-full my-1 bg-white border-2 border-gray-500 text-lg h-10 leading-3 hover:bg-gray-100 cursor-pointer;
+  @apply w-full bg-white border-2 border-gray-500 text-base px-2 h-16 leading-relaxed hover:bg-gray-100 cursor-pointer md:text-lg md:px-1;
 }
 </style>

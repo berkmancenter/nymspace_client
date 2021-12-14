@@ -1,29 +1,20 @@
 <template>
-  <div class="mx-auto w-11/12 lg:w-3/5">
-    <div class="lg:w-1/2 lg:inline-block p-3 text-lg">
-      <button class="btn" @click="$emit('login')">
-        Use this pseudonym for one session
-      </button>
-    </div>
-    <div class="lg:w-1/2 lg:inline-block p-3 text-lg">
-      <button class="btn">
-        <router-link to="/login">
-          Login
-          <span class="text-gray-600 text-sm"
-            >retain a pseudonym across sessions</span
-          >
-        </router-link>
-      </button>
-    </div>
+  <div class="mx-auto w-11/12 lg:w-3/5 flex gap-2 md:gap-4">
+    <button class="btn" @click="$emit('login')">
+      Use pseudonym for one session
+    </button>
+
+    <router-link
+      to="/login"
+      class="btn"
+      title="Retain a pseudonym across sessions"
+      >Login</router-link
+    >
   </div>
 </template>
 
-<script setup>
-const emit = defineEmits(["login"]);
-</script>
-
 <style scoped>
 .btn {
-  @apply w-full md:w-auto  bg-white border-2 border-gray-500 text-lg px-10 h-10 leading-3 hover:bg-gray-100 cursor-pointer;
+  @apply w-full flex justify-center place-items-center bg-white border-2 border-gray-500 text-base px-2 h-16 leading-relaxed hover:bg-gray-100 cursor-pointer md:text-lg md:h-12 md:px-0;
 }
 </style>
