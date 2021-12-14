@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-white text-2xl mt-4 mb-2">{{ route.params.threadId }}</h2>
+  <h2 class="text-red-500 text-2xl mt-4 mb-2 font-bold">{{ thread.name }}</h2>
   <ThreadView
     :ref="
       (el) => {
@@ -21,12 +21,22 @@ import { useRoute } from "vue-router";
 import { onMounted, ref, nextTick, watch } from "vue";
 import ThreadView from "../components/Threads/ThreadView.vue";
 import useStore from "../composables/global/useStore";
+
 const route = useRoute();
-const { loadMessages, postMessage, getMessages, clearMessages } = useStore;
+const {
+  loadMessages,
+  postMessage,
+  getMessages,
+  clearMessages,
+  loadThread,
+  getThread,
+} = useStore;
 
 const messages = getMessages;
 const message = ref("");
 const messageViewRef = ref(null);
+
+const thread = ref(getThread(route.params.threadId));
 
 async function sendMessage() {
   if (message.value.trim().length > 0) {
@@ -44,7 +54,7 @@ async function sendMessage() {
 }
 
 async function fetchMessages(threadId) {
-  loadMessages(threadId).then(async (data) => {
+  loadMessages(threadId).then(async () => {
     await nextTick();
     messageViewRef.value.$el.scrollTo({
       top: messageViewRef.value.$el.scrollHeight,
@@ -53,17 +63,27 @@ async function fetchMessages(threadId) {
   });
 }
 
+async function fetchThreadDetails(threadId) {
+  if (Object.keys(thread.value).length == 0) {
+    thread.value = { ...(await loadThread(threadId)) };
+  } else {
+    thread.value = getThread(threadId);
+  }
+}
+
 watch(
   () => route.params.threadId,
   async (threadId, prevThreadId) => {
-    if (threadId !== prevThreadId) {
+    if (threadId !== undefined && threadId !== prevThreadId) {
       clearMessages();
       await fetchMessages(threadId);
+      await fetchThreadDetails(threadId);
     }
   }
 );
 
 onMounted(async () => {
   await fetchMessages(route.params.threadId);
+  await fetchThreadDetails(route.params.threadId);
 });
 </script>

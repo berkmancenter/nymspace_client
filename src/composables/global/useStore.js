@@ -89,6 +89,10 @@ async function loadThreads(channelId) {
   setThreads(threads);
 }
 
+async function loadThread(threadId) {
+  return await ThreadService.getThread(threadId);
+}
+
 async function loadUserThreads() {
   const userThreads = await ThreadService.getThreads();
   setUserThreads(userThreads);
@@ -104,9 +108,13 @@ async function postMessage(payload) {
   setMessage(message);
 }
 
-const getThread = (id) => state.threads[id];
+const getThread = (id) => {
+  const threadId = state.threads.findIndex((x) => x.id === id);
+  return threadId > -1 ? state.threads[threadId] : {};
+};
+
 const getChannel = (id) => {
-  const channelId = state.channels.indexOf((x) => x.id === id);
+  const channelId = state.channels.findIndex((x) => x.id === id);
   return channelId > -1 ? state.channels[channelId] : {};
 };
 
@@ -199,6 +207,7 @@ const getAuth = computed(() => ({
 
 export default {
   loadThreads,
+  loadThread,
   loadUserThreads,
   updateUserToken,
   loginUser,

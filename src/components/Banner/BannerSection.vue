@@ -20,14 +20,10 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
 import useStore from "../../composables/global/useStore";
-import { computed } from "@vue/reactivity";
 import { defineAsyncComponent } from "@vue/runtime-core";
 
-const router = useRouter();
-const { getLoggedInStatus, getUserToken, getPseudonym, registerOnce } =
-  useStore;
+const { getLoggedInStatus, getPseudonym, registerOnce } = useStore;
 
 function registerOneTime() {
   registerOnce();

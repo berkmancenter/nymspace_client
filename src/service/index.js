@@ -1,5 +1,4 @@
 import axios from "../plugins/axios";
-import { VueCookieNext } from "vue-cookie-next";
 
 if ("VITE_API_SERVER_URL" in import.meta.env) {
   axios.defaults.baseURL =
@@ -9,10 +8,6 @@ if ("VITE_API_SERVER_URL" in import.meta.env) {
 } else {
   axios.defaults.baseURL = "";
 }
-
-axios.defaults.headers.common[
-  "Authorization"
-] = `Bearer ${VueCookieNext.getCookie("access_token")}`;
 
 export default {
   createChannel: async function (payload) {

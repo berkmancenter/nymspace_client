@@ -26,17 +26,16 @@ import { onErrorCaptured, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 
-const messagesRef = ref(null);
-
 onErrorCaptured((e) => {
   console.error(e);
 });
 
-const { getThreads, loadThreads, getChannel, loadChannel } = useStore;
+const { getThreads, loadThreads, getChannel, loadChannel, getChannels } =
+  useStore;
 
 const items = getThreads;
 
-const channel = ref([]);
+const channel = ref(getChannel(route.params.channelId));
 
 onMounted(async () => {
   if (Object.keys(channel.value).length == 0) {
