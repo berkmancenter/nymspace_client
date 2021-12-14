@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="login">
+    <h1 class="text-center text-3xl font-bold">Login</h1>
     <p class="mt-4">
       Log in to retain a pseudonym across sessions, develop reputation, and
       create channels:
@@ -16,14 +17,22 @@
       placeholder="password"
       v-model="password"
     />
-    <input class="log-in-btn" type="submit" value="log in" />
-    <router-link class="create-account-btn" to="create-account"
-      >create account</router-link
-    >
-    <div
-      v-show="showError"
-      class="text-red-500 float-left md:ml-5 mt-5 text-center w-full md:w-auto"
-    >
+    <div class="flex gap-4 flex-col mt-4">
+      <div>
+        <input class="log-in-btn" type="submit" value="Login" />
+      </div>
+      <div>
+        Don't have a username?
+        <router-link
+          to="create-account"
+          class="text-red-500 hover:underline font-bold"
+          >Signup</router-link
+        >
+      </div>
+    </div>
+
+    <div v-show="showError" class="text-red-500 mt-5 w-full border-red-500">
+      *
       {{ errorMessage }}
     </div>
     <div class="clear-both"></div>
@@ -63,9 +72,6 @@ function isFormValid() {
 </script>
 <style scoped>
 .log-in-btn {
-  @apply w-full md:w-auto text-center float-left bg-white border-2 border-gray-500 text-lg px-10 h-10 mt-4 leading-3 hover:bg-gray-100 cursor-pointer;
-}
-.create-account-btn {
-  @apply w-full md:w-auto text-center float-left inline-block border-2 border-gray-500 text-lg px-10 h-10 md:ml-4 mt-4 leading-9 hover:bg-gray-100;
+  @apply w-full text-center  bg-white border-2 border-gray-500 text-lg px-10 h-10 leading-3 hover:bg-gray-100 cursor-pointer;
 }
 </style>

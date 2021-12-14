@@ -1,7 +1,10 @@
 <template>
   <div class="bg-gray-200 p-4">
     <div class="text-center text-2xl p-4">
-      Hello, [<select class="bg-gray-200 text-red-500">
+      Hello, [<select
+        :disabled="getGuestStatus"
+        class="bg-gray-200 text-red-500"
+      >
         <option class="text-red-500">
           {{ getPseudonym?.pseudonym }}
         </option>
@@ -23,7 +26,8 @@
 import useStore from "../../composables/global/useStore";
 import { defineAsyncComponent } from "@vue/runtime-core";
 
-const { getLoggedInStatus, getPseudonym, registerOnce } = useStore;
+const { getLoggedInStatus, getPseudonym, registerOnce, getGuestStatus } =
+  useStore;
 
 function registerOneTime() {
   registerOnce();
