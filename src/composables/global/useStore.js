@@ -47,7 +47,7 @@ function setMessage(message) {
     body: message.body,
     created: message.createdAt,
     id: message.id,
-    owner: message.owner.id,
+    pseudonym: message.pseudonym,
   });
 }
 

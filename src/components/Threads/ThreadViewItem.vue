@@ -1,9 +1,8 @@
 <template>
-  <p :class="getMessageClass(item)" :title="item.createdAt">
-    <b>{{ item.owner }}</b
+  <p class="my-1" :class="getMessageClass(item)" :title="item.createdAt">
+    <b>{{ item.pseudonym || item.owner }}</b
     >: {{ item.body }}
   </p>
-  <br />
 </template>
 
 <script>
