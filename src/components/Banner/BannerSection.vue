@@ -1,12 +1,20 @@
 <template>
   <div class="bg-gray-200 p-4">
     <div class="text-center text-2xl p-4">
-      Hello, [<select
+      Hello, [
+      <select
+        v-model="activeToken"
         :disabled="getGuestStatus"
         class="bg-gray-200 text-red-500"
+        @change="activateToken"
+        id="pseudonymSelect"
       >
-        <option class="text-red-500">
-          {{ getPseudonym?.pseudonym }}
+        <option
+          v-for="pseudonym in getPseudonyms"
+          class="text-red-500"
+          :value="pseudonym.token"
+        >
+          {{ pseudonym.pseudonym }}
         </option>
       </select>
       ]. Would you like to:
@@ -23,13 +31,48 @@
 </template>
 
 <script setup>
+import { onMounted, watch, ref } from "vue";
 import useStore from "../../composables/global/useStore";
 import { defineAsyncComponent } from "@vue/runtime-core";
 
-const { getLoggedInStatus, getPseudonym, registerOnce, getGuestStatus } =
-  useStore;
+const {
+  getLoggedInStatus,
+  getPseudonyms,
+  getActivePseudonym,
+  registerOnce,
+  getGuestStatus,
+  activatePseudonym,
+} = useStore;
 
-function registerOneTime() {
-  registerOnce();
+const activeToken = ref("");
+
+async function registerOneTime() {
+  await registerOnce();
 }
+
+async function activateToken() {
+  await activatePseudonym(activeToken.value);
+  let element = document.getElementById("pseudonymSelect");
+  let text = element.options[element.selectedIndex].text;
+  element.style.width = text.length * 15 + "px";
+}
+
+/**
+ * handling logout case to update activeToken
+ */
+watch(
+  () => getActivePseudonym.value?.token,
+  (val, prevVal) => {
+    if (val !== prevVal && val !== activeToken.value) {
+      activeToken.value = val;
+    }
+  }
+);
+
+onMounted(async () => {
+  if (getLoggedInStatus.value) {
+    await activatePseudonym(getActivePseudonym.value?.token);
+  }
+  activeToken.value = getActivePseudonym.value?.token;
+});
 </script>
