@@ -103,15 +103,15 @@ function messageHandler(data) {
  */
 async function fetchMessages(threadId) {
   loadMessages(threadId).then(async () => {
-    await nextTick();
-    scrollToBottom();
+    await scrollToBottom();
   });
 }
 
 /**
  * Scoroll messages pane to bottom
  */
-function scrollToBottom() {
+async function scrollToBottom() {
+  await nextTick();
   messageViewRef.value.$el.scrollTo({
     top: messageViewRef.value.$el.scrollHeight,
     left: 0,
