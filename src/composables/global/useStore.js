@@ -178,7 +178,7 @@ async function registerOnce() {
 }
 
 async function createNewPseudonym() {
-  if (getPseudonyms.length < 5) {
+  if (getPseudonyms.value.length < 5) {
     return await ThreadService.getNewPseudonym().then((response) =>
       ThreadService.registerNewPseudonym(response).then((data) =>
         updateAuth(data)

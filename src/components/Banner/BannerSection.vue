@@ -7,6 +7,7 @@
         :disabled="getGuestStatus"
         class="bg-gray-200 text-red-500"
         @change="activateToken"
+        id="pseudonymSelect"
       >
         <option
           v-for="pseudonym in getPseudonyms"
@@ -51,6 +52,9 @@ async function registerOneTime() {
 
 async function activateToken() {
   await activatePseudonym(activeToken.value);
+  let element = document.getElementById("pseudonymSelect");
+  let text = element.options[element.selectedIndex].text;
+  element.style.width = text.length * 15 + "px";
 }
 
 /**
