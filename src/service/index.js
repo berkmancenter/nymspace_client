@@ -96,4 +96,20 @@ export default {
       })
       .then((x) => x.data);
   },
+
+  registerNewPseudonym: async function (payload) {
+    return await axios
+      .post(`/users/pseudonyms`, {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
+  activatePseudonym: async function (payload) {
+    return await axios
+      .put(`/users/pseudonyms/activate`, {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
 };

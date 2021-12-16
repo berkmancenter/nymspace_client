@@ -5,8 +5,13 @@
         :disabled="getGuestStatus"
         class="bg-gray-200 text-red-500"
       >
-        <option class="text-red-500">
-          {{ getPseudonym?.pseudonym }}
+        <option
+          v-for="pseudonym in getPseudonyms"
+          class="text-red-500"
+          :value="pseudonym.token"
+          :selected="pseudonym.token === getActivePseudonym.token"
+        >
+          {{ pseudonym.pseudonym }}
         </option>
       </select>
       ]. Would you like to:
@@ -23,13 +28,26 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import useStore from "../../composables/global/useStore";
 import { defineAsyncComponent } from "@vue/runtime-core";
 
-const { getLoggedInStatus, getPseudonym, registerOnce, getGuestStatus } =
-  useStore;
+const {
+  getLoggedInStatus,
+  getPseudonyms,
+  getActivePseudonym,
+  registerOnce,
+  getGuestStatus,
+  activatePseudonym,
+} = useStore;
 
 function registerOneTime() {
   registerOnce();
 }
+
+onMounted(async () => {
+  if (getLoggedInStatus.value) {
+    await activatePseudonym();
+  }
+});
 </script>

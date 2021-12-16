@@ -6,11 +6,9 @@
         >Create a new pseudonym for one session (log out)</template
       >
     </button>
-    <button class="btn" v-if="!getGuestStatus">
-      <router-link to="/login">
-        <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym
-        on your account
-      </router-link>
+    <button class="btn" v-if="!getGuestStatus" @click="createNewPseudonym">
+      <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym on
+      your account
     </button>
   </div>
 </template>
@@ -20,7 +18,7 @@ import { useRouter } from "vue-router";
 import store from "../../composables/global/useStore";
 import { RefreshIcon } from "@heroicons/vue/outline";
 const router = useRouter();
-const { logout, getGuestStatus } = store;
+const { logout, getGuestStatus, createNewPseudonym } = store;
 async function signout() {
   await logout();
   router.push({ name: "home.featured" });

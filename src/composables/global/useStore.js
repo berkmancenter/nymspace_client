@@ -128,9 +128,9 @@ function updateUserToken(tokens) {
 
 function updateAuth(pseudonyms) {
   state.auth = [...pseudonyms];
-  VueCookieNext.setCookie("pseudonym", getPseudonym.value.pseudonym);
-  VueCookieNext.setCookie("token", getPseudonym.value.token);
-  VueCookieNext.setCookie("active", getPseudonym.value.active);
+  VueCookieNext.setCookie("pseudonym", getActivePseudonym.value.pseudonym);
+  VueCookieNext.setCookie("token", getActivePseudonym.value.token);
+  VueCookieNext.setCookie("active", getActivePseudonym.value.active);
   VueCookieNext.removeCookie("is_guest");
   state.isGuest = false;
 }
@@ -159,8 +159,8 @@ async function loginUser(username, password) {
 
 async function registerUser(username, password) {
   return await ThreadService.registerUser(username, password, {
-    pseudonym: getPseudonym.value.pseudonym,
-    token: getPseudonym.value.token,
+    pseudonym: getActivePseudonym.value.pseudonym,
+    token: getActivePseudonym.value.token,
   }).then((data) => {
     updateAuthTokens(data);
   });
@@ -168,13 +168,29 @@ async function registerUser(username, password) {
 
 async function registerOnce() {
   return await ThreadService.registerOnce({
-    pseudonym: getPseudonym.value.pseudonym,
-    token: getPseudonym.value.token,
+    pseudonym: getActivePseudonym.value.pseudonym,
+    token: getActivePseudonym.value.token,
   }).then((data) => {
     updateAuthTokens(data);
     VueCookieNext.setCookie("is_guest", "true");
     state.isGuest = true;
   });
+}
+
+async function createNewPseudonym() {
+  return await ThreadService.getNewPseudonym().then((response) =>
+    ThreadService.registerNewPseudonym(response).then((data) =>
+      updateAuth(data)
+    )
+  );
+}
+
+async function activatePseudonym() {
+  let pseudonyms = await ThreadService.activatePseudonym({
+    token: VueCookieNext.getCookie("token"),
+  });
+  console.log(pseudonyms);
+  updateAuth(pseudonyms);
 }
 
 async function logout() {
@@ -203,9 +219,11 @@ const getGuestStatus = computed(() => {
   return state.isGuest;
 });
 
-const getPseudonym = computed(() =>
+const getActivePseudonym = computed(() =>
   state.auth.filter((x) => x.active === true).pop()
 );
+
+const getPseudonyms = computed(() => state.auth);
 
 const getMajorError = computed(() => state.majorError);
 
@@ -232,6 +250,8 @@ export default {
   registerOnce,
   createChannel,
   createThread,
+  createNewPseudonym,
+  activatePseudonym,
   postMessage,
 
   getUserThreads,
@@ -242,7 +262,8 @@ export default {
   getChannel,
   getUserToken,
   getChannels,
-  getPseudonym,
+  getPseudonyms,
+  getActivePseudonym,
   getMessages,
   getMajorError,
 };
