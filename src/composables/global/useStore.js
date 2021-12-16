@@ -111,8 +111,19 @@ async function loadMessages(threadId) {
   setMessages(messages);
 }
 
+/**
+ * Create message using API and update
+ * messages array with response
+ */
 async function postMessage(payload) {
   const message = await ThreadService.createMessage(payload);
+  setMessage(message);
+}
+
+/**
+ * Update messages array with ws response
+ */
+async function addMessage(message) {
   setMessage(message);
 }
 
@@ -269,7 +280,7 @@ export default {
   createNewPseudonym,
   activatePseudonym,
   postMessage,
-
+  addMessage,
   getUserThreads,
   getThreads,
   getLoggedInStatus,

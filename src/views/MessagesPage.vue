@@ -18,17 +18,20 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { onMounted, ref, nextTick, watch } from "vue";
+import { onMounted, ref, nextTick, watch, onUnmounted } from "vue";
 import ThreadView from "../components/Threads/ThreadView.vue";
 import useStore from "../composables/global/useStore";
+import SocketioService from "../service/socket.service";
+import { VueCookieNext } from "vue-cookie-next";
 
 const route = useRoute();
 const {
   loadMessages,
-  postMessage,
+  addMessage,
   getMessages,
   clearMessages,
   loadThread,
+  getLoggedInStatus,
   getThread,
 } = useStore;
 
@@ -38,31 +41,87 @@ const messageViewRef = ref(null);
 
 const thread = ref(getThread(route.params.threadId));
 
+/**
+ * Send message via ws
+ */
 async function sendMessage() {
   if (message.value.trim().length > 0) {
-    const msg = {
-      body: message.value,
-      thread: route.params.threadId,
-    };
-    await postMessage(msg);
-    message.value = "";
-    messageViewRef.value.$el.scrollTo({
-      top: messageViewRef.value.$el.scrollHeight,
-      left: 0,
+    SocketioService.sendMessage({
+      message: {
+        body: message.value,
+        thread: route.params.threadId,
+      },
+      token: VueCookieNext.getCookie("access_token"),
     });
+
+    message.value = "";
+    scrollToBottom();
   }
 }
 
+/**
+ * Join thread if thread exist and
+ * user is logged in (either guest or user)
+ */
+function joinThread(threadId) {
+  if (threadId && getLoggedInStatus.value) {
+    SocketioService.joinThread({
+      threadId: threadId,
+      token: VueCookieNext.getCookie("access_token"),
+    });
+  }
+}
+/**
+ * Handle received message
+ */
+function messageHandler(data) {
+  const threadToUpdate = getThread(data.thread.id);
+  /**
+   * Update message if current thread matches the received
+   * message thread
+   */
+  if (data.thread.id === route.params.threadId) {
+    addMessage({
+      body: data.body,
+      created: data.createdAt,
+      id: data.id,
+      pseudonym: data.pseudonym,
+    });
+    scrollToBottom();
+  }
+
+  /**
+   * Update thread's message count
+   */
+  if (threadToUpdate) {
+    threadToUpdate.messageCount = data.thread.messages.length;
+  }
+}
+
+/**
+ * Fetch messages
+ */
 async function fetchMessages(threadId) {
   loadMessages(threadId).then(async () => {
     await nextTick();
-    messageViewRef.value.$el.scrollTo({
-      top: messageViewRef.value.$el.scrollHeight,
-      left: 0,
-    });
+    scrollToBottom();
   });
 }
 
+/**
+ * Scoroll messages pane to bottom
+ */
+function scrollToBottom() {
+  messageViewRef.value.$el.scrollTo({
+    top: messageViewRef.value.$el.scrollHeight,
+    left: 0,
+  });
+}
+
+/**
+ * Load thread from store if exist
+ * else load from API if does not exist
+ */
 async function fetchThreadDetails(threadId) {
   if (Object.keys(thread.value).length == 0) {
     thread.value = { ...(await loadThread(threadId)) };
@@ -71,6 +130,12 @@ async function fetchThreadDetails(threadId) {
   }
 }
 
+/**
+ * Watch threadId on router params to
+ * clear and fetch messages for new thread and
+ * automatically join thread on load of new
+ * thread
+ */
 watch(
   () => route.params.threadId,
   async (threadId, prevThreadId) => {
@@ -78,6 +143,7 @@ watch(
       clearMessages();
       await fetchMessages(threadId);
       await fetchThreadDetails(threadId);
+      joinThread(threadId);
     }
   }
 );
@@ -85,5 +151,13 @@ watch(
 onMounted(async () => {
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
+  joinThread(route.params.threadId);
 });
+
+onUnmounted(() => {
+  console.log("disconect");
+  SocketioService.disconnect();
+});
+
+const socket = SocketioService.setupSocketConnection(messageHandler);
 </script>
