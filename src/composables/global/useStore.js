@@ -185,12 +185,19 @@ async function createNewPseudonym() {
   );
 }
 
-async function activatePseudonym() {
+async function activatePseudonym(token) {
+  const isGuest = state.isGuest;
+  if (token === null) {
+    token = VueCookieNext.getCookie("token");
+  }
   let pseudonyms = await ThreadService.activatePseudonym({
-    token: VueCookieNext.getCookie("token"),
+    token,
   });
-  console.log(pseudonyms);
   updateAuth(pseudonyms);
+  if (isGuest) {
+    VueCookieNext.setCookie("is_guest", "true");
+    state.isGuest = true;
+  }
 }
 
 async function logout() {
