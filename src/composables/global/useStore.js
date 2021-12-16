@@ -178,11 +178,13 @@ async function registerOnce() {
 }
 
 async function createNewPseudonym() {
-  return await ThreadService.getNewPseudonym().then((response) =>
-    ThreadService.registerNewPseudonym(response).then((data) =>
-      updateAuth(data)
-    )
-  );
+  if (getPseudonyms.length < 5) {
+    return await ThreadService.getNewPseudonym().then((response) =>
+      ThreadService.registerNewPseudonym(response).then((data) =>
+        updateAuth(data)
+      )
+    );
+  }
 }
 
 async function activatePseudonym(token) {
