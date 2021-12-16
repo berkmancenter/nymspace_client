@@ -23,8 +23,7 @@
 
 <script setup>
 import ChannelList from "./ChannelList.vue";
-import useChannels from "../../composables/useChannels";
-import userSorting from "../../composables/userSorting";
+import { computed, ref } from "vue";
 
 const sortByItems = [
   {
@@ -44,6 +43,27 @@ const sortByItems = [
     value: "follows",
   },
 ];
-const { channels } = await useChannels();
-const { sortedItems, sortBy } = userSorting(channels);
+
+const props = defineProps({
+  channels: {
+    type: Array,
+    required: true,
+  },
+});
+
+const sortBy = ref("defaultSortAverage");
+const order = ref("desc");
+
+const sortedItems = computed(() => [
+  ...props.channels.sort((a, b) => {
+    const multiplier = order === "asc" ? 1 : -1;
+    if (a[sortBy.value] == b[sortBy.value]) {
+      return 0;
+    } else if (a[sortBy.value] > b[sortBy.value]) {
+      return 1 * multiplier;
+    } else if (a[sortBy.value] < b[sortBy.value]) {
+      return -1 * multiplier;
+    }
+  }),
+]);
 </script>

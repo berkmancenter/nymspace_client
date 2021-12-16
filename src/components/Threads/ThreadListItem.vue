@@ -3,7 +3,7 @@
     <div class="col-span-8 text-lg">{{ item.name }}</div>
     <div class="col-span-2 font-semibold justify-self-end"></div>
     <div class="col-span-2 font-semibold justify-self-end">
-      {{ item.comment_count }}
+      {{ item.messageCount }}
       <ChatAltIcon class="h-5 w-5 inline-block" />
     </div>
   </router-link>

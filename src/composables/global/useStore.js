@@ -81,8 +81,15 @@ async function loadChannel(id) {
 }
 
 async function loadChannels() {
-  const channels = await ThreadService.getChannels();
-  setChannels(channels);
+  if (getLoggedInStatus.value) {
+    const channels = await ThreadService.getChannels();
+    setChannels(channels);
+  } else {
+    const channels = await ThreadService.getPublicChannels(
+      getActivePseudonym.value.token
+    );
+    setChannels(channels);
+  }
 }
 
 async function loadThreads(channelId) {

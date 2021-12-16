@@ -42,6 +42,10 @@ export default {
     return await axios.get("/topics").then((x) => x.data);
   },
 
+  getPublicChannels: async function (token) {
+    return await axios.get(`/topics/public/${token}`).then((x) => x.data);
+  },
+
   getThreads: async function (channelId) {
     return await axios.get(`/threads/topic/${channelId}`).then((x) => x.data);
   },
