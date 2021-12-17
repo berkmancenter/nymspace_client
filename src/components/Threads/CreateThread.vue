@@ -62,17 +62,3 @@ function isFormValid() {
   return threadName.value.trim().length > 0;
 }
 </script>
-
-<style scoped>
-.btn {
-  @apply w-20 my-2 bg-white border-2 border-gray-500 text-lg h-10 leading-3 hover:text-white cursor-pointer;
-}
-
-.btn.success {
-  @apply hover:bg-green-500;
-}
-
-.btn.error {
-  @apply hover:bg-red-500;
-}
-</style>
