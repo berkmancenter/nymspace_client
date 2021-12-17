@@ -19,6 +19,24 @@
         type="text"
       />
     </div>
+    <div>
+      <input
+        v-model="enableVoting"
+        type="checkbox"
+        id="disableVoting"
+        class="cursor-pointer w-4 h-4 mr-2 align-middle"
+      /><label class="cursor-pointer" for="disableVoting">Disable voting</label>
+    </div>
+    <div>
+      <input
+        v-model="notify"
+        type="checkbox"
+        id="notify"
+        class="cursor-pointer w-4 h-4 mr-2 align-middle"
+      /><label class="cursor-pointer" for="notify"
+        >Archive and notify via email</label
+      >
+    </div>
     <div class="text-red-500">{{ message }}</div>
     <template v-slot:actions>
       <button class="btn success" @click="processCreate">Create</button>
@@ -36,6 +54,8 @@ const { getLoggedInStatus, createChannel } = useStore;
 const isModalOpen = ref(false);
 const channelType = ref("");
 const channelName = ref("");
+const enableVoting = ref(false);
+const notify = ref(false);
 const message = ref("");
 
 const channelTypeName = computed(
@@ -49,6 +69,8 @@ function closeModal() {
 
 function openModal() {
   channelName.value = "";
+  enableVoting.value = false;
+  notify.value = false;
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
   document.querySelector("body").classList.add("modal-open");
@@ -56,7 +78,12 @@ function openModal() {
 
 function processCreate() {
   if (isFormValid()) {
-    createChannel({ name: channelName.value })
+    createChannel({
+      name: channelName.value,
+      private: channelType.value === "private",
+      votingAllowed: enableVoting.value,
+      archivable: notify.value,
+    })
       .then((x) => closeModal())
       .catch((err) => (message.value = err.response.data.message));
   } else {
