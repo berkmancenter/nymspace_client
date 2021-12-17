@@ -138,6 +138,7 @@ const getChannel = (id) => {
 };
 
 function updateUserToken(tokens) {
+  ThreadService.setAuth(tokens.access.token);
   VueCookieNext.setCookie("access_token", tokens.access.token);
   VueCookieNext.setCookie("access_token_expiry", tokens.access.expires);
   VueCookieNext.setCookie("refresh_token", tokens.refresh.token);
@@ -205,6 +206,12 @@ async function createNewPseudonym() {
   }
 }
 
+async function deletePseudonym(id) {
+  if (getActivePseudonym.value?._id !== id) {
+    await ThreadService.deletePseudonym(id);
+  }
+}
+
 async function activatePseudonym(token) {
   const isGuest = state.isGuest;
   if (token === null) {
@@ -220,7 +227,18 @@ async function activatePseudonym(token) {
   }
 }
 
+async function loadPseudonyms() {
+  const isGuest = state.isGuest;
+  let pseudonyms = await ThreadService.getPseudonyms();
+  updateAuth(pseudonyms);
+  if (isGuest) {
+    VueCookieNext.setCookie("is_guest", "true");
+    state.isGuest = true;
+  }
+}
+
 async function logout() {
+  ThreadService.setAuth("");
   VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie));
   state.auth = [...[]];
   state.isLoggedIn = false;
@@ -260,24 +278,37 @@ const getAuth = computed(() => ({
 }));
 
 export default {
+  getThread,
   loadThreads,
   loadThread,
   loadUserThreads,
-  updateUserToken,
-  loginUser,
-  loadNewPseudonym,
-  registerUser,
-  logout,
+  createThread,
+  getUserThreads,
+  getThreads,
+
+  getChannel,
   loadChannels,
   loadChannel,
-  loadMessages,
+  createChannel,
+  getChannels,
 
+  logout,
+  loginUser,
+  registerUser,
+  updateUserToken,
+  getGuestStatus,
+  getLoggedInStatus,
+  getUserToken,
+
+  loadMessages,
   clearMessages,
+  postMessage,
+  getMessages,
 
   registerOnce,
-  createChannel,
-  createThread,
   createNewPseudonym,
+  loadNewPseudonym,
+  deletePseudonym,
   activatePseudonym,
   postMessage,
   addMessage,
@@ -289,8 +320,9 @@ export default {
   getChannel,
   getUserToken,
   getChannels,
+  loadPseudonyms,
   getPseudonyms,
   getActivePseudonym,
-  getMessages,
+
   getMajorError,
 };
