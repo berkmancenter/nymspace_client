@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-gray-200 p-4">
-    <div class="text-center text-2xl p-4">
+  <div class="bg-gray-200 pb-4 px-4 pt-1">
+    <div class="text-center text-2xl pb-4 px-4 pt-1">
       Hello, [
       <select
         v-model="activeToken"
