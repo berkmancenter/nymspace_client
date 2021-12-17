@@ -1,7 +1,7 @@
 import { VueCookieNext } from "vue-cookie-next";
 import store from "../composables/global/useStore";
 
-const { loadNewPseudonym } = store;
+const { loadNewPseudonym, registerOnce } = store;
 
 export default async (to, from, next) => {
   const accessToken = VueCookieNext.getCookie("access_token");
@@ -15,6 +15,18 @@ export default async (to, from, next) => {
     const token = VueCookieNext.getCookie("token");
     if (pseudonym === null || token === null) {
       await loadNewPseudonym().then((x) => next());
+    } else next();
+  } else if (
+    to.name === "home.threads" &&
+    to.params.threadId !== null &&
+    to.params.channelId !== null
+  ) {
+    const pseudonym = VueCookieNext.getCookie("pseudonym");
+    const token = VueCookieNext.getCookie("token");
+    if (pseudonym === null || token === null) {
+      await loadNewPseudonym().then(async (x) => {
+        next();
+      });
     } else next();
   } else if (
     !["home.login", "home.createAccount"].includes(to.name) &&
