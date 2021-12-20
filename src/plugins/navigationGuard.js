@@ -16,7 +16,10 @@ export default async (to, from, next) => {
     if (pseudonym === null || token === null) {
       await loadNewPseudonym().then((x) => next());
     } else next();
-  } else if (
+  }
+
+  // Allow accessing the threads page with a shared link
+  else if (
     to.name === "home.threads" &&
     to.params.threadId !== null &&
     to.params.channelId !== null
@@ -28,7 +31,10 @@ export default async (to, from, next) => {
         next();
       });
     } else next();
-  } else if (to.name === "home.channels" && to.params.channelId !== null) {
+  }
+
+  // Allow accessing the channels page with a shared link
+  else if (to.name === "home.channels" && to.params.channelId !== null) {
     const pseudonym = VueCookieNext.getCookie("pseudonym");
     const token = VueCookieNext.getCookie("token");
     if (pseudonym === null || token === null) {
@@ -40,6 +46,7 @@ export default async (to, from, next) => {
     !["home.login", "home.createAccount"].includes(to.name) &&
     !accessToken
   ) {
+    // Redirect to home by default when no token is present
     next({
       name: "home.featured",
     });
