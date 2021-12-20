@@ -28,6 +28,14 @@ export default async (to, from, next) => {
         next();
       });
     } else next();
+  } else if (to.name === "home.channels" && to.params.channelId !== null) {
+    const pseudonym = VueCookieNext.getCookie("pseudonym");
+    const token = VueCookieNext.getCookie("token");
+    if (pseudonym === null || token === null) {
+      await loadNewPseudonym().then(async (x) => {
+        next();
+      });
+    } else next();
   } else if (
     !["home.login", "home.createAccount"].includes(to.name) &&
     !accessToken
