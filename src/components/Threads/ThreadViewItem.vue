@@ -5,31 +5,21 @@
   </p>
 </template>
 
-<script>
-import { ChatAltIcon } from "@heroicons/vue/outline";
+<script setup>
+import { computed } from "vue";
 
-export default {
-  components: {
-    ChatAltIcon,
+defineProps({
+  item: {
+    type: Object,
+    required: true,
   },
+});
 
-  props: {
-    item: {
-      type: Object,
-      required: true,
-    },
-  },
+function getMessageClass(item) {
+  return item.votes < -1 ? "text-gray-400" : "text-black";
+}
 
-  methods: {
-    getMessageClass(item) {
-      return item.votes < -1 ? "text-gray-400" : "text-black";
-    },
-  },
-
-  computed: {
-    threadLink() {
-      return "/threads/" + this.$route.params.channel + "/" + this.item.name;
-    },
-  },
-};
+const threadLink = computed(
+  () => "/threads/" + this.$route.params.channel + "/" + this.item.name
+);
 </script>

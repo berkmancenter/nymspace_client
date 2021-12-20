@@ -10,6 +10,10 @@ if ("VITE_API_SERVER_URL" in import.meta.env) {
 }
 
 export default {
+  setAuth: function (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  },
+
   createChannel: async function (payload) {
     return await axios
       .post("/topics", {
@@ -66,6 +70,10 @@ export default {
     return await axios.get("/auth/newPseudonym").then((x) => x.data);
   },
 
+  getPseudonyms: async function () {
+    return await axios.get("/users/pseudonyms").then((x) => x.data);
+  },
+
   registerToken: async function (token) {
     return await axios
       .post(`/auth/register`, {
@@ -115,5 +123,9 @@ export default {
         ...payload,
       })
       .then((x) => x.data);
+  },
+
+  deletePseudonym: async function (id) {
+    return await axios.delete(`/users/pseudonyms/${id}`).then((x) => x.data);
   },
 };

@@ -39,4 +39,15 @@ body.modal-open {
 .modal-content {
   @apply px-6 py-2 bg-white divide-y divide-gray-500 h-72 max-h-80 w-2/5 flex flex-col justify-evenly;
 }
+.btn {
+  @apply w-20 my-2 bg-white border-2 border-gray-500 text-lg h-10 leading-3 hover:text-white cursor-pointer;
+}
+
+.btn.success {
+  @apply hover:bg-green-500;
+}
+
+.btn.error {
+  @apply hover:bg-red-500;
+}
 </style>
