@@ -10,16 +10,26 @@
   />
   <textarea
     v-model="message"
+    id="messageTextArea"
+    @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
     class="w-full block border-2 border-gray-500 text-lg p-2 h-30 mt-4"
     placeholder="Message (hit enter to send)"
   ></textarea>
+  <TagList
+    :items="getTags()"
+    :visible="getTagListVisible()"
+    :left="getTagListLeft()"
+    :top="getTagListTop()"
+    @tag-click="tagClick"
+  />
 </template>
 
 <script setup>
 import { useRoute } from "vue-router";
 import { onMounted, ref, nextTick, watch, onUnmounted } from "vue";
 import ThreadView from "../components/Threads/ThreadView.vue";
+import TagList from "../components/Messages/TagList.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
@@ -37,6 +47,9 @@ const {
 
 const messages = getMessages;
 const message = ref("");
+var tagListVisible = false;
+var tagListLeft = 0;
+var tagListTop = 0;
 const messageViewRef = ref(null);
 
 const thread = ref(getThread(route.params.threadId));
@@ -60,6 +73,59 @@ async function sendMessage() {
 }
 
 /**
+ * Watch for tag characters and display the users list
+ */
+function watchTagging(event) {
+  if (event.key == "@") {
+    let textArea = document.getElementById("messageTextArea");
+    let previousText = textArea.value.substr(
+      textArea.selectionStart - 1,
+      textArea.selectionStart
+    );
+    if (previousText != " ") return;
+    let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
+    tagListTop = parseInt(
+      textArea.offsetTop + textArea.clientHeight + pos.top - 6
+    );
+    tagListLeft = parseInt(textArea.offsetLeft + pos.left + 3);
+    tagListVisible = true;
+  }
+}
+
+function getTags() {
+  var tags = [];
+  getMessages.value.forEach((element) => {
+    if (tags.indexOf(element.pseudonym) == -1) tags.push(element.pseudonym);
+  });
+  return tags;
+}
+
+function getTagListVisible() {
+  return tagListVisible;
+}
+
+function getTagListLeft() {
+  return tagListLeft;
+}
+
+function getTagListTop() {
+  return tagListTop;
+}
+
+function tagClick(value) {
+  tagListVisible = false;
+  let existingText = message.value.trim();
+  let pseudonym = value;
+  if (pseudonym.indexOf(" ") > -1) pseudonym = '"' + pseudonym + '"';
+  if (existingText.indexOf(pseudonym) > -1) {
+    message.value = message.value.replace(/@\s*$/, "");
+    return;
+  }
+  message.value = existingText + pseudonym + " ";
+  document.getElementById("messageTextArea").focus();
+}
+
+/**
  * Join thread if thread exist and
  * user is logged in (either guest or user)
  */
@@ -71,6 +137,7 @@ function joinThread(threadId) {
     });
   }
 }
+
 /**
  * Handle received message
  */
