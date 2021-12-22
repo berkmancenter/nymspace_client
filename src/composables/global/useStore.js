@@ -93,6 +93,7 @@ async function loadChannels() {
 }
 
 async function loadThreads(channelId) {
+  if (!getLoggedInStatus.value) await registerOnce();
   const threads = await ThreadService.getThreads(channelId);
   setThreads(threads);
 }
@@ -118,6 +119,16 @@ async function loadMessages(threadId) {
 async function postMessage(payload) {
   const message = await ThreadService.createMessage(payload);
   setMessage(message);
+}
+
+async function upvote(id) {
+  const response = await ThreadService.upvote(id);
+  console.log(response);
+}
+
+async function downvote(id) {
+  const response = await ThreadService.downvote(id);
+  console.log(response);
 }
 
 /**
@@ -304,6 +315,8 @@ export default {
   clearMessages,
   postMessage,
   getMessages,
+  upvote,
+  downvote,
 
   registerOnce,
   createNewPseudonym,
