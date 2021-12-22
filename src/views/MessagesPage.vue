@@ -84,7 +84,7 @@ function watchTagging(event) {
       window.getSelection().getRangeAt(0).startOffset - 2,
       1
     );
-    //    if (previousText != " " && previousText != "") return;
+    if (previousText != " " && previousText != "") return;
     let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
     tagListTop = parseInt(
       textArea.offsetTop + textArea.clientHeight + pos.top - 6
