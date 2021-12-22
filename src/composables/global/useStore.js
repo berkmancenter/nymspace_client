@@ -93,6 +93,7 @@ async function loadChannels() {
 }
 
 async function loadThreads(channelId) {
+  if (!getLoggedInStatus.value) await registerOnce();
   const threads = await ThreadService.getThreads(channelId);
   setThreads(threads);
 }

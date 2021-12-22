@@ -30,20 +30,25 @@ onErrorCaptured((e) => {
   console.error(e);
 });
 
-const { getThreads, loadThreads, getChannel, loadChannel, getChannels } =
-  useStore;
+const {
+  getThreads,
+  loadChannels,
+  loadThreads,
+  getChannel,
+  loadChannel,
+  getChannels,
+} = useStore;
 
 const items = getThreads;
 
 const channel = ref(getChannel(route.params.channelId));
 
 onMounted(async () => {
+  await loadThreads(route.params.channelId);
   if (Object.keys(channel.value).length == 0) {
     channel.value = { ...(await loadChannel(route.params.channelId)) };
   } else {
     channel.value = getChannel(route.params.channelId);
   }
 });
-
-loadThreads(route.params.channelId);
 </script>
