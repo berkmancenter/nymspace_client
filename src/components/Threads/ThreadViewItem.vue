@@ -11,16 +11,16 @@
       </p>
     </div>
     <div>
-      <div class="flex items-center -mb-2.5">
+      <div class="flex items-center -mb-2.5 text-gray-300 hover:text-gray-700">
         <ChevronUpIcon
           @click="upvote(item.id)"
-          class="h-6 w-6 text-gray-300 cursor-pointer hover:text-gray-700"
+          class="h-6 w-6 cursor-pointer"
         /><span class="text-sm font-bold">{{ item.upVotes }}</span>
       </div>
-      <div class="flex items-center">
+      <div class="flex items-center text-gray-300 hover:text-gray-700">
         <ChevronDownIcon
           @click="downvote(item.id)"
-          class="h-6 w-6 text-gray-300 cursor-pointer hover:text-gray-700"
+          class="h-6 w-6 cursor-pointer"
         /><span class="text-sm font-bold">{{ item.downVotes }}</span>
       </div>
     </div>

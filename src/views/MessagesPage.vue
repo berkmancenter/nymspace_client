@@ -9,13 +9,15 @@
     :items="messages"
   />
   <textarea
+    contenteditable="true"
     v-model="message"
     id="messageTextArea"
     @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
     class="w-full block border-2 border-gray-500 text-lg p-2 h-30 mt-4"
     placeholder="Message (hit enter to send)"
-  ></textarea>
+  >
+  </textarea>
   <TagList
     :items="getTags()"
     :visible="getTagListVisible()"
@@ -78,18 +80,18 @@ async function sendMessage() {
 function watchTagging(event) {
   if (event.key == "@") {
     let textArea = document.getElementById("messageTextArea");
-    let previousText = textArea.value.substr(
-      textArea.selectionStart - 1,
-      textArea.selectionStart
+    let previousText = textArea.innerHTML.substr(
+      window.getSelection().getRangeAt(0).startOffset - 2,
+      1
     );
-    if (previousText != " ") return;
+    //    if (previousText != " " && previousText != "") return;
     let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
     tagListTop = parseInt(
       textArea.offsetTop + textArea.clientHeight + pos.top - 6
     );
     tagListLeft = parseInt(textArea.offsetLeft + pos.left + 3);
     tagListVisible = true;
-  }
+  } else tagListVisible = false;
 }
 
 function getTags() {
