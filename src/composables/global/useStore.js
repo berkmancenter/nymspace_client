@@ -120,6 +120,16 @@ async function postMessage(payload) {
   setMessage(message);
 }
 
+async function upvote(id) {
+  const response = await ThreadService.upvote(id);
+  console.log(response);
+}
+
+async function downvote(id) {
+  const response = await ThreadService.downvote(id);
+  console.log(response);
+}
+
 /**
  * Update messages array with ws response
  */
@@ -304,6 +314,8 @@ export default {
   clearMessages,
   postMessage,
   getMessages,
+  upvote,
+  downvote,
 
   registerOnce,
   createNewPseudonym,
