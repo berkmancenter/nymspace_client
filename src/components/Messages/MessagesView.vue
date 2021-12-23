@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import ThreadViewItem from "./ThreadViewItem.vue";
+import ThreadViewItem from "./MessageViewItem.vue";
 
 export default {
   components: {

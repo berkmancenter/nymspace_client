@@ -6,7 +6,7 @@
         if (el) messageViewRef = el;
       }
     "
-    :items="messages"
+    :items="updatedMsgs"
   />
   <textarea
     contenteditable="true"
@@ -29,8 +29,8 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { onMounted, ref, nextTick, watch, onUnmounted } from "vue";
-import ThreadView from "../components/Threads/ThreadView.vue";
+import { onMounted, ref, nextTick, watch, onUnmounted, computed } from "vue";
+import ThreadView from "../components/Messages/MessagesView.vue";
 import TagList from "../components/Messages/TagList.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
@@ -45,6 +45,8 @@ const {
   loadThread,
   getLoggedInStatus,
   getThread,
+  getActivePseudonym,
+  getId,
 } = useStore;
 
 const messages = getMessages;
@@ -55,6 +57,27 @@ var tagListTop = 0;
 const messageViewRef = ref(null);
 
 const thread = ref(getThread(route.params.threadId));
+
+/**
+ * Update messages array to add property
+ * that determines if user can vote
+ */
+const updatedMsgs = computed((x) => {
+  const isNotOwner = (x) => x.pseudonymId !== getActivePseudonym.value?._id;
+
+  /**
+   * This condition might change based on how backend handles
+   * the alternate voting for same message
+   */
+  const hasNotVoted = (x) =>
+    x.upVotes.findIndex((y) => y.owner === getId.value) === -1 &&
+    x.downVotes.findIndex((y) => y.owner === getId.value) === -1;
+
+  return messages.value.map((x) => ({
+    ...x,
+    canVote: hasNotVoted(x) && isNotOwner(x),
+  }));
+});
 
 /**
  * Send message via ws
@@ -150,12 +173,7 @@ function messageHandler(data) {
    * message thread
    */
   if (data.thread.id === route.params.threadId) {
-    addMessage({
-      body: data.body,
-      created: data.createdAt,
-      id: data.id,
-      pseudonym: data.pseudonym,
-    });
+    addMessage(data);
     scrollToBottom();
   }
 
@@ -218,15 +236,14 @@ watch(
 );
 
 onMounted(async () => {
+  SocketioService.disconnect();
+  SocketioService.setupSocketConnection(messageHandler);
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
   joinThread(route.params.threadId);
 });
 
 onUnmounted(() => {
-  console.log("disconect");
   SocketioService.disconnect();
 });
-
-const socket = SocketioService.setupSocketConnection(messageHandler);
 </script>

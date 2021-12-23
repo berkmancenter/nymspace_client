@@ -11,17 +11,25 @@
       </p>
     </div>
     <div>
-      <div class="flex items-center -mb-2.5 text-gray-300 hover:text-gray-700">
+      <div
+        class="flex items-center -mb-2.5 text-gray-300"
+        :class="item.canVote ? 'hover:text-gray-700' : ''"
+      >
         <ChevronUpIcon
           @click="upvote(item.id)"
-          class="h-6 w-6 cursor-pointer"
-        /><span class="text-sm font-bold">{{ item.upVotes }}</span>
+          class="h-6 w-6"
+          :class="item.canVote ? 'cursor-pointer' : 'pointer-events-none'"
+        /><span class="text-sm font-bold">{{ item.upVotes.length }}</span>
       </div>
-      <div class="flex items-center text-gray-300 hover:text-gray-700">
+      <div
+        class="flex items-center text-gray-300"
+        :class="item.canVote ? 'hover:text-gray-700' : ''"
+      >
         <ChevronDownIcon
           @click="downvote(item.id)"
           class="h-6 w-6 cursor-pointer"
-        /><span class="text-sm font-bold">{{ item.downVotes }}</span>
+          :class="item.canVote ? 'cursor-pointer' : 'pointer-events-none'"
+        /><span class="text-sm font-bold">{{ item.downVotes.length }}</span>
       </div>
     </div>
   </div>

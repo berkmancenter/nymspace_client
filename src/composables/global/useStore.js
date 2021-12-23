@@ -11,6 +11,7 @@ const state = reactive({
       active: true,
     },
   ],
+  uid: VueCookieNext.getCookie("uid"),
   isLoggedIn: VueCookieNext.getCookie("access_token") !== null,
   isGuest: VueCookieNext.getCookie("is_guest") !== null,
   channels: [],
@@ -43,12 +44,16 @@ function setMessages(messages) {
 }
 
 function setMessage(message) {
-  state.messages.push({
-    body: message.body,
-    created: message.createdAt,
-    id: message.id,
-    pseudonym: message.pseudonym,
-  });
+  state.messages.push(message);
+}
+
+function updateMessage(message) {
+  const messageId = state.messages.findIndex((x) => x.id === message.id);
+  if (messageId > -1) {
+    state.messages.splice(messageId, 1, message);
+  } else {
+    state.messages.push(message);
+  }
 }
 
 function addChannel(channel) {
@@ -123,12 +128,12 @@ async function postMessage(payload) {
 
 async function upvote(id) {
   const response = await ThreadService.upvote(id);
-  console.log(response);
+  updateMessage(response);
 }
 
 async function downvote(id) {
   const response = await ThreadService.downvote(id);
-  console.log(response);
+  updateMessage(response);
 }
 
 /**
@@ -178,6 +183,8 @@ async function loadNewPseudonym(username, password) {
 async function updateAuthTokens(data) {
   updateUserToken(data.tokens);
   updateAuth(data.user.pseudonyms);
+  VueCookieNext.setCookie("uid", data.user.id);
+  state.uid = data.user.id;
   state.isLoggedIn = true;
 }
 
@@ -288,6 +295,8 @@ const getAuth = computed(() => ({
   token: state.auth.token,
 }));
 
+const getId = computed(() => state.uid);
+
 export default {
   getThread,
   loadThreads,
@@ -310,6 +319,7 @@ export default {
   getGuestStatus,
   getLoggedInStatus,
   getUserToken,
+  getId,
 
   loadMessages,
   clearMessages,
@@ -323,16 +333,22 @@ export default {
   loadNewPseudonym,
   deletePseudonym,
   activatePseudonym,
+
   postMessage,
   addMessage,
+
   getUserThreads,
   getThreads,
   getLoggedInStatus,
+
   getGuestStatus,
+
   getThread,
   getChannel,
+
   getUserToken,
   getChannels,
+
   loadPseudonyms,
   getPseudonyms,
   getActivePseudonym,
