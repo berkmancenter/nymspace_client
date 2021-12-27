@@ -8,7 +8,14 @@
     "
     :items="updatedMsgs"
   />
+  <TagList
+    :items="filteredTags"
+    :visible="tagListVisible"
+    :msg-txt-area="messageTextArea"
+    @tag-click="tagClick"
+  />
   <textarea
+    ref="messageTextArea"
     contenteditable="true"
     v-model="message"
     id="messageTextArea"
@@ -18,18 +25,19 @@
     placeholder="Message (hit enter to send)"
   >
   </textarea>
-  <TagList
-    :items="getTags()"
-    :visible="getTagListVisible()"
-    :left="getTagListLeft()"
-    :top="getTagListTop()"
-    @tag-click="tagClick"
-  />
 </template>
 
 <script setup>
 import { useRoute } from "vue-router";
-import { onMounted, ref, nextTick, watch, onUnmounted, computed } from "vue";
+import {
+  onMounted,
+  ref,
+  nextTick,
+  watch,
+  onUnmounted,
+  computed,
+  watchEffect,
+} from "vue";
 import ThreadView from "../components/Messages/MessagesView.vue";
 import TagList from "../components/Messages/TagList.vue";
 import useStore from "../composables/global/useStore";
@@ -51,12 +59,43 @@ const {
 
 const messages = getMessages;
 const message = ref("");
-var tagListVisible = false;
-var tagListLeft = 0;
-var tagListTop = 0;
+const tagListVisible = ref(false);
 const messageViewRef = ref(null);
-
+const messageTextArea = ref(null);
 const thread = ref(getThread(route.params.threadId));
+const searchTag = ref("");
+
+/**
+ * Get tags based on messages
+ */
+const tags = computed(() => {
+  var tags = [];
+  getMessages.value.forEach((element) => {
+    if (
+      element.pseudonym !== undefined &&
+      tags.indexOf(element.pseudonym) === -1
+    )
+      tags.push(element.pseudonym);
+  });
+  tags.sort();
+  return tags;
+});
+
+/**
+ * Filter tags based on search text after @ symbol
+ */
+const filteredTags = computed(() => {
+  if (tagListVisible.value) {
+    if (searchTag.value.length === 0) {
+      return tags.value;
+    }
+    // Case insensitive filter
+    return tags.value.filter((x) =>
+      x.toLowerCase().startsWith(searchTag.value.toLowerCase())
+    );
+  }
+  return [];
+});
 
 /**
  * Update messages array to add property
@@ -98,47 +137,20 @@ async function sendMessage() {
 }
 
 /**
- * Watch for tag characters and display the users list
+ * Watch for tagging symbol, update search text and display the users list
  */
-function watchTagging(event) {
-  if (event.key == "@") {
-    let textArea = document.getElementById("messageTextArea");
-    let previousText = textArea.innerHTML.substr(
-      window.getSelection().getRangeAt(0).startOffset - 2,
-      1
-    );
-    if (previousText != " " && previousText != "") return;
-    let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
-    tagListTop = parseInt(
-      textArea.offsetTop + textArea.clientHeight + pos.top - 6
-    );
-    tagListLeft = parseInt(textArea.offsetLeft + pos.left + 3);
-    tagListVisible = true;
-  } else tagListVisible = false;
-}
-
-function getTags() {
-  var tags = [];
-  getMessages.value.forEach((element) => {
-    if (tags.indexOf(element.pseudonym) == -1) tags.push(element.pseudonym);
-  });
-  return tags;
-}
-
-function getTagListVisible() {
-  return tagListVisible;
-}
-
-function getTagListLeft() {
-  return tagListLeft;
-}
-
-function getTagListTop() {
-  return tagListTop;
-}
+watchEffect(() => {
+  const matches = /@([A-Za-z0-9]*)$/.exec(message.value);
+  if (matches && matches.length > 1) {
+    tagListVisible.value = true;
+    searchTag.value = matches[1];
+  } else {
+    searchTag.value = "";
+    tagListVisible.value = false;
+  }
+});
 
 function tagClick(value) {
-  tagListVisible = false;
   let existingText = message.value.trim();
   let pseudonym = value;
   if (pseudonym.indexOf(" ") > -1) pseudonym = '"' + pseudonym + '"';
@@ -147,7 +159,7 @@ function tagClick(value) {
     return;
   }
   message.value = existingText + pseudonym + " ";
-  document.getElementById("messageTextArea").focus();
+  messageTextArea.value.focus();
 }
 
 /**
@@ -241,6 +253,7 @@ onMounted(async () => {
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
   joinThread(route.params.threadId);
+  messageTextArea.value.focus();
 });
 
 onUnmounted(() => {
