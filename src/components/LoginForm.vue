@@ -42,6 +42,7 @@
 import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import userStore from "../composables/global/useStore";
+
 const { loginUser } = userStore;
 const router = useRouter();
 const username = ref("");
@@ -49,12 +50,22 @@ const password = ref("");
 const showError = ref(false);
 const errorMessage = ref("");
 
+/**
+ * Login method to validate form and call login api
+ * Navigate to home page or previous page
+ */
 function login() {
   setError("", false);
   showError.value = false;
   if (isFormValid()) {
     loginUser(username.value, password.value)
-      .then(() => router.push({ name: "home.featured" }))
+      .then(() => {
+        if (router.currentRoute.value.query.to) {
+          router.push({ path: router.currentRoute.value.query.to });
+        } else {
+          router.push({ name: "home.featured" });
+        }
+      })
       .catch((x) => setError(x.response.data.message, true));
   } else {
     setError("Usename and Password required", true);

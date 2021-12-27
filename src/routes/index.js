@@ -5,6 +5,7 @@ import LandingPageLayout from "../layout/LandingPageLayout.vue";
 import ThreadsPage from "../views/ThreadsPage.vue";
 import MessagesPage from "../views/MessagesPage.vue";
 import LandingPage from "../views/LandingPage.vue";
+import NotFound from "../views/NotFound.vue";
 
 export default [
   {
@@ -45,6 +46,19 @@ export default [
         path: "create-account",
         name: "home.createAccount",
         component: CreateAccountPage,
+      },
+    ],
+  },
+  // will match everything and put it under `$route.params.pathMatch`
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not.found.layout",
+    component: HomePageLayout,
+    children: [
+      {
+        path: "",
+        name: "not.found",
+        component: NotFound,
       },
     ],
   },

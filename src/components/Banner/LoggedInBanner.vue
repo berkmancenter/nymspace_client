@@ -15,6 +15,7 @@
       <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym on
       your account
     </button>
+    <button class="btn" v-else @click="loginViaGuest">Login</button>
   </div>
 </template>
 
@@ -22,17 +23,36 @@
 import { useRouter } from "vue-router";
 import store from "../../composables/global/useStore";
 import { RefreshIcon } from "@heroicons/vue/outline";
+
 const router = useRouter();
 const { logout, getGuestStatus, createNewPseudonym, getPseudonyms } = store;
+
 async function signout() {
   await logout();
   router.push({ name: "home.featured" });
+}
+
+/**
+ * Go to login page from guest session
+ * Logout guest user and pass current page
+ * so the after loggin in, app can navigate
+ * to same page
+ */
+async function loginViaGuest() {
+  await logout();
+  console.log(router.currentRoute.value.path);
+  router.push({
+    name: "home.login",
+    query: {
+      to: router.currentRoute.value.path,
+    },
+  });
 }
 </script>
 
 <style scoped>
 .btn {
-  @apply w-full bg-white border-2 border-gray-500 text-base px-2 h-16 leading-relaxed hover:bg-gray-100 cursor-pointer md:text-lg md:px-1;
+  @apply w-full bg-white border-2 border-gray-500 text-base px-2 h-16 leading-relaxed hover:bg-gray-200 cursor-pointer md:text-lg md:px-1;
 }
 
 .btn:disabled {
