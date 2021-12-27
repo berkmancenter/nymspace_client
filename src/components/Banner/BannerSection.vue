@@ -3,6 +3,7 @@
     <div class="text-center text-2xl pb-4 px-4 pt-1">
       Hello, [
       <select
+        v-if="!getGuestStatus"
         v-model="activeToken"
         :disabled="getGuestStatus"
         class="bg-gray-200 text-red-500"
@@ -17,6 +18,9 @@
           {{ pseudonym.pseudonym }}
         </option>
       </select>
+      <span v-else class="text-red-500">{{
+        getActivePseudonym.pseudonym
+      }}</span>
       ].
       <TrashIcon
         v-if="getPseudonyms.length > 1"
