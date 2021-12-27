@@ -62,7 +62,7 @@ function addToMessage(el) {
 }
 
 function getMessageClass(item) {
-  return item.downVotes > 2 ? "text-gray-400" : "text-black";
+  return item.downVotes.length > 2 ? "text-gray-400" : "text-black";
 }
 
 const threadLink = computed(
