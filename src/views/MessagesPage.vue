@@ -150,15 +150,13 @@ watchEffect(() => {
   }
 });
 
+/**
+ * Update tag on message to follow a taggable pattern
+ */
 function tagClick(value) {
-  let existingText = message.value.trim();
-  let pseudonym = value;
-  if (pseudonym.indexOf(" ") > -1) pseudonym = '"' + pseudonym + '"';
-  if (existingText.indexOf(pseudonym) > -1) {
-    message.value = message.value.replace(/@\s*$/, "");
-    return;
-  }
-  message.value = existingText + pseudonym + " ";
+  let pseudonym = `@"${value}"`;
+  // Replace last occurrence of word starting with @
+  message.value = message.value.replace(/(\S+)(?=[^@]*)$/, pseudonym);
   messageTextArea.value.focus();
 }
 
