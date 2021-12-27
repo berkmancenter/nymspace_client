@@ -154,9 +154,9 @@ watchEffect(() => {
  * Update tag on message to follow a taggable pattern
  */
 function tagClick(value) {
-  let pseudonym = `@"${value}"`;
+  let pseudonym = `"${value}" `;
   // Replace last occurrence of word starting with @
-  message.value = message.value.replace(/(\S+)(?=[^@]*)$/, pseudonym);
+  message.value = message.value.replace(/(\w*)(?=[^@]*)$/, pseudonym);
   messageTextArea.value.focus();
 }
 
