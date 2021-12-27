@@ -104,7 +104,7 @@ function watchTagging(event) {
   if (event.key == "@") {
     let textArea = document.getElementById("messageTextArea");
     let previousText = textArea.innerHTML.substr(
-      window.getSelection().getRangeAt(0).startOffset - 2,
+      textArea.selectionStart - 1,
       1
     );
     if (previousText != " " && previousText != "") return;
