@@ -7,7 +7,7 @@
         :title="item.createdAt"
       >
         <b @click="addToMessage(this)">{{ item.pseudonym || item.owner }}</b
-        >: {{ item.body }}
+        >: <span v-html="formattedBody"></span>
       </p>
     </div>
     <div>
@@ -43,7 +43,7 @@ import useStore from "../../composables/global/useStore";
 
 const { upvote, downvote } = useStore;
 
-defineProps({
+const props = defineProps({
   item: {
     type: Object,
     required: true,
@@ -68,13 +68,38 @@ function getMessageClass(item) {
 const threadLink = computed(
   () => "/threads/" + this.$route.params.channel + "/" + this.item.name
 );
+/**
+ * Build html tag for tagged pseudonym
+ */
+function getFormattedTag(tag) {
+  return `<span class='tag'>@${/@"([A-Za-z0-9\s]+)"/g.exec(tag)[1]}</span>`;
+}
+
+/**
+ * Search for all pseudonym tags and format them
+ */
+const formattedBody = computed(() => {
+  let regex = /(@\"[A-Za-z0-9\s]+\")/g;
+  let matches = [];
+  let tempStr = props.item.body;
+  while ((matches = regex.exec(props.item.body)) !== null) {
+    tempStr = tempStr.replace(matches[0], getFormattedTag(matches[0]));
+  }
+  return tempStr;
+});
 </script>
 
 <style scoped>
+:deep(svg path) {
+  stroke-width: 4px;
+}
+</style>
+
+<style>
 .thread-message b {
   @apply cursor-pointer;
 }
-:deep(svg path) {
-  stroke-width: 4px;
+.tag {
+  @apply shadow-inner rounded-sm text-xs font-semibold px-0.5 ring-1 bg-gray-200 ring-gray-400;
 }
 </style>
