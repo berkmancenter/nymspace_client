@@ -7,7 +7,7 @@
       <span>Keep using this one-time pseudonym, or</span>
     </div>
     <button v-else class="btn" @click="signout">
-      <template>Create a new pseudonym for one session (log out)</template>
+      <span>Create a new pseudonym for one session (log out)</span>
     </button>
     <button
       :disabled="getPseudonyms.length >= 5"
