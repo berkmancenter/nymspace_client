@@ -7,7 +7,10 @@
         class="w-48 float-left"
       />
     </a>
-    <a href="https://github.com/berkmancenter/threads_client" target="_blank">
+    <a
+      href="https://github.com/berkmancenter/threads/discussions"
+      target="_blank"
+    >
       <img
         src="/images/threads-github-logo.png"
         alt="Threads GitHub"
