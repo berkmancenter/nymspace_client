@@ -6,7 +6,9 @@
         :class="getMessageClass(item)"
         :title="item.createdAt"
       >
-        <b @click="addToMessage(this)">{{ item.pseudonym || item.owner }}</b
+        <b @click="addToMessage(item.pseudonym)">{{
+          item.pseudonym || item.owner
+        }}</b
         >: <span v-html="formattedBody"></span>
       </p>
     </div>
@@ -54,10 +56,9 @@ const props = defineProps({
   },
 });
 
-function addToMessage(el) {
+function addToMessage(pseudonym) {
   let textArea = document.getElementById("messageTextArea");
   let existingText = textArea.value.trim();
-  let pseudonym = el.item.pseudonym;
   if (pseudonym.indexOf(" ") > -1) pseudonym = '"' + pseudonym + '"';
   if (existingText.indexOf(pseudonym) > -1) return;
   if (existingText != "") existingText += " ";
