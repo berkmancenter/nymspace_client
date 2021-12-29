@@ -100,6 +100,6 @@ const formattedBody = computed(() => {
   @apply cursor-pointer;
 }
 .tag {
-  @apply shadow-inner rounded-sm text-xs font-semibold px-0.5 ring-1 bg-gray-200 ring-gray-400 mx-0.5;
+  @apply font-bold mx-0.5;
 }
 </style>
