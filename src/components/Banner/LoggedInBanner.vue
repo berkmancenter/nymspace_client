@@ -1,10 +1,13 @@
 <template>
   <div class="mx-auto w-11/12 lg:w-3/5 flex gap-2 md:gap-4">
-    <button class="btn" @click="signout">
-      <template v-if="getGuestStatus">Exit session</template>
-      <template v-else
-        >Create a new pseudonym for one session (log out)</template
-      >
+    <div
+      class="w-full px-2 h-16 leading-relaxed self-cente flex justify-center items-center my-2"
+      v-if="getGuestStatus"
+    >
+      <span>Keep using this one-time pseudonym, or</span>
+    </div>
+    <button v-else class="btn" @click="signout">
+      <template>Create a new pseudonym for one session (log out)</template>
     </button>
     <button
       :disabled="getPseudonyms.length >= 5"

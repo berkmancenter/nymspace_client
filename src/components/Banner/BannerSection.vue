@@ -162,7 +162,7 @@ watch(
 );
 
 onMounted(async () => {
-  if (getLoggedInStatus.value) {
+  if (getLoggedInStatus.value && !getGuestStatus.value) {
     await loadPseudonyms();
   }
   activeToken.value = getActivePseudonym.value?.token;
