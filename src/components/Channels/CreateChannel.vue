@@ -65,6 +65,7 @@ const channelTypeName = computed(
 function closeModal() {
   document.querySelector("body").classList.remove("modal-open");
   isModalOpen.value = false;
+  channelType.value = "";
 }
 
 function openModal() {
