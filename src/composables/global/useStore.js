@@ -131,9 +131,15 @@ async function upvote(id) {
   updateMessage(response);
 }
 
+/**
+ * Let only non guest user downvote a message
+ * @param {*} id : message id to cast down vote
+ */
 async function downvote(id) {
-  const response = await ThreadService.downvote(id);
-  updateMessage(response);
+  if (!getGuestStatus.value) {
+    const response = await ThreadService.downvote(id);
+    updateMessage(response);
+  }
 }
 
 /**

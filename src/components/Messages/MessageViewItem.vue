@@ -23,12 +23,16 @@
       </div>
       <div
         class="flex items-center text-gray-300"
-        :class="item.canVote ? 'hover:text-gray-700' : ''"
+        :class="item.canVote && !getGuestStatus ? 'hover:text-gray-700' : ''"
       >
         <ChevronDownIcon
           @click="downvote(item.id)"
           class="h-6 w-6 cursor-pointer"
-          :class="item.canVote ? 'cursor-pointer' : 'pointer-events-none'"
+          :class="
+            item.canVote && !getGuestStatus
+              ? 'cursor-pointer'
+              : 'pointer-events-none'
+          "
         /><span class="text-sm font-bold">{{ item.downVotes.length }}</span>
       </div>
     </div>
@@ -41,7 +45,7 @@ import { computed } from "vue";
 
 import useStore from "../../composables/global/useStore";
 
-const { upvote, downvote } = useStore;
+const { upvote, downvote, getGuestStatus } = useStore;
 
 const props = defineProps({
   item: {
