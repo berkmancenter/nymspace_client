@@ -30,9 +30,10 @@ function isLoginSignupPage(to) {
 
 export default async (to, from, next) => {
   const accessToken = VueCookieNext.getCookie("access_token");
+  const isGuest = VueCookieNext.getCookie("is_guest");
 
   // Logged in and login/signup page
-  if (accessToken && isLoginSignupPage(to)) {
+  if (accessToken && !isGuest && isLoginSignupPage(to)) {
     next({
       name: "home.featured",
     });

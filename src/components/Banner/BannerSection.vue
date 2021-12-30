@@ -21,14 +21,19 @@
       <span v-else class="text-red-500">{{
         getActivePseudonym.pseudonym
       }}</span>
-      ].
+      ]
       <TrashIcon
         v-if="getPseudonyms.length > 1"
         class="h-5 w-5 inline-block cursor-pointer hover:text-red-500"
         title="Delete pseudonym"
         @click="openModal"
       />
-      Would you like to:
+      <RefreshIcon
+        v-if="getGuestStatus"
+        class="h-5 w-5 inline-block cursor-pointer hover:text-red-500"
+        title="Get a new pseudonym"
+        @click="refreshPseudonym"
+      />. Would you like to:
     </div>
     <component
       :is="
@@ -39,11 +44,11 @@
       @login="registerOneTime"
     ></component>
 
-    <Modal :is-open="isModalOpen">
+    <Modal :is-open="isModalOpen" @close-modal="closeModal">
       <template v-slot:title>Delete Pseudonym</template>
       <div class="text-xl">Are you sure you want to delete pseudonym?</div>
       <div class="text-lg mt-3">
-        Please select pseudonym to delete
+        Please select the pseudonym to delete
         <select
           v-model="pseudonymToDelete"
           class="bg-gray-200 text-red-500"
@@ -61,15 +66,14 @@
         </select>
       </div>
       <div class="text-xs mt-4">
-        If you want to delete active pseudonym, please activate other pseudonym
-        and come back here.
+        If you want to delete the active pseudonym, please activate other
+        pseudonym first and come back here.
       </div>
       <div :class="isError ? 'text-red-500' : 'text-green-500'" class="mt-4">
         {{ message }}
       </div>
       <template v-slot:actions>
-        <button class="btn success" @click="processDelete">Yes</button>
-        <button class="btn error" @click="closeModal">No</button>
+        <button class="btn success" @click="processDelete">Delete</button>
       </template>
     </Modal>
   </div>
@@ -79,7 +83,7 @@
 import { onMounted, watch, ref, computed } from "vue";
 import useStore from "../../composables/global/useStore";
 import { defineAsyncComponent } from "@vue/runtime-core";
-import { TrashIcon } from "@heroicons/vue/outline";
+import { TrashIcon, RefreshIcon } from "@heroicons/vue/outline";
 import Modal from "../Shared/Modal.vue";
 const {
   getLoggedInStatus,
@@ -87,6 +91,7 @@ const {
   getActivePseudonym,
   registerOnce,
   getGuestStatus,
+  loadNewPseudonym,
   activatePseudonym,
   loadPseudonyms,
   deletePseudonym,
@@ -110,6 +115,11 @@ function openModal() {
   message.value = "";
   document.querySelector("body").classList.add("modal-open");
   isModalOpen.value = true;
+}
+
+async function refreshPseudonym() {
+  await loadNewPseudonym();
+  await registerOnce();
 }
 
 function closeModal() {

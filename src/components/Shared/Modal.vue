@@ -2,7 +2,14 @@
   <teleport to="body">
     <div v-if="isOpen" class="modal">
       <div class="modal-content">
-        <div class="my-3 text-xl"><slot name="title">Modal Title</slot></div>
+        <div class="my-3 text-xl">
+          <slot name="title">Modal Title</slot>
+          <XIcon
+            class="float-right h-5 w-5 inline-block cursor-pointer hover:text-red-500"
+            title="Close"
+            @click="closeModal"
+          />
+        </div>
         <div class="flex-grow py-3"><slot>Modal Body</slot></div>
         <div class="flex justify-end my-3 gap-4">
           <slot name="actions"><button @click="closeModal"></button></slot>
@@ -13,6 +20,8 @@
 </template>
 
 <script setup>
+import { XIcon } from "@heroicons/vue/outline";
+
 const props = defineProps({
   isOpen: {
     type: Boolean,

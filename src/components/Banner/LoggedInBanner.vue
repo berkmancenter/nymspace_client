@@ -31,7 +31,7 @@ const router = useRouter();
 const { logout, getGuestStatus, createNewPseudonym, getPseudonyms } = store;
 
 async function signout() {
-  await logout();
+  logout();
   router.push({ name: "home.featured" });
 }
 
@@ -41,9 +41,7 @@ async function signout() {
  * so the after loggin in, app can navigate
  * to same page
  */
-async function loginViaGuest() {
-  await logout();
-  console.log(router.currentRoute.value.path);
+function loginViaGuest() {
   router.push({
     name: "home.login",
     query: {
