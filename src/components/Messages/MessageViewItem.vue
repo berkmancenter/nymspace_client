@@ -15,7 +15,7 @@
     <div>
       <div
         class="flex items-center -mb-2.5 text-gray-300"
-        :class="item.canVote ? 'hover:text-gray-700' : ''"
+        :class="getUpVoteClass(item)"
       >
         <ChevronUpIcon
           @click="upvote(item.id)"
@@ -25,13 +25,13 @@
       </div>
       <div
         class="flex items-center text-gray-300"
-        :class="item.canVote && !getGuestStatus ? 'hover:text-gray-700' : ''"
+        :class="getDownVoteClass(item)"
       >
         <ChevronDownIcon
           @click="downvote(item.id)"
           class="h-6 w-6 cursor-pointer"
           :class="
-            item.canVote && !getGuestStatus
+            item.canVote && !getGuestStatus.value
               ? 'cursor-pointer'
               : 'pointer-events-none'
           "
@@ -55,6 +55,29 @@ const props = defineProps({
     required: true,
   },
 });
+
+function getUpVoteClass(item) {
+  let className = item.canVote ? "hover:text-gray-700" : "";
+  if (className == "" && item.upVotes) {
+    item.upVotes.forEach((vote) => {
+      if (vote.owner && vote.owner == useStore.getId.value)
+        className = "text-gray-700";
+    });
+  }
+  return className;
+}
+
+function getDownVoteClass(item) {
+  let className =
+    item.canVote && !getGuestStatus.value ? "hover:text-gray-700" : "";
+  if (className == "" && item.downVotes) {
+    item.downVotes.forEach((vote) => {
+      if (vote.owner && vote.owner == useStore.getId.value)
+        className = "text-gray-700";
+    });
+  }
+  return className;
+}
 
 function addToMessage(pseudonym) {
   let textArea = document.getElementById("messageTextArea");

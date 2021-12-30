@@ -62,6 +62,8 @@ function tagClick(item) {
 <style>
 .tags {
   min-width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
   left: v-bind(leftPlacement);
   top: v-bind(topPlacement);
   @apply absolute bg-white rounded items-center border-2 border-black shadow-xl;
