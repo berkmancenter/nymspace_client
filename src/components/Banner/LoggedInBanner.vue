@@ -13,7 +13,8 @@
       :disabled="getPseudonyms.length >= 5"
       class="btn"
       v-if="!getGuestStatus"
-      @click="createNewPseudonym"
+      @click="createPseudonym"
+      :title="getNewPseudonymButtonTitle()"
     >
       <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym on
       your account
@@ -27,6 +28,7 @@ import { useRouter } from "vue-router";
 import store from "../../composables/global/useStore";
 import { RefreshIcon } from "@heroicons/vue/outline";
 
+const emit = defineEmits(["create-pseudonym"]);
 const router = useRouter();
 const { logout, getGuestStatus, createNewPseudonym, getPseudonyms } = store;
 
@@ -48,6 +50,17 @@ function loginViaGuest() {
       to: router.currentRoute.value.path,
     },
   });
+}
+
+async function createPseudonym() {
+  await createNewPseudonym();
+  emit("create-pseudonym");
+}
+
+function getNewPseudonymButtonTitle() {
+  if (getPseudonyms.value.length >= 5)
+    return "Maximum of five pseudonyms reached.";
+  return "";
 }
 </script>
 

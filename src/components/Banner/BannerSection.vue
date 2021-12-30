@@ -42,6 +42,7 @@
           : defineAsyncComponent(() => import('./GuestBanner.vue'))
       "
       @login="registerOneTime"
+      @create-pseudonym="adjustSelect"
     ></component>
 
     <Modal :is-open="isModalOpen" @close-modal="closeModal">
@@ -80,7 +81,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch, ref, computed } from "vue";
+import { onMounted, watch, ref, computed, nextTick } from "vue";
 import useStore from "../../composables/global/useStore";
 import { defineAsyncComponent } from "@vue/runtime-core";
 import { TrashIcon, RefreshIcon } from "@heroicons/vue/outline";
@@ -120,6 +121,7 @@ function openModal() {
 async function refreshPseudonym() {
   await loadNewPseudonym();
   await registerOnce();
+  adjustSelect();
 }
 
 function closeModal() {
@@ -136,7 +138,7 @@ function closeModal() {
 async function processDelete() {
   isError.value = true;
   if (pseudonymToDelete.value.trim().length === 0) {
-    message.value = "Please select pseudonym.";
+    message.value = "Please select a pseudonym.";
     return;
   }
   message.value = "";
@@ -154,9 +156,20 @@ async function processDelete() {
 
 async function activateToken() {
   await activatePseudonym(activeToken.value);
-  let element = document.getElementById("pseudonymSelect");
-  let text = element.options[element.selectedIndex].text;
-  element.style.width = text.length * 15 + "px";
+  adjustSelect();
+}
+
+function adjustSelect() {
+  let sel = document.getElementById("pseudonymSelect");
+  let tempOption = document.createElement("option");
+  tempOption.textContent = sel.selectedOptions[0].textContent;
+  let tempSelect = document.createElement("select");
+  tempSelect.style.visibility = "hidden";
+  tempSelect.style.position = "fixed";
+  tempSelect.appendChild(tempOption);
+  sel.after(tempSelect);
+  sel.style.width = `${+tempSelect.clientWidth + 4}px`;
+  tempSelect.remove();
 }
 
 /**
@@ -176,6 +189,9 @@ onMounted(async () => {
     await loadPseudonyms();
   }
   activeToken.value = getActivePseudonym.value?.token;
+  nextTick(() => {
+    adjustSelect();
+  });
 });
 </script>
 
