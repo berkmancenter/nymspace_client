@@ -1,5 +1,8 @@
 <template>
-  <div class="px-2 py-1 cursor-pointer" @click="tagClick(item)">
+  <div
+    class="px-2 py-1 cursor-pointer hover:bg-gray-100"
+    @click="tagClick(item)"
+  >
     <slot>
       {{ item }}
     </slot>
