@@ -160,16 +160,19 @@ async function activateToken() {
 }
 
 function adjustSelect() {
-  let sel = document.getElementById("pseudonymSelect");
-  let tempOption = document.createElement("option");
-  tempOption.textContent = sel.selectedOptions[0].textContent;
-  let tempSelect = document.createElement("select");
-  tempSelect.style.visibility = "hidden";
-  tempSelect.style.position = "fixed";
-  tempSelect.appendChild(tempOption);
-  sel.after(tempSelect);
-  sel.style.width = `${+tempSelect.clientWidth + 4}px`;
-  tempSelect.remove();
+  // Adject select tag width when select tag is visible on DOM
+  if (!getGuestStatus.value) {
+    let sel = document.getElementById("pseudonymSelect");
+    let tempOption = document.createElement("option");
+    tempOption.textContent = sel.selectedOptions[0].textContent;
+    let tempSelect = document.createElement("select");
+    tempSelect.style.visibility = "hidden";
+    tempSelect.style.position = "fixed";
+    tempSelect.appendChild(tempOption);
+    sel.after(tempSelect);
+    sel.style.width = `${+tempSelect.clientWidth + 4}px`;
+    tempSelect.remove();
+  }
 }
 
 /**
