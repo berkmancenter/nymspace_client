@@ -4,25 +4,13 @@
       <div class="lg:w-2/5">
         <CreateAccountForm />
       </div>
-      <div class="ring-red-500 ring-2 p-2 g:mt-4 lg:w-3/5 lg:self-center">
-        <p class="text-red-500">Need input on details for signup</p>
-        <p>Logged in, your pseudonyms develop <b>reputation</b>.</p>
-
-        <p>You may create up to 5 pseudonyms assocated with one account.</p>
-
+      <div class="ring-gray-500 ring-2 p-2 g:mt-4 lg:w-3/5 lg:self-center">
+        <p>Attaching an email to your account is optional.</p>
         <p>
-          After [1 week], your account receives the ability to downvote messages
-          in a thread.
+          Adding an email enables recovery of forgotten passwords, and gives
+          users the option to archive inactive Threads on the interface for more
+          than 90 days.
         </p>
-
-        <p>
-          Good community behavior is rewarded, and vice versa: if your messages
-          repeatedly receive downvotes, suggesting the community finds them
-          unhelpful or inappropriate, your ability to downvote will be revoked
-          (until a sufficient number of upvotes are accumulated).
-        </p>
-
-        <p>Please email XXX@XXX with any questions about your account.</p>
       </div>
     </div>
     <router-link

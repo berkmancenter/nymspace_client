@@ -22,6 +22,12 @@
       placeholder="confirm password"
       v-model="password2"
     />
+    <input
+      class="border-2 border-gray-500 w-full h-12 px-3 text-lg mt-4"
+      type="email"
+      placeholder="Email (optional)"
+      v-model="email"
+    />
     <div class="flex gap-4 flex-col mt-4">
       <div>
         <input class="signup-btn" type="submit" value="Signup" />
@@ -33,8 +39,10 @@
         >
       </div>
     </div>
-
-    <div v-show="showError" class="text-red-500 mt-5 w-full">
+    <div v-show="!isEmailValid" class="text-red-500 mt-5 w-full">
+      * Please enter a valid email address
+    </div>
+    <div v-show="showError" class="text-red-500 mt-1 w-full">
       *
       {{ message }}
     </div>
@@ -45,7 +53,7 @@
   </form>
 </template>
 <script setup>
-import { ref } from "@vue/reactivity";
+import { ref, computed } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import userStore from "../composables/global/useStore";
 const { registerUser } = userStore;
@@ -53,6 +61,7 @@ const router = useRouter();
 const username = ref("");
 const password = ref("");
 const password2 = ref("");
+const email = ref("");
 const showError = ref(false);
 const showSuccess = ref(false);
 const message = ref("");
@@ -63,6 +72,7 @@ function register() {
   if (checkFormValidity() && checkPasswordsMatch()) {
     registerUser(username.value, password.value)
       .then(() => {
+        clearForm();
         message.value = "Register successful. Redirecting to home page.";
         showSuccess.value = true;
         setTimeout(() => {
@@ -78,11 +88,17 @@ function setError(msg, flag) {
   showError.value = flag;
 }
 
+const isEmailValid = computed(() => {
+  if (email.value.trim().length == 0) return true;
+  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value);
+});
+
 function checkFormValidity() {
   const isFormValid =
     username.value?.trim().length > 0 &&
     password.value?.trim().length > 0 &&
-    password2.value?.trim().length > 0;
+    password2.value?.trim().length > 0 &&
+    isEmailValid;
 
   if (!isFormValid) {
     setError("All fields are required", true);
@@ -90,12 +106,20 @@ function checkFormValidity() {
 
   return isFormValid;
 }
+
 function checkPasswordsMatch() {
   let isMatching = password.value?.trim() === password2.value?.trim();
   if (!isMatching) {
     setError("Passwords should be same", true);
   }
   return isMatching;
+}
+
+function clearForm() {
+  username.value = "";
+  password.value = "";
+  password2.value = "";
+  email.value = "";
 }
 </script>
 <style scoped>
