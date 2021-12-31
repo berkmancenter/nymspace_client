@@ -13,7 +13,8 @@
       :disabled="getPseudonyms.length >= 5"
       class="btn"
       v-if="!getGuestStatus"
-      @click="createNewPseudonym"
+      @click="createPseudonym"
+      :title="getNewPseudonymButtonTitle()"
     >
       <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym on
       your account
@@ -27,11 +28,12 @@ import { useRouter } from "vue-router";
 import store from "../../composables/global/useStore";
 import { RefreshIcon } from "@heroicons/vue/outline";
 
+const emit = defineEmits(["create-pseudonym"]);
 const router = useRouter();
 const { logout, getGuestStatus, createNewPseudonym, getPseudonyms } = store;
 
 async function signout() {
-  await logout();
+  logout();
   router.push({ name: "home.featured" });
 }
 
@@ -41,15 +43,24 @@ async function signout() {
  * so the after loggin in, app can navigate
  * to same page
  */
-async function loginViaGuest() {
-  await logout();
-  console.log(router.currentRoute.value.path);
+function loginViaGuest() {
   router.push({
     name: "home.login",
     query: {
       to: router.currentRoute.value.path,
     },
   });
+}
+
+async function createPseudonym() {
+  await createNewPseudonym();
+  emit("create-pseudonym");
+}
+
+function getNewPseudonymButtonTitle() {
+  if (getPseudonyms.value.length >= 5)
+    return "Maximum of five pseudonyms reached.";
+  return "";
 }
 </script>
 
@@ -59,6 +70,6 @@ async function loginViaGuest() {
 }
 
 .btn:disabled {
-  @apply cursor-not-allowed bg-gray-200;
+  @apply cursor-not-allowed bg-gray-200 text-black;
 }
 </style>

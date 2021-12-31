@@ -21,14 +21,19 @@
       <span v-else class="text-red-500">{{
         getActivePseudonym.pseudonym
       }}</span>
-      ].
+      ]
       <TrashIcon
         v-if="getPseudonyms.length > 1"
         class="h-5 w-5 inline-block cursor-pointer hover:text-red-500"
         title="Delete pseudonym"
         @click="openModal"
       />
-      Would you like to:
+      <RefreshIcon
+        v-if="getGuestStatus"
+        class="h-5 w-5 inline-block cursor-pointer hover:text-red-500"
+        title="Get a new pseudonym"
+        @click="refreshPseudonym"
+      />. Would you like to:
     </div>
     <component
       :is="
@@ -37,13 +42,14 @@
           : defineAsyncComponent(() => import('./GuestBanner.vue'))
       "
       @login="registerOneTime"
+      @create-pseudonym="adjustSelect"
     ></component>
 
-    <Modal :is-open="isModalOpen">
+    <Modal :is-open="isModalOpen" @close-modal="closeModal">
       <template v-slot:title>Delete Pseudonym</template>
       <div class="text-xl">Are you sure you want to delete pseudonym?</div>
       <div class="text-lg mt-3">
-        Please select pseudonym to delete
+        Please select the pseudonym to delete
         <select
           v-model="pseudonymToDelete"
           class="bg-gray-200 text-red-500"
@@ -61,25 +67,24 @@
         </select>
       </div>
       <div class="text-xs mt-4">
-        If you want to delete active pseudonym, please activate other pseudonym
-        and come back here.
+        If you want to delete the active pseudonym, please activate other
+        pseudonym first and come back here.
       </div>
       <div :class="isError ? 'text-red-500' : 'text-green-500'" class="mt-4">
         {{ message }}
       </div>
       <template v-slot:actions>
-        <button class="btn success" @click="processDelete">Yes</button>
-        <button class="btn error" @click="closeModal">No</button>
+        <button class="btn success" @click="processDelete">Delete</button>
       </template>
     </Modal>
   </div>
 </template>
 
 <script setup>
-import { onMounted, watch, ref, computed } from "vue";
+import { onMounted, watch, ref, computed, nextTick } from "vue";
 import useStore from "../../composables/global/useStore";
 import { defineAsyncComponent } from "@vue/runtime-core";
-import { TrashIcon } from "@heroicons/vue/outline";
+import { TrashIcon, RefreshIcon } from "@heroicons/vue/outline";
 import Modal from "../Shared/Modal.vue";
 const {
   getLoggedInStatus,
@@ -87,6 +92,7 @@ const {
   getActivePseudonym,
   registerOnce,
   getGuestStatus,
+  loadNewPseudonym,
   activatePseudonym,
   loadPseudonyms,
   deletePseudonym,
@@ -112,6 +118,12 @@ function openModal() {
   isModalOpen.value = true;
 }
 
+async function refreshPseudonym() {
+  await loadNewPseudonym();
+  await registerOnce();
+  adjustSelect();
+}
+
 function closeModal() {
   document.querySelector("body").classList.remove("modal-open");
   isModalOpen.value = false;
@@ -126,7 +138,7 @@ function closeModal() {
 async function processDelete() {
   isError.value = true;
   if (pseudonymToDelete.value.trim().length === 0) {
-    message.value = "Please select pseudonym.";
+    message.value = "Please select a pseudonym.";
     return;
   }
   message.value = "";
@@ -144,9 +156,23 @@ async function processDelete() {
 
 async function activateToken() {
   await activatePseudonym(activeToken.value);
-  let element = document.getElementById("pseudonymSelect");
-  let text = element.options[element.selectedIndex].text;
-  element.style.width = text.length * 15 + "px";
+  adjustSelect();
+}
+
+function adjustSelect() {
+  // Adject select tag width when select tag is visible on DOM
+  if (!getGuestStatus.value) {
+    let sel = document.getElementById("pseudonymSelect");
+    let tempOption = document.createElement("option");
+    tempOption.textContent = sel.selectedOptions[0].textContent;
+    let tempSelect = document.createElement("select");
+    tempSelect.style.visibility = "hidden";
+    tempSelect.style.position = "fixed";
+    tempSelect.appendChild(tempOption);
+    sel.after(tempSelect);
+    sel.style.width = `${+tempSelect.clientWidth + 4}px`;
+    tempSelect.remove();
+  }
 }
 
 /**
@@ -166,6 +192,9 @@ onMounted(async () => {
     await loadPseudonyms();
   }
   activeToken.value = getActivePseudonym.value?.token;
+  nextTick(() => {
+    adjustSelect();
+  });
 });
 </script>
 

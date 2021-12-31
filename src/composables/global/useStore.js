@@ -262,12 +262,8 @@ async function loadPseudonyms() {
 }
 
 async function logout() {
-  ThreadService.setAuth("");
-  VueCookieNext.keys().forEach((cookie) => VueCookieNext.removeCookie(cookie));
-  state.auth = [...[]];
-  state.isLoggedIn = false;
-  state.isGuest = null;
-  return await loadNewPseudonym();
+  await loadNewPseudonym();
+  await registerOnce();
 }
 
 // Getters
