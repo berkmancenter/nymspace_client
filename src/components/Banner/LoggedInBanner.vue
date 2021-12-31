@@ -70,6 +70,6 @@ function getNewPseudonymButtonTitle() {
 }
 
 .btn:disabled {
-  @apply cursor-not-allowed bg-gray-200;
+  @apply cursor-not-allowed bg-gray-200 text-black;
 }
 </style>
