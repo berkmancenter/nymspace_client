@@ -1,41 +1,50 @@
 <template>
   <router-link :to="threadLink" :class="getThreadClass(item)">
     <div class="col-span-8 text-lg">{{ item.name }}</div>
-    <div class="col-span-2 font-semibold justify-self-end"></div>
-    <div class="col-span-2 font-semibold justify-self-end">
+    <div class="col-span-1 font-semibold justify-self-end">
+      <BookmarkIcon
+        :class="item.isFollowed ? 'fill-current text-black' : ''"
+        @click.prevent="pinThread"
+        class="h-5 w-5 inline-block cursor-pointer"
+      />
+    </div>
+    <div class="col-span-3 font-semibold justify-self-end">
       {{ item.messageCount }}
       <ChatAltIcon class="h-5 w-5 inline-block" />
     </div>
   </router-link>
 </template>
 
-<script>
-import { ChatAltIcon } from "@heroicons/vue/outline";
+<script setup>
+import { ChatAltIcon, BookmarkIcon } from "@heroicons/vue/outline";
+import { computed } from "vue";
+import useStore from "../../composables/global/useStore";
+import { useRoute } from "vue-router";
 
-export default {
-  components: {
-    ChatAltIcon,
-  },
+const route = useRoute();
+const { followThread, getUserThreads } = useStore;
 
-  props: {
-    item: {
-      type: Object,
-      required: true,
-    },
-  },
-  methods: {
-    getThreadClass(item) {
-      var className =
-        "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
-      if (item.id == this.$route.params.threadId) className += "  text-red-500";
-      return className;
-    },
-  },
+const threadLink = computed(
+  () => `/channels/${route.params.channelId}/threads/${props.item.id}`
+);
 
-  computed: {
-    threadLink() {
-      return `/channels/${this.$route.params.channelId}/threads/${this.item.id}`;
-    },
+const props = defineProps({
+  item: {
+    type: Object,
+    required: true,
   },
-};
+});
+function getThreadClass(item) {
+  var className =
+    "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-default";
+  if (props.item.id == route.params.threadId) className += "  text-red-500";
+  return className;
+}
+
+function pinThread() {
+  followThread({
+    status: !props.item.isFollowed,
+    threadId: props.item.id,
+  });
+}
 </script>

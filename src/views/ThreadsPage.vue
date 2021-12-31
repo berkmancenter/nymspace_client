@@ -5,7 +5,7 @@
         <h2 class="text-red-500 text-2xl mt-4 mb-2 font-bold">
           {{ channel.name }}
         </h2>
-        <ThreadList :items="items" />
+        <ThreadList :items="sortedThreads" />
         <CreateThread />
       </div>
     </div>
@@ -22,7 +22,7 @@
 import ThreadList from "../components/Threads/ThreadList.vue";
 import CreateThread from "../components/Threads/CreateThread.vue";
 import useStore from "../composables/global/useStore";
-import { onErrorCaptured, onMounted, reactive, ref } from "vue";
+import { onErrorCaptured, onMounted, computed, ref } from "vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 
@@ -32,18 +32,40 @@ onErrorCaptured((e) => {
 
 const {
   getThreads,
-  loadChannels,
   loadThreads,
   getChannel,
   loadChannel,
   getChannels,
+  loadUserThreads,
+  getUserThreads,
 } = useStore;
 
 const items = getThreads;
 
 const channel = ref(getChannel(route.params.channelId));
 
+// compare method to Sort the threads to put followed threads at top
+function compare(a, b) {
+  if (a.isFollowed && b.isFollowed) {
+    return 0;
+  }
+  if (a.isFollowed) {
+    return -1;
+  } else return 1;
+}
+
+const sortedThreads = computed(() => threadsWithFollow.value.sort(compare));
+
+// Add isFollowed property to update if the thread is followed by user
+const threadsWithFollow = computed(() =>
+  items.value.map((x) => ({
+    ...x,
+    isFollowed: getUserThreads.value.some((y) => y.id === x.id),
+  }))
+);
+
 onMounted(async () => {
+  await loadUserThreads();
   await loadThreads(route.params.channelId);
   if (Object.keys(channel.value).length == 0) {
     channel.value = { ...(await loadChannel(route.params.channelId)) };

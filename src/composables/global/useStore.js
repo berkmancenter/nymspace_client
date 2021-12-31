@@ -81,6 +81,11 @@ async function createThread(payload) {
   loadThreads(payload.topicId);
 }
 
+async function followThread(payload) {
+  await ThreadService.followThread(payload);
+  loadUserThreads();
+}
+
 async function loadChannel(id) {
   return await ThreadService.getChannel(id);
 }
@@ -97,6 +102,12 @@ async function loadChannels() {
   }
 }
 
+async function loadUserThreads() {
+  if (!getLoggedInStatus.value) await registerOnce();
+  const userThreads = await ThreadService.getUserThreads();
+  setUserThreads(userThreads);
+}
+
 async function loadThreads(channelId) {
   if (!getLoggedInStatus.value) await registerOnce();
   const threads = await ThreadService.getThreads(channelId);
@@ -105,11 +116,6 @@ async function loadThreads(channelId) {
 
 async function loadThread(threadId) {
   return await ThreadService.getThread(threadId);
-}
-
-async function loadUserThreads() {
-  const userThreads = await ThreadService.getThreads();
-  setUserThreads(userThreads);
 }
 
 async function loadMessages(threadId) {
@@ -302,9 +308,11 @@ const getId = computed(() => state.uid);
 export default {
   getThread,
   loadThreads,
+  loadUserThreads,
   loadThread,
   loadUserThreads,
   createThread,
+  followThread,
   getUserThreads,
   getThreads,
 

@@ -30,6 +30,14 @@ export default {
       .then((x) => x.data);
   },
 
+  followThread: async function (payload) {
+    return await axios
+      .post("/threads/follow", {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
   createMessage: async function (payload) {
     return await axios
       .post("/messages/", {
@@ -60,6 +68,10 @@ export default {
 
   getThreads: async function (channelId) {
     return await axios.get(`/threads/topic/${channelId}`).then((x) => x.data);
+  },
+
+  getUserThreads: async function (channelId) {
+    return await axios.get(`/threads/userthreads`).then((x) => x.data);
   },
 
   getMessages: async function (threadId) {
