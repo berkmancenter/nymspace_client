@@ -7,7 +7,7 @@ import { VueCookieNext } from "vue-cookie-next";
 import navigationGuard from "./plugins/navigationGuard";
 const app = createApp(App);
 
-VueCookieNext.config({ expire: "1y" });
+VueCookieNext.config({ expire: "30d" });
 app.use(VueCookieNext);
 
 const router = createRouter({

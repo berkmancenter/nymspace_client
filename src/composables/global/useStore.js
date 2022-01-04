@@ -39,6 +39,13 @@ function setChannels(channels) {
   state.channels = [...channels];
 }
 
+function removeChannel(id) {
+  let index = state.channels.findIndex((x) => x.id === id);
+  if (index > -1) {
+    state.channels.splice(index, 1);
+  }
+}
+
 function setMessages(messages) {
   state.messages = [...messages];
 }
@@ -74,6 +81,11 @@ function clearMessages() {
 async function createChannel(payload) {
   const channels = await ThreadService.createChannel(payload);
   loadChannels();
+}
+
+async function deleteChannel(id) {
+  await ThreadService.deleteChannel(id);
+  removeChannel(id);
 }
 
 async function createThread(payload) {
@@ -321,6 +333,7 @@ export default {
   loadChannel,
   createChannel,
   getChannels,
+  deleteChannel,
 
   logout,
   loginUser,

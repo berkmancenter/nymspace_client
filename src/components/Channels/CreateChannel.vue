@@ -17,9 +17,10 @@
         v-model="channelName"
         class="rounded border-2 border-gray-500 w-full h-12 px-3 text-xl my-1"
         type="text"
+        placeholder="Enter channel name"
       />
     </div>
-    <div>
+    <div class="mt-2">
       <input
         v-model="enableVoting"
         type="checkbox"
@@ -29,8 +30,10 @@
         >Disable voting</label
       >
     </div>
-    <div class="mt-8 ring-2 ring-gray-500 rounded-sm px-2 py-1 ring-opacity-50">
-      <div>Reminder:</div>
+    <div
+      class="mt-8 ring-2 ring-gray-500 rounded-sm px-2 py-1 ring-opacity-50 bg-gray-200"
+    >
+      <div class="font-semibold">Reminder:</div>
       <div class="mb-4">
         Channels remain on the Threads interface for 90 days after their last
         use. At that time, channel owners can be emailed a reminder, offering
@@ -40,9 +43,9 @@
       <div class="font-semibold">
         Email address:
         <input
-          v-model="notify"
+          v-model="email"
           type="text"
-          id="notify"
+          id="email"
           placeholder="Optional"
           class="rounded border-2 border-gray-500 w-full h-12 px-3 text-xl my-1"
         />
@@ -66,7 +69,7 @@ const isModalOpen = ref(false);
 const channelType = ref("");
 const channelName = ref("");
 const enableVoting = ref(false);
-const notify = ref("");
+const email = ref("");
 const message = ref("");
 
 const channelTypeName = computed(
@@ -82,7 +85,7 @@ function closeModal() {
 function openModal() {
   channelName.value = "";
   enableVoting.value = false;
-  notify.value = "";
+  email.value = "";
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
   document.querySelector("body").classList.add("modal-open");
@@ -94,7 +97,7 @@ function processCreate() {
       name: channelName.value,
       private: channelType.value === "private",
       votingAllowed: enableVoting.value,
-      archivable: notify.value,
+      archivable: true,
     })
       .then((x) => closeModal())
       .catch((err) => (message.value = err.response.data.message));
