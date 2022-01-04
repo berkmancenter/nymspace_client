@@ -111,6 +111,14 @@ export default {
       .then((x) => x.data);
   },
 
+  forgotPassword: async function (email) {
+    return await axios
+      .post("/auth/forgotPassword", {
+        email,
+      })
+      .then((x) => x.data);
+  },
+
   registerUser: async function (username, password, auth) {
     return await axios
       .post(`/auth/register`, {

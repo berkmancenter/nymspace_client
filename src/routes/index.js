@@ -1,5 +1,6 @@
 import HomePageLayout from "../layout/HomePageLayout.vue";
 import LoginPage from "../views/LoginPage.vue";
+import ResetPassword from "../views/ResetPassword.vue";
 import CreateAccountPage from "../views/CreateAccountPage.vue";
 import LandingPageLayout from "../layout/LandingPageLayout.vue";
 import ThreadsPage from "../views/ThreadsPage.vue";
@@ -41,6 +42,11 @@ export default [
         path: "login",
         name: "home.login",
         component: LoginPage,
+      },
+      {
+        path: "reset",
+        name: "home.reset",
+        component: ResetPassword,
       },
       {
         path: "create-account",
