@@ -4,7 +4,7 @@
       class="w-full px-2 h-16 leading-relaxed self-cente flex justify-center items-center my-2"
       v-if="getGuestStatus"
     >
-      <span>Keep using this one-time pseudonym, or</span>
+      <span class="text-xl">Keep using this one-time pseudonym, or</span>
     </div>
     <button v-else class="btn" @click="signout">
       <span>Create a new pseudonym for one session (log out)</span>

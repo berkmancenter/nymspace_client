@@ -136,4 +136,11 @@ export default {
   deletePseudonym: async function (id) {
     return await axios.delete(`/users/pseudonyms/${id}`).then((x) => x.data);
   },
+
+  deleteChannel: async function (id) {
+    return await axios.delete(`/topics/${id}`).then((x) => x.data);
+  },
+  deleteThread: async function (id) {
+    return await axios.delete(`/deleteThread/${id}`).then((x) => x.data);
+  },
 };
