@@ -200,6 +200,10 @@ async function loginUser(username, password) {
   });
 }
 
+async function forgotPassword(email) {
+  return await ThreadService.forgotPassword(email);
+}
+
 async function registerUser(username, password) {
   return await ThreadService.registerUser(username, password, {
     pseudonym: getActivePseudonym.value.pseudonym,
@@ -356,4 +360,6 @@ export default {
   getActivePseudonym,
 
   getMajorError,
+
+  forgotPassword,
 };

@@ -29,6 +29,12 @@
           >Signup</router-link
         >
       </div>
+      <div>
+        Forgot password?
+        <router-link to="reset" class="text-red-500 hover:underline font-bold"
+          >Reset password</router-link
+        >
+      </div>
     </div>
 
     <div v-show="showError" class="text-red-500 mt-5 w-full border-red-500">
