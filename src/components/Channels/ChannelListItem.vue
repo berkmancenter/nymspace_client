@@ -2,7 +2,7 @@
   <router-link :to="channelLink" :class="getChannelClass(item)">
     <div class="col-span-5 text-lg">{{ item.name }}</div>
     <div class="group col-span-1 font-semibold justify-self-end">
-      <EditChannel :show="canEditDelete(item)" @edit-channel="processDelete" />
+      <EditChannel :item="item" :show="canEditDelete(item)" />
     </div>
     <div class="group col-span-1 font-semibold justify-self-end">
       <DeleteChannel
