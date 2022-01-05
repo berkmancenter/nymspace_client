@@ -4,7 +4,7 @@
     class="h-6 w-6 inline-block border group-hover:bg-gray-300 border-gray-100 group-hover:border-black rounded"
     @click.prevent="openModal"
   />
-  <Modal :is-open="isModalOpen">
+  <Modal :is-open="isModalOpen" @close-modal="closeModal">
     <template v-slot:title>Delete Channel</template>
     <div class="font-semibold">
       Are you sure you want to delete channel

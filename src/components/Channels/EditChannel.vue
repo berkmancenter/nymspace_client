@@ -4,7 +4,7 @@
     class="h-6 w-6 inline-block border group-hover:bg-gray-300 border-gray-100 group-hover:border-black rounded"
     @click.prevent="openModal"
   />
-  <Modal :is-open="isModalOpen">
+  <Modal :is-open="isModalOpen" @close-modal="closeModal">
     <template v-slot:title>Edit Channel</template>
     <span class="font-semibold">Channel name:</span>
     <div>
@@ -68,7 +68,7 @@ const email = ref("");
 const message = ref("");
 
 const isEmailValid = computed(() => {
-  if (email.value.trim().length == 0) return true;
+  if (!email.value || email.value.trim().length == 0) return true;
   return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value);
 });
 

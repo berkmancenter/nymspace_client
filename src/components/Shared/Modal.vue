@@ -3,11 +3,11 @@
     <div v-if="isOpen" class="modal">
       <div class="modal-content">
         <div
-          class="my-3 text-2xl bg-red-500 p-2 font-semibold text-white rounded"
+          class="my-3 text-2xl bg-red-500 px-2 py-1 font-semibold text-white"
         >
           <slot name="title">Modal Title</slot>
           <XIcon
-            class="float-right h-6 w-6 inline-block cursor-pointer"
+            class="mt-1 float-right h-6 w-6 inline-block cursor-pointer"
             title="Close"
             @click="closeModal"
           />
