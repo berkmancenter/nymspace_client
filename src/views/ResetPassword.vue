@@ -72,11 +72,22 @@ async function reset() {
   setError("", false);
   showError.value = false;
   if (isEmailValid.value) {
-    await forgotPassword(email.value).catch((x) =>
-      setError(x.response.data.message, true)
-    );
-    setError("", false);
-    isLinkSent.value = true;
+    await forgotPassword(email.value)
+      .then(() => {
+        setError("", false);
+        isLinkSent.value = true;
+      })
+      .catch((x) => {
+        if (x.isAxiosError) {
+          setError(
+            "Timeout while requesting password reset. Please contact administrator.",
+            true
+          );
+        }
+        if (x.response) {
+          setError(x.response.data.message, true);
+        }
+      });
   } else {
     setError("Please enter valid email", true);
   }

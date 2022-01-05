@@ -70,7 +70,7 @@ function register() {
   setError("", false);
   showError.value = false;
   if (checkFormValidity() && checkPasswordsMatch()) {
-    registerUser(username.value, password.value)
+    registerUser(username.value, password.value, email.value)
       .then(() => {
         clearForm();
         message.value = "Register successful. Redirecting to home page.";
@@ -101,7 +101,7 @@ function checkFormValidity() {
     isEmailValid;
 
   if (!isFormValid) {
-    setError("All fields are required", true);
+    setError("All fields (except email) are required", true);
   }
 
   return isFormValid;

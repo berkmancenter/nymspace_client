@@ -113,20 +113,18 @@ export default {
 
   forgotPassword: async function (email) {
     return await axios
-      .post("/auth/forgotPassword", {
-        email,
-      })
+      .post(
+        "/auth/forgotPassword",
+        {
+          email,
+        },
+        { timeout: 10 * 1000 }
+      )
       .then((x) => x.data);
   },
 
-  registerUser: async function (username, password, auth) {
-    return await axios
-      .post(`/auth/register`, {
-        username,
-        password,
-        ...auth,
-      })
-      .then((x) => x.data);
+  registerUser: async function (payload) {
+    return await axios.post(`/auth/register`, payload).then((x) => x.data);
   },
 
   registerOnce: async function (auth) {
