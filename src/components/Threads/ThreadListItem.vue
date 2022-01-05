@@ -3,9 +3,9 @@
     <div class="col-span-8 text-lg">{{ item.name }}</div>
     <div class="col-span-1 font-semibold justify-self-end">
       <BookmarkIcon
-        :class="item.isFollowed ? 'fill-current text-black' : ''"
+        :class="item.isFollowed ? 'fill-current text-red-500' : ''"
         @click.prevent="pinThread"
-        class="h-5 w-5 inline-block cursor-pointer"
+        class="h-5 w-5 inline-block"
       />
     </div>
     <div class="col-span-3 font-semibold justify-self-end">
@@ -36,8 +36,9 @@ const props = defineProps({
 });
 function getThreadClass(item) {
   var className =
-    "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-default";
-  if (props.item.id == route.params.threadId) className += "  text-red-500";
+    "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
+  if (props.item.id == route.params.threadId)
+    className += "  text-red-500 bg-gray-100";
   return className;
 }
 
