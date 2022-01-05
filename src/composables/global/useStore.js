@@ -39,6 +39,13 @@ function setChannels(channels) {
   state.channels = [...channels];
 }
 
+function removeChannel(id) {
+  let index = state.channels.findIndex((x) => x.id === id);
+  if (index > -1) {
+    state.channels.splice(index, 1);
+  }
+}
+
 function setMessages(messages) {
   state.messages = [...messages];
 }
@@ -76,6 +83,16 @@ async function createChannel(payload) {
   loadChannels();
 }
 
+async function updateChannel(payload) {
+  await ThreadService.updateChannel(payload);
+  loadChannels();
+}
+
+async function deleteChannel(id) {
+  await ThreadService.deleteChannel(id);
+  removeChannel(id);
+}
+
 async function createThread(payload) {
   const threads = await ThreadService.createThread(payload);
   loadThreads(payload.topicId);
@@ -84,6 +101,17 @@ async function createThread(payload) {
 async function followThread(payload) {
   await ThreadService.followThread(payload);
   loadUserThreads();
+}
+
+async function loadUser() {
+  return await ThreadService.getUser(state.uid);
+}
+
+async function updateUser(payload) {
+  return await ThreadService.updateUser({
+    ...payload,
+    userId: state.uid,
+  });
 }
 
 async function loadChannel(id) {
@@ -320,7 +348,9 @@ export default {
   loadChannels,
   loadChannel,
   createChannel,
+  updateChannel,
   getChannels,
+  deleteChannel,
 
   logout,
   loginUser,
@@ -330,6 +360,8 @@ export default {
   getLoggedInStatus,
   getUserToken,
   getId,
+  loadUser,
+  updateUser,
 
   loadMessages,
   clearMessages,

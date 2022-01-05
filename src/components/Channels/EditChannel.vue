@@ -1,26 +1,20 @@
 <template>
-  <select
-    v-model="channelType"
-    @change="openModal"
-    class="border-2 border-gray-400 p-1"
-    v-if="getLoggedInStatus && !getGuestStatus"
-  >
-    <option disabled selected value="">Create New Channel</option>
-    <option value="public">Public</option>
-    <option value="private">Private</option>
-  </select>
+  <PencilIcon
+    v-if="show"
+    class="h-6 w-6 inline-block border group-hover:bg-gray-300 border-gray-100 group-hover:border-black rounded"
+    @click.prevent="openModal"
+  />
   <Modal :is-open="isModalOpen">
-    <template v-slot:title>Create {{ channelTypeName }} Channel</template>
+    <template v-slot:title>Edit Channel</template>
     <span class="font-semibold">Channel name:</span>
     <div>
       <input
         v-model="channelName"
         class="rounded border-2 border-gray-500 w-full h-12 px-3 text-xl my-1"
         type="text"
-        placeholder="Enter channel name"
       />
     </div>
-    <div class="mt-2">
+    <div>
       <input
         v-model="enableVoting"
         type="checkbox"
@@ -30,9 +24,7 @@
         >Disable voting</label
       >
     </div>
-    <div
-      class="mt-8 ring-2 ring-gray-500 rounded-sm px-2 py-1 ring-opacity-50 bg-gray-200"
-    >
+    <div class="mt-8 ring-2 ring-gray-500 rounded-sm px-2 py-1 ring-opacity-50">
       <div class="font-semibold">Reminder:</div>
       <div class="mb-4">
         Channels remain on the Threads interface for 90 days after their last
@@ -52,62 +44,90 @@
       </div>
     </div>
     <div class="text-red-500">{{ message }}</div>
+    <div v-show="!isEmailValid" class="text-red-500 mt-5 w-full">
+      * Please enter a valid email address
+    </div>
     <template v-slot:actions>
-      <button class="btn success" @click="processCreate">Create</button>
+      <button class="btn success" @click="processUpdate">Update</button>
       <button class="btn error" @click="closeModal">Cancel</button>
     </template>
   </Modal>
 </template>
 
 <script setup>
+import { PencilIcon } from "@heroicons/vue/outline";
 import { computed, ref } from "@vue/reactivity";
 import useStore from "../../composables/global/useStore";
 import Modal from "../Shared/Modal.vue";
-const { getLoggedInStatus, createChannel, getGuestStatus } = useStore;
+const { updateChannel, getGuestStatus, loadUser, updateUser } = useStore;
 
 const isModalOpen = ref(false);
-const channelType = ref("");
 const channelName = ref("");
 const enableVoting = ref(false);
 const email = ref("");
 const message = ref("");
 
-const channelTypeName = computed(
-  () => channelType.value[0].toUpperCase() + channelType.value.slice(1)
-);
+const isEmailValid = computed(() => {
+  if (email.value.trim().length == 0) return true;
+  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value);
+});
+
+const props = defineProps({
+  show: {
+    type: Boolean,
+    required: true,
+  },
+  item: {
+    type: Object,
+    required: true,
+  },
+});
 
 function closeModal() {
   document.querySelector("body").classList.remove("modal-open");
   isModalOpen.value = false;
-  channelType.value = "";
 }
 
-function openModal() {
-  channelName.value = "";
-  enableVoting.value = false;
-  email.value = "";
+async function openModal() {
+  const user = await fetchDetails();
+  channelName.value = props.item.name;
+  enableVoting.value = props.item.votingAllowed;
+  email.value = user.email;
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
   document.querySelector("body").classList.add("modal-open");
 }
 
-function processCreate() {
+function isNameValid() {
+  return channelName.value.trim().length > 0;
+}
+
+async function processUpdate() {
   if (isFormValid()) {
-    createChannel({
+    if (email.value.trim().length > 0) {
+      await updateUser({
+        email: email.value,
+      });
+    }
+    updateChannel({
+      id: props.item.id,
       name: channelName.value,
-      private: channelType.value === "private",
       votingAllowed: enableVoting.value,
       archivable: true,
     })
       .then((x) => closeModal())
       .catch((err) => (message.value = err.response.data.message));
-  } else {
+  } else if (!isNameValid()) {
     message.value = "Name is required";
   }
 }
 
+async function fetchDetails() {
+  return await loadUser();
+}
+
 function isFormValid() {
-  return channelName.value.trim().length > 0;
+  return isNameValid() & isEmailValid.value;
 }
 </script>
 

@@ -22,6 +22,14 @@ export default {
       .then((x) => x.data);
   },
 
+  updateChannel: async function (payload) {
+    return await axios
+      .put("/topics", {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
   createThread: async function (payload) {
     return await axios
       .post("/threads", {
@@ -102,6 +110,18 @@ export default {
       .then((x) => x.data);
   },
 
+  getUser: async function (id) {
+    return await axios.get(`/users/user/${id}`).then((x) => x.data);
+  },
+
+  updateUser: async function (payload) {
+    return await axios
+      .put(`/users`, {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
   loginUser: async function (username, password) {
     return await axios
       .post(`/auth/login`, {
@@ -147,5 +167,12 @@ export default {
 
   deletePseudonym: async function (id) {
     return await axios.delete(`/users/pseudonyms/${id}`).then((x) => x.data);
+  },
+
+  deleteChannel: async function (id) {
+    return await axios.delete(`/topics/${id}`).then((x) => x.data);
+  },
+  deleteThread: async function (id) {
+    return await axios.delete(`/deleteThread/${id}`).then((x) => x.data);
   },
 };
