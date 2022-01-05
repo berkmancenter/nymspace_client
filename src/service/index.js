@@ -22,6 +22,14 @@ export default {
       .then((x) => x.data);
   },
 
+  updateChannel: async function (payload) {
+    return await axios
+      .put("/topics", {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
   createThread: async function (payload) {
     return await axios
       .post("/threads", {
@@ -98,6 +106,18 @@ export default {
     return await axios
       .post(`/auth/register`, {
         password: token,
+      })
+      .then((x) => x.data);
+  },
+
+  getUser: async function (id) {
+    return await axios.get(`/users/user/${id}`).then((x) => x.data);
+  },
+
+  updateUser: async function (payload) {
+    return await axios
+      .put(`/users`, {
+        ...payload,
       })
       .then((x) => x.data);
   },
