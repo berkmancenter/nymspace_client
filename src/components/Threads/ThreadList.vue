@@ -12,18 +12,13 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import ThreadListItem from "./ThreadListItem.vue";
 
-export default {
-  components: {
-    ThreadListItem,
+const props = defineProps({
+  items: {
+    type: Array,
+    required: true,
   },
-  props: {
-    items: {
-      type: Array,
-      required: true,
-    },
-  },
-};
+});
 </script>
