@@ -234,11 +234,21 @@ async function loginUser(username, password) {
   });
 }
 
-async function registerUser(username, password) {
-  return await ThreadService.registerUser(username, password, {
+async function forgotPassword(email) {
+  return await ThreadService.forgotPassword(email);
+}
+
+async function registerUser(username, password, email) {
+  let payload = {
+    username: username,
+    password: password,
     pseudonym: getActivePseudonym.value.pseudonym,
     token: getActivePseudonym.value.token,
-  }).then((data) => {
+  };
+  if (email.trim().length > 0) {
+    payload = { ...payload, email };
+  }
+  return await ThreadService.registerUser(payload).then((data) => {
     updateAuthTokens(data);
   });
 }
@@ -396,4 +406,6 @@ export default {
   getActivePseudonym,
 
   getMajorError,
+
+  forgotPassword,
 };
