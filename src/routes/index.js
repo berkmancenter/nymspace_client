@@ -1,12 +1,13 @@
-import HomePageLayout from "../layout/HomePageLayout.vue";
-import LoginPage from "../views/LoginPage.vue";
-import ResetPassword from "../views/ResetPassword.vue";
-import CreateAccountPage from "../views/CreateAccountPage.vue";
-import LandingPageLayout from "../layout/LandingPageLayout.vue";
-import ThreadsPage from "../views/ThreadsPage.vue";
-import MessagesPage from "../views/MessagesPage.vue";
-import LandingPage from "../views/LandingPage.vue";
-import NotFound from "../views/NotFound.vue";
+// Lazy loading of the components
+const HomePageLayout = () => import("../layout/HomePageLayout.vue");
+const LoginPage = () => import("../views/LoginPage.vue");
+const ResetPassword = () => import("../views/ResetPassword.vue");
+const CreateAccountPage = () => import("../views/CreateAccountPage.vue");
+const LandingPageLayout = () => import("../layout/LandingPageLayout.vue");
+const ThreadsPage = () => import("../views/ThreadsPage.vue");
+const MessagesPage = () => import("../views/MessagesPage.vue");
+const LandingPage = () => import("../views/LandingPage.vue");
+const NotFound = () => import("../views/NotFound.vue");
 
 export default [
   {
