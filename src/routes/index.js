@@ -2,6 +2,7 @@
 const HomePageLayout = () => import("../layout/HomePageLayout.vue");
 const LoginPage = () => import("../views/LoginPage.vue");
 const ResetPassword = () => import("../views/ResetPassword.vue");
+const ForgotPassword = () => import("../views/ForgotPassword.vue");
 const CreateAccountPage = () => import("../views/CreateAccountPage.vue");
 const LandingPageLayout = () => import("../layout/LandingPageLayout.vue");
 const ThreadsPage = () => import("../views/ThreadsPage.vue");
@@ -47,7 +48,13 @@ export default [
       {
         path: "reset",
         name: "home.reset",
+        component: ForgotPassword,
+      },
+      {
+        path: "reset-password",
+        name: "home.reset.password",
         component: ResetPassword,
+        props: (route) => ({ token: route.query.token }),
       },
       {
         path: "create-account",

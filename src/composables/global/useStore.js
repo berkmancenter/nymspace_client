@@ -238,6 +238,13 @@ async function forgotPassword(email) {
   return await ThreadService.forgotPassword(email);
 }
 
+async function resetPassword(password, token) {
+  return await ThreadService.resetPassword({
+    password,
+    token,
+  });
+}
+
 async function registerUser(username, password, email) {
   let payload = {
     username: username,
@@ -408,4 +415,5 @@ export default {
   getMajorError,
 
   forgotPassword,
+  resetPassword,
 };

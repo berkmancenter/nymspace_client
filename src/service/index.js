@@ -143,6 +143,10 @@ export default {
       .then((x) => x.data);
   },
 
+  resetPassword: async function (payload) {
+    return await axios.post("/auth/resetPassword", payload).then((x) => x.data);
+  },
+
   registerUser: async function (payload) {
     return await axios.post(`/auth/register`, payload).then((x) => x.data);
   },
