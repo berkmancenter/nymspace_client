@@ -24,6 +24,6 @@ export default {
 
 <style scoped>
 .flip-list-move {
-  transition: transform 0.8s ease;
+  transition: transform 0.2s ease;
 }
 </style>

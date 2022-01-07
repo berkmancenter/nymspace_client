@@ -46,6 +46,14 @@ export default {
       .then((x) => x.data);
   },
 
+  followChannel: async function (payload) {
+    return await axios
+      .post("/topics/follow", {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
   createMessage: async function (payload) {
     return await axios
       .post("/messages/", {
@@ -68,6 +76,10 @@ export default {
 
   getChannels: async function () {
     return await axios.get("/topics").then((x) => x.data);
+  },
+
+  getUserChannels: async function () {
+    return await axios.get("/topics/userTopics").then((x) => x.data);
   },
 
   getPublicChannels: async function (token) {

@@ -1,18 +1,25 @@
 <template>
   <router-link :to="channelLink" :class="getChannelClass(item)">
-    <div class="col-span-5 text-lg">{{ item.name }}</div>
-    <div class="group col-span-1 font-semibold justify-self-end">
-      <EditChannel :item="item" :show="canEditDelete(item)" />
+    <div class="col-span-5 text-lg">
+      {{ item.name }}
+      <LockClosedIcon v-if="isPrivate(item)" class="h-5 w-5 inline-block" />
     </div>
-    <div class="group col-span-1 font-semibold justify-self-end">
+    <div
+      class="col-span-3 font-semibold justify-self-end flex items-center justify-around gap-x-4"
+    >
+      <EditChannel :item="item" :show="canEditDelete(item)" />
+
       <DeleteChannel
         :show="canEditDelete(item)"
         :name="item.name"
         @delete-channel="processDelete"
       />
-    </div>
-    <div class="col-span-1 font-semibold justify-self-end">
-      <LockClosedIcon v-if="isPrivate(item)" class="h-5 w-5 inline-block" />
+
+      <BookmarkIcon
+        :class="item.isFollowed ? 'fill-current text-red-500' : ''"
+        @click.prevent="pinChannel"
+        class="h-5 w-5 inline-block cursor-pointer hover:text-black hover:stroke-current"
+      />
     </div>
     <div class="col-span-2 font-semibold justify-self-end">
       {{ item.threadCount }} threads
@@ -25,13 +32,17 @@
 </template>
 
 <script setup>
-import { ChatAltIcon, LockClosedIcon } from "@heroicons/vue/outline";
+import {
+  ChatAltIcon,
+  LockClosedIcon,
+  BookmarkIcon,
+} from "@heroicons/vue/outline";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import useStore from "../../composables/global/useStore";
 import DeleteChannel from "./DeleteChannel.vue";
 import EditChannel from "./EditChannel.vue";
-const { getGuestStatus, getId, deleteChannel } = useStore;
+const { getGuestStatus, getId, deleteChannel, followChannel } = useStore;
 
 const route = useRoute();
 const props = defineProps({
@@ -43,7 +54,7 @@ const props = defineProps({
 
 function getChannelClass(item) {
   var className =
-    "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
+    "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-default";
   if (item.name == route.params.channelId) className += " bg-gray-100";
   return className;
 }
@@ -60,5 +71,13 @@ const channelLink = computed(() => `/channels/${props.item.id}/`);
 
 async function processDelete() {
   await deleteChannel(props.item.id);
+}
+
+function pinChannel() {
+  console.log("yolo");
+  followChannel({
+    status: !props.item.isFollowed,
+    topicId: props.item.id,
+  });
 }
 </script>

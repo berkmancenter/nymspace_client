@@ -1,7 +1,7 @@
 <template>
   <TrashIcon
     v-if="show"
-    class="h-6 w-6 inline-block border group-hover:bg-gray-300 border-gray-100 group-hover:border-black rounded"
+    class="h-6 w-6 inline-block hover:text-black hover:fill-current rounded cursor-pointer"
     @click.prevent="openModal"
   />
   <Modal :is-open="isModalOpen" @close-modal="closeModal">

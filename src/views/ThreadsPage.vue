@@ -60,7 +60,9 @@ const sortedThreads = computed(() => threadsWithFollow.value.sort(compare));
 const threadsWithFollow = computed(() =>
   items.value.map((x) => ({
     ...x,
-    isFollowed: getUserThreads.value.some((y) => y.id === x.id),
+    isFollowed: getUserThreads.value.some(
+      (y) => y.id === x.id && y.hasOwnProperty("followed") && y.followed
+    ),
   }))
 );
 
