@@ -52,6 +52,9 @@
       </div>
     </div>
     <div class="text-red-500">{{ message }}</div>
+    <div v-show="!isEmailValid" class="text-red-500 mt-5 w-full">
+      * Please enter a valid email address
+    </div>
     <template v-slot:actions>
       <button class="btn success" @click="processCreate">Create</button>
       <button class="btn error" @click="closeModal">Cancel</button>
@@ -76,6 +79,11 @@ const channelTypeName = computed(
   () => channelType.value[0].toUpperCase() + channelType.value.slice(1)
 );
 
+const isEmailValid = computed(() => {
+  if (!email.value || email.value.trim().length == 0) return true;
+  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value);
+});
+
 function closeModal() {
   document.querySelector("body").classList.remove("modal-open");
   isModalOpen.value = false;
@@ -93,12 +101,16 @@ function openModal() {
 
 function processCreate() {
   if (isFormValid()) {
-    createChannel({
+    let payload = {
       name: channelName.value,
       private: channelType.value === "private",
       votingAllowed: enableVoting.value,
       archivable: true,
-    })
+    };
+    if (email.value.trim().length > 0) {
+      payload = { ...payload, archiveEmail: email.value };
+    }
+    createChannel(payload)
       .then((x) => closeModal())
       .catch((err) => (message.value = err.response.data.message));
   } else {
@@ -107,7 +119,7 @@ function processCreate() {
 }
 
 function isFormValid() {
-  return channelName.value.trim().length > 0;
+  return (channelName.value.trim().length > 0) & isEmailValid.value;
 }
 </script>
 

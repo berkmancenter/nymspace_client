@@ -24,7 +24,9 @@
         >Disable voting</label
       >
     </div>
-    <div class="mt-8 ring-2 ring-gray-500 rounded-sm px-2 py-1 ring-opacity-50">
+    <div
+      class="mt-8 ring-2 ring-gray-500 rounded-sm px-2 py-1 ring-opacity-50 bg-gray-200"
+    >
       <div class="font-semibold">Reminder:</div>
       <div class="mb-4">
         Channels remain on the Threads interface for 90 days after their last
@@ -92,7 +94,7 @@ async function openModal() {
   const user = await fetchDetails();
   channelName.value = props.item.name;
   enableVoting.value = props.item.votingAllowed;
-  email.value = user.email;
+  email.value = props.item.archiveEmail || user.email;
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
   document.querySelector("body").classList.add("modal-open");
@@ -104,17 +106,18 @@ function isNameValid() {
 
 async function processUpdate() {
   if (isFormValid()) {
-    if (email.value.trim().length > 0) {
-      await updateUser({
-        email: email.value,
-      });
-    }
-    updateChannel({
+    let payload = {
       id: props.item.id,
       name: channelName.value,
       votingAllowed: enableVoting.value,
       archivable: true,
-    })
+    };
+
+    if (email.value !== undefined && email.value.trim().length > 0) {
+      payload = { ...payload, archiveEmail: email.value };
+    }
+
+    updateChannel(payload)
       .then((x) => closeModal())
       .catch((err) => (message.value = err.response.data.message));
   } else if (!isNameValid()) {
