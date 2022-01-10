@@ -107,10 +107,9 @@ function processCreate() {
       private: channelType.value === "private",
       votingAllowed: !disableVoting.value,
       archivable: true,
+      archiveEmail: email.value,
     };
-    if (email.value.trim().length > 0) {
-      payload = { ...payload, archiveEmail: email.value };
-    }
+
     createChannel(payload)
       .then((x) => closeModal())
       .catch((err) => (message.value = err.response.data.message));

@@ -110,11 +110,8 @@ async function processUpdate() {
       name: channelName.value,
       votingAllowed: !disableVoting.value,
       archivable: true,
+      archiveEmail: email.value,
     };
-
-    if (email.value !== undefined && email.value.trim().length > 0) {
-      payload = { ...payload, archiveEmail: email.value };
-    }
 
     updateChannel(payload)
       .then((x) => closeModal())
