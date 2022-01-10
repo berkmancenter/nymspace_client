@@ -61,7 +61,7 @@ import { PencilIcon } from "@heroicons/vue/outline";
 import { computed, ref } from "@vue/reactivity";
 import useStore from "../../composables/global/useStore";
 import Modal from "../Shared/Modal.vue";
-const { updateChannel, getGuestStatus, loadUser, updateUser } = useStore;
+const { updateChannel, getGuestStatus } = useStore;
 
 const isModalOpen = ref(false);
 const channelName = ref("");
@@ -91,10 +91,9 @@ function closeModal() {
 }
 
 async function openModal() {
-  const user = await fetchDetails();
   channelName.value = props.item.name;
   disableVoting.value = !props.item.votingAllowed;
-  email.value = props.item.archiveEmail || user.email;
+  email.value = props.item.archiveEmail;
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
   document.querySelector("body").classList.add("modal-open");
@@ -123,10 +122,6 @@ async function processUpdate() {
   } else if (!isNameValid()) {
     message.value = "Name is required";
   }
-}
-
-async function fetchDetails() {
-  return await loadUser();
 }
 
 function isFormValid() {
