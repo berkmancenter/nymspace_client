@@ -18,9 +18,13 @@
         :class="getUpVoteClass(item)"
       >
         <ChevronUpIcon
-          @click="upvote(item.id)"
+          @click="upvote(item.id, !item.hasUpvoted)"
           class="h-6 w-6"
-          :class="item.canVote ? 'cursor-pointer' : 'pointer-events-none'"
+          :class="
+            item.canVote || item.hasUpvoted
+              ? 'cursor-pointer'
+              : 'pointer-events-none'
+          "
         /><span class="text-sm font-bold">{{ item.upVotes.length }}</span>
       </div>
       <div
@@ -28,10 +32,10 @@
         :class="getDownVoteClass(item)"
       >
         <ChevronDownIcon
-          @click="downvote(item.id)"
+          @click="downvote(item.id, !item.hasDownvoted)"
           class="h-6 w-6 cursor-pointer"
           :class="
-            item.canVote && !getGuestStatus.value
+            (item.canVote || item.hasDownvoted) && !getGuestStatus.value
               ? 'cursor-pointer'
               : 'pointer-events-none'
           "

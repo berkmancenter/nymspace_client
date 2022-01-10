@@ -62,12 +62,10 @@ export default {
       .then((x) => x.data);
   },
 
-  upvote: async function (id) {
-    return await axios.post(`messages/${id}/upvote`).then((x) => x.data);
-  },
-
-  downvote: async function (id) {
-    return await axios.post(`messages/${id}/downvote`).then((x) => x.data);
+  vote: async function (payload) {
+    return await axios
+      .post(`messages/${payload.messageId}/vote`, payload)
+      .then((x) => x.data);
   },
 
   getChannel: async function (id) {

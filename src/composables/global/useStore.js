@@ -180,8 +180,12 @@ async function postMessage(payload) {
   setMessage(message);
 }
 
-async function upvote(id) {
-  const response = await ThreadService.upvote(id);
+async function upvote(id, status) {
+  const response = await ThreadService.vote({
+    messageId: id,
+    direction: "up",
+    status: status,
+  });
   updateMessage(response);
 }
 
@@ -189,9 +193,13 @@ async function upvote(id) {
  * Let only non guest user downvote a message
  * @param {*} id : message id to cast down vote
  */
-async function downvote(id) {
+async function downvote(id, status) {
   if (!getGuestStatus.value) {
-    const response = await ThreadService.downvote(id);
+    const response = await ThreadService.vote({
+      messageId: id,
+      direction: "down",
+      status: status,
+    });
     updateMessage(response);
   }
 }
