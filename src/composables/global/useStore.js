@@ -15,6 +15,7 @@ const state = reactive({
   isLoggedIn: VueCookieNext.getCookie("access_token") !== null,
   isGuest: VueCookieNext.getCookie("is_guest") !== null,
   channels: [],
+  activeChannel: null,
   userChannels: [],
   threads: [],
   userThreads: [],
@@ -37,6 +38,10 @@ function setThreads(threads) {
 
 function setAuth(response) {
   state.auth = [{ ...response }];
+}
+
+function setActiveChannel(channel) {
+  state.activeChannel = { ...channel };
 }
 
 function setChannels(channels) {
@@ -366,6 +371,8 @@ const getAuth = computed(() => ({
 
 const getId = computed(() => state.uid);
 
+const getActiveChannel = computed(() => state.activeChannel);
+
 export default {
   getThread,
   loadThreads,
@@ -381,6 +388,8 @@ export default {
   loadChannels,
   loadUserChannels,
   loadChannel,
+  setActiveChannel,
+  getActiveChannel,
   createChannel,
   followChannel,
   updateChannel,

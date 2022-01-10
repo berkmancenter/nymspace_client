@@ -12,7 +12,7 @@
         >: <span v-html="formattedBody"></span>
       </p>
     </div>
-    <div>
+    <div v-if="showVoting">
       <div
         class="flex items-center -mb-2.5 text-gray-300"
         :class="getUpVoteClass(item)"
@@ -47,7 +47,7 @@ import { computed } from "vue";
 
 import useStore from "../../composables/global/useStore";
 
-const { upvote, downvote, getGuestStatus } = useStore;
+const { upvote, downvote, getGuestStatus, getActiveChannel } = useStore;
 
 const props = defineProps({
   item: {
@@ -55,6 +55,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const showVoting = computed(
+  () => getActiveChannel.value && getActiveChannel.value.votingAllowed
+);
 
 function getUpVoteClass(item) {
   let className = item.canVote ? "hover:text-gray-700" : "";
