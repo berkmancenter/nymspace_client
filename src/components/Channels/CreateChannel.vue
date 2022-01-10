@@ -22,7 +22,7 @@
     </div>
     <div class="mt-2">
       <input
-        v-model="enableVoting"
+        v-model="disableVoting"
         type="checkbox"
         id="disableVoting"
         class="cursor-pointer w-4 h-4 mr-2 align-middle"
@@ -71,7 +71,7 @@ const { getLoggedInStatus, createChannel, getGuestStatus } = useStore;
 const isModalOpen = ref(false);
 const channelType = ref("");
 const channelName = ref("");
-const enableVoting = ref(false);
+const disableVoting = ref(false);
 const email = ref("");
 const message = ref("");
 
@@ -92,7 +92,7 @@ function closeModal() {
 
 function openModal() {
   channelName.value = "";
-  enableVoting.value = false;
+  disableVoting.value = false;
   email.value = "";
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
@@ -104,7 +104,7 @@ function processCreate() {
     let payload = {
       name: channelName.value,
       private: channelType.value === "private",
-      votingAllowed: enableVoting.value,
+      votingAllowed: !disableVoting.value,
       archivable: true,
     };
     if (email.value.trim().length > 0) {
