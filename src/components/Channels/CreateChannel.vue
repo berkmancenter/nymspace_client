@@ -66,7 +66,7 @@
 import { computed, ref } from "@vue/reactivity";
 import useStore from "../../composables/global/useStore";
 import Modal from "../Shared/Modal.vue";
-const { getLoggedInStatus, createChannel, getGuestStatus } = useStore;
+const { getLoggedInStatus, createChannel, getGuestStatus, loadUser } = useStore;
 
 const isModalOpen = ref(false);
 const channelType = ref("");
@@ -90,10 +90,11 @@ function closeModal() {
   channelType.value = "";
 }
 
-function openModal() {
+async function openModal() {
+  const user = await loadUser();
   channelName.value = "";
   enableVoting.value = false;
-  email.value = "";
+  email.value = user.email || "";
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
   document.querySelector("body").classList.add("modal-open");
