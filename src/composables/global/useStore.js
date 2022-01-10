@@ -27,6 +27,10 @@ function setUserThreads(userThreads) {
   state.userThreads = userThreads;
 }
 
+function setUserChannels(userChannels) {
+  state.userChannels = userChannels;
+}
+
 function setThreads(threads) {
   state.threads = [...threads];
 }
@@ -83,6 +87,11 @@ async function createChannel(payload) {
   loadChannels();
 }
 
+async function followChannel(payload) {
+  await ThreadService.followChannel(payload);
+  loadUserChannels();
+}
+
 async function updateChannel(payload) {
   await ThreadService.updateChannel(payload);
   loadChannels();
@@ -116,6 +125,12 @@ async function updateUser(payload) {
 
 async function loadChannel(id) {
   return await ThreadService.getChannel(id);
+}
+
+async function loadUserChannels() {
+  if (!getLoggedInStatus.value) await registerOnce();
+  const userChannels = await ThreadService.getUserChannels();
+  setUserChannels(userChannels);
 }
 
 async function loadChannels() {
@@ -319,6 +334,7 @@ async function logout() {
 
 // Getters
 const getUserThreads = computed(() => state.userThreads);
+const getUserChannels = computed(() => state.userChannels);
 
 const getThreads = computed(() => state.threads);
 
@@ -363,10 +379,11 @@ export default {
 
   getChannel,
   loadChannels,
+  loadUserChannels,
   loadChannel,
   createChannel,
+  followChannel,
   updateChannel,
-  getChannels,
   deleteChannel,
 
   logout,
@@ -396,10 +413,10 @@ export default {
   postMessage,
   addMessage,
 
-  getUserThreads,
   getThreads,
   getLoggedInStatus,
-
+  getChannels,
+  getUserChannels,
   getGuestStatus,
 
   getThread,

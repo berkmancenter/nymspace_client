@@ -13,11 +13,21 @@ import FeaturedChannelList from "../components/Channels/FeaturedChannelList.vue"
 import CreateChannel from "../components/Channels/CreateChannel.vue";
 import { computed, onMounted, ref } from "vue";
 import useStore from "../composables/global/useStore";
-const { loadChannels, getChannels } = useStore;
-
+const { loadChannels, getChannels, getUserChannels, loadUserChannels } =
+  useStore;
 const searchText = ref("");
+
+const channelsWithFollow = computed(() => {
+  return getChannels.value.map((x) => ({
+    ...x,
+    isFollowed: getUserChannels.value.some(
+      (y) => y.id === x.id && y.hasOwnProperty("followed") && y.followed
+    ),
+  }));
+});
+
 const channels = computed(() => {
-  const filteredChannels = getChannels.value.filter((x) => {
+  const filteredChannels = channelsWithFollow.value.filter((x) => {
     if (searchText.value.trim().length == 0) {
       return true;
     } else {
@@ -27,7 +37,10 @@ const channels = computed(() => {
   return filteredChannels;
 });
 
-onMounted(async () => await loadChannels());
+onMounted(async () => {
+  await loadUserChannels();
+  await loadChannels();
+});
 
 const updateSearch = (value) => (searchText.value = value?.toLowerCase());
 </script>
