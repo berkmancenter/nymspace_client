@@ -11,7 +11,18 @@ class SocketioService {
    * messages received
    */
   setupSocketConnection(onMessageHandler) {
-    this.socket = io({ path: import.meta.env.VITE_WEBSOCKET_SERVER_URL });
+    const socketServerUrl = new URL(import.meta.env.VITE_WEBSOCKET_SERVER_URL);
+
+    let path = "";
+    if (socketServerUrl.pathname) {
+      path = socketServerUrl.pathname.replace(/\/+$/, "") + "/socket.io";
+    } else {
+      ("/socket.io");
+    }
+
+    this.socket = io(`${socketServerUrl.protocol}//${socketServerUrl.host}`, {
+      path: path,
+    });
 
     // New message bind
     this.socket.on("message:new", onMessageHandler);
