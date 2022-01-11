@@ -15,6 +15,7 @@ const state = reactive({
   isLoggedIn: VueCookieNext.getCookie("access_token") !== null,
   isGuest: VueCookieNext.getCookie("is_guest") !== null,
   channels: [],
+  activeChannel: null,
   userChannels: [],
   threads: [],
   userThreads: [],
@@ -37,6 +38,10 @@ function setThreads(threads) {
 
 function setAuth(response) {
   state.auth = [{ ...response }];
+}
+
+function setActiveChannel(channel) {
+  state.activeChannel = { ...channel };
 }
 
 function setChannels(channels) {
@@ -175,8 +180,12 @@ async function postMessage(payload) {
   setMessage(message);
 }
 
-async function upvote(id) {
-  const response = await ThreadService.upvote(id);
+async function upvote(id, status) {
+  const response = await ThreadService.vote({
+    messageId: id,
+    direction: "up",
+    status: status,
+  });
   updateMessage(response);
 }
 
@@ -184,9 +193,13 @@ async function upvote(id) {
  * Let only non guest user downvote a message
  * @param {*} id : message id to cast down vote
  */
-async function downvote(id) {
+async function downvote(id, status) {
   if (!getGuestStatus.value) {
-    const response = await ThreadService.downvote(id);
+    const response = await ThreadService.vote({
+      messageId: id,
+      direction: "down",
+      status: status,
+    });
     updateMessage(response);
   }
 }
@@ -366,6 +379,8 @@ const getAuth = computed(() => ({
 
 const getId = computed(() => state.uid);
 
+const getActiveChannel = computed(() => state.activeChannel);
+
 export default {
   getThread,
   loadThreads,
@@ -381,6 +396,8 @@ export default {
   loadChannels,
   loadUserChannels,
   loadChannel,
+  setActiveChannel,
+  getActiveChannel,
   createChannel,
   followChannel,
   updateChannel,

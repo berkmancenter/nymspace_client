@@ -16,7 +16,7 @@
     </div>
     <div>
       <input
-        v-model="enableVoting"
+        v-model="disableVoting"
         type="checkbox"
         id="disableVoting"
         class="cursor-pointer w-4 h-4 mr-2 align-middle"
@@ -65,7 +65,7 @@ const { updateChannel, getGuestStatus } = useStore;
 
 const isModalOpen = ref(false);
 const channelName = ref("");
-const enableVoting = ref(false);
+const disableVoting = ref(false);
 const email = ref("");
 const message = ref("");
 
@@ -92,7 +92,7 @@ function closeModal() {
 
 async function openModal() {
   channelName.value = props.item.name;
-  enableVoting.value = props.item.votingAllowed;
+  disableVoting.value = !props.item.votingAllowed;
   email.value = props.item.archiveEmail;
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
@@ -108,13 +108,10 @@ async function processUpdate() {
     let payload = {
       id: props.item.id,
       name: channelName.value,
-      votingAllowed: enableVoting.value,
+      votingAllowed: !disableVoting.value,
       archivable: true,
+      archiveEmail: email.value,
     };
-
-    if (email.value !== undefined && email.value.trim().length > 0) {
-      payload = { ...payload, archiveEmail: email.value };
-    }
 
     updateChannel(payload)
       .then((x) => closeModal())

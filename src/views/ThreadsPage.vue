@@ -38,6 +38,7 @@ const {
   getChannels,
   loadUserThreads,
   getUserThreads,
+  setActiveChannel,
 } = useStore;
 
 const items = getThreads;
@@ -74,5 +75,6 @@ onMounted(async () => {
   } else {
     channel.value = getChannel(route.params.channelId);
   }
+  setActiveChannel(channel.value);
 });
 </script>

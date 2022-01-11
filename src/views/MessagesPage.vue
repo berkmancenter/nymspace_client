@@ -115,6 +115,8 @@ const updatedMsgs = computed((x) => {
   return messages.value.map((x) => ({
     ...x,
     canVote: hasNotVoted(x) && isNotOwner(x),
+    hasUpvoted: x.upVotes.findIndex((y) => y.owner === getId.value) > -1,
+    hasDownvoted: x.downVotes.findIndex((y) => y.owner === getId.value) > -1,
   }));
 });
 
