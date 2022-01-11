@@ -2,12 +2,14 @@
 
 ## Running project for production
 
-- Add `.env` file to the root of project with following key and and values to point to the threads server api and websocket
+- Add `.env` file to the root of project with following key and and values to point to the threads server api and websocket. Note: below config shows version number on the application, which comes from `version` property of `package.json`
 
 ```
 VITE_API_SERVER_URL=http://localhost:3000
 VITE_API_VERSION=v1
-VITE_WEBSOCKET_SERVER_URL=ws://localhost:5555
+VITE_WEBSOCKET_SERVER_URL=http://localhost:5555
+VITE_SHOW_VERSION=true
+# anything except true will hide the version number
 ```
 
 - Install the packages by running following command on root of project
