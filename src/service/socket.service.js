@@ -17,7 +17,7 @@ class SocketioService {
     if (socketServerUrl.pathname) {
       path = socketServerUrl.pathname.replace(/\/+$/, "") + "/socket.io";
     } else {
-      ("/socket.io");
+      path = "/socket.io";
     }
 
     this.socket = io(`${socketServerUrl.protocol}//${socketServerUrl.host}`, {
