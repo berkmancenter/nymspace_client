@@ -7,7 +7,7 @@
 ```
 VITE_API_SERVER_URL=http://localhost:3000
 VITE_API_VERSION=v1
-VITE_WEBSOCKET_SERVER_URL=http://localhost:5555
+VITE_WEBSOCKET_SERVER_URL=ws://localhost:5555
 ```
 
 - Install the packages by running following command on root of project
