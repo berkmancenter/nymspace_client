@@ -11,7 +11,7 @@ class SocketioService {
    * messages received
    */
   setupSocketConnection(onMessageHandler) {
-    this.socket = io(import.meta.env.VITE_WEBSOCKET_SERVER_URL);
+    this.socket = io({ path: import.meta.env.VITE_WEBSOCKET_SERVER_URL });
 
     // New message bind
     this.socket.on("message:new", onMessageHandler);
