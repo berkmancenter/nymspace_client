@@ -8,10 +8,15 @@
       />
       <p class="inline-block text-red-600">Threads</p>
     </router-link>
+    <span v-if="showVersion" class="text-sm ml-4 align-middle">{{
+      version
+    }}</span>
     <div v-if="getMajorError?.trim().length > 0">{{ getMajorError }}</div>
   </div>
 </template>
 <script setup>
 import store from "../../composables/global/useStore";
 const { getMajorError } = store;
+const showVersion = import.meta.env.VITE_SHOW_VERSION === "true";
+const version = __APP_VERSION__;
 </script>
