@@ -38,10 +38,6 @@ const sortByItems = [
     name: "Activity",
     value: "messageCount",
   },
-  {
-    name: "Starred",
-    value: "follows",
-  },
 ];
 
 const props = defineProps({
