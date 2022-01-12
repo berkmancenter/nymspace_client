@@ -55,6 +55,7 @@ const {
   getThread,
   getActivePseudonym,
   getId,
+  loadUser,
 } = useStore;
 
 const messages = getMessages;
@@ -64,7 +65,7 @@ const messageViewRef = ref(null);
 const messageTextArea = ref(null);
 const thread = ref(getThread(route.params.threadId));
 const searchTag = ref("");
-
+const goodReputation = ref(false);
 /**
  * Get tags based on messages
  */
@@ -114,7 +115,7 @@ const updatedMsgs = computed((x) => {
 
   return messages.value.map((x) => ({
     ...x,
-    canVote: hasNotVoted(x) && isNotOwner(x),
+    canVote: hasNotVoted(x) && isNotOwner(x) && goodReputation.value,
     hasUpvoted: x.upVotes.findIndex((y) => y.owner === getId.value) > -1,
     hasDownvoted: x.downVotes.findIndex((y) => y.owner === getId.value) > -1,
   }));
@@ -250,6 +251,8 @@ watch(
 onMounted(async () => {
   SocketioService.disconnect();
   SocketioService.setupSocketConnection(messageHandler);
+  const user = await loadUser();
+  goodReputation.value = user.goodReputation;
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
   joinThread(route.params.threadId);

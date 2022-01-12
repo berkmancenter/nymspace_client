@@ -8,18 +8,18 @@
         >No messages. Start a conversation.</span
       >
       <template v-for="item in items" :key="item.id">
-        <ThreadViewItem :item="item" />
+        <MessageViewItem :item="item" />
       </template>
     </div>
   </div>
 </template>
 
 <script>
-import ThreadViewItem from "./MessageViewItem.vue";
+import MessageViewItem from "./MessageViewItem.vue";
 
 export default {
   components: {
-    ThreadViewItem,
+    MessageViewItem,
   },
   props: {
     items: {
