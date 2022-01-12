@@ -14,8 +14,8 @@
         </select>
       </div>
     </div>
-    <ChannelList v-show="sortedItems.length > 0" :items="finalItems" />
-    <div class="text-red-600" v-show="sortedItems.length === 0">
+    <ChannelList v-show="finalItems.length > 0" :items="finalItems" />
+    <div class="text-red-600" v-show="finalItems.length === 0">
       No channels available
     </div>
   </div>

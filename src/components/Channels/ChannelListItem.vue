@@ -74,7 +74,6 @@ async function processDelete() {
 }
 
 function pinChannel() {
-  console.log("yolo");
   followChannel({
     status: !props.item.isFollowed,
     topicId: props.item.id,
