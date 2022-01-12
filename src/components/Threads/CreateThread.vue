@@ -5,7 +5,7 @@
   >
     Create new thread
   </button>
-  <Modal :is-open="isModalOpen">
+  <Modal :is-open="isModalOpen" @close-modal="closeModal">
     <template v-slot:title>Create New Thread</template>
     <span class="font-semibold">Thread name:</span>
     <div>

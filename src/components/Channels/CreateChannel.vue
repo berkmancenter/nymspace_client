@@ -9,7 +9,7 @@
     <option value="public">Public</option>
     <option value="private">Private</option>
   </select>
-  <Modal :is-open="isModalOpen">
+  <Modal :is-open="isModalOpen" @close-modal="closeModal">
     <template v-slot:title>Create {{ channelTypeName }} Channel</template>
     <span class="font-semibold">Channel name:</span>
     <div>
