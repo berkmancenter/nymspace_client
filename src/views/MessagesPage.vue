@@ -1,6 +1,6 @@
 <template>
   <h2 class="text-red-500 text-2xl mt-4 mb-2 font-bold">{{ thread.name }}</h2>
-  <ThreadView
+  <MessagesView
     :ref="
       (el) => {
         if (el) messageViewRef = el;
@@ -38,7 +38,7 @@ import {
   computed,
   watchEffect,
 } from "vue";
-import ThreadView from "../components/Messages/MessagesView.vue";
+import MessagesView from "../components/Messages/MessagesView.vue";
 import TagList from "../components/Messages/TagList.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
@@ -115,7 +115,8 @@ const updatedMsgs = computed((x) => {
 
   return messages.value.map((x) => ({
     ...x,
-    canVote: hasNotVoted(x) && isNotOwner(x) && goodReputation.value,
+    canVote: hasNotVoted(x) && isNotOwner(x),
+    goodReputation: goodReputation.value,
     hasUpvoted: x.upVotes.findIndex((y) => y.owner === getId.value) > -1,
     hasDownvoted: x.downVotes.findIndex((y) => y.owner === getId.value) > -1,
   }));

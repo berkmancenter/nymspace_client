@@ -35,7 +35,9 @@
           @click="downvote(item.id, !item.hasDownvoted)"
           class="h-6 w-6 cursor-pointer"
           :class="
-            (item.canVote || item.hasDownvoted) && !getGuestStatus.value
+            (item.canVote || item.hasDownvoted) &&
+            !getGuestStatus.value &&
+            item.goodReputation
               ? 'cursor-pointer'
               : 'pointer-events-none'
           "
@@ -77,7 +79,9 @@ function getUpVoteClass(item) {
 
 function getDownVoteClass(item) {
   let className =
-    item.canVote && !getGuestStatus.value ? "hover:text-gray-700" : "";
+    item.canVote && !getGuestStatus.value && item.goodReputation
+      ? "hover:text-gray-700"
+      : "";
   if (className == "" && item.downVotes) {
     item.downVotes.forEach((vote) => {
       if (vote.owner && vote.owner == useStore.getId.value)
