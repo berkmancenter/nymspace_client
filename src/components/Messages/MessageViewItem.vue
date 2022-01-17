@@ -13,10 +13,7 @@
       </p>
     </div>
     <div v-if="showVoting">
-      <div
-        class="flex items-center -mb-2.5 text-gray-300"
-        :class="getUpVoteClass(item)"
-      >
+      <div class="flex items-center -mb-2.5" :class="getUpVoteClass(item)">
         <ChevronUpIcon
           @click="upvote(item.id, !item.hasUpvoted)"
           class="h-6 w-6"
@@ -27,13 +24,10 @@
           "
         /><span class="text-sm font-bold">{{ item.upVotes.length }}</span>
       </div>
-      <div
-        class="flex items-center text-gray-300"
-        :class="getDownVoteClass(item)"
-      >
+      <div class="flex items-center" :class="getDownVoteClass(item)">
         <ChevronDownIcon
           @click="downvote(item.id, !item.hasDownvoted)"
-          class="h-6 w-6 cursor-pointer"
+          class="h-6 w-6"
           :class="
             (item.canVote || item.hasDownvoted) &&
             !getGuestStatus.value &&
@@ -66,29 +60,35 @@ const showVoting = computed(
   () => getActiveChannel.value && getActiveChannel.value.votingAllowed
 );
 
-function getUpVoteClass(item) {
-  let className = item.canVote ? "hover:text-gray-700" : "";
-  if (className == "" && item.upVotes) {
-    item.upVotes.forEach((vote) => {
-      if (vote.owner && vote.owner == useStore.getId.value)
-        className = "text-gray-700";
-    });
+function checkOwner(votes, id, className) {
+  if (votes && votes.length > 0) {
+    // someone has voted, so turn black
+    className = "text-black";
+    for (let i = 0; i < votes.length; i++) {
+      if (votes[i].owner && votes[i].owner == id) {
+        // current user has voted, so turn red
+        className = "text-red-500";
+        break;
+      }
+    }
+  } else {
+    // nobody has voted, so turn gray
+    className += " text-gray-300";
   }
   return className;
+}
+
+function getUpVoteClass(item) {
+  let className = item.canVote ? "hover:text-gray-500" : "";
+  return checkOwner(item.upVotes, useStore.getId.value, className);
 }
 
 function getDownVoteClass(item) {
   let className =
     item.canVote && !getGuestStatus.value && item.goodReputation
-      ? "hover:text-gray-700"
+      ? "hover:text-gray-500"
       : "";
-  if (className == "" && item.downVotes) {
-    item.downVotes.forEach((vote) => {
-      if (vote.owner && vote.owner == useStore.getId.value)
-        className = "text-gray-700";
-    });
-  }
-  return className;
+  return checkOwner(item.downVotes, useStore.getId.value, className);
 }
 
 function addToMessage(pseudonym) {
