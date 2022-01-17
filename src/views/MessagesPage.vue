@@ -188,6 +188,12 @@ function messageHandler(data) {
    */
   if (data.thread.id === route.params.threadId) {
     addMessage(data);
+  }
+
+  /**
+   * Scroll to bottom if the message belongs to current user
+   */
+  if (data.owner === getId.value) {
     scrollToBottom();
   }
 
