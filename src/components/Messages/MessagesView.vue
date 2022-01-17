@@ -8,24 +8,25 @@
         >No messages. Start a conversation.</span
       >
       <template v-for="item in items" :key="item.id">
-        <MessageViewItem :item="item" />
+        <MessageViewItem :item="item" v-bind="$attrs" />
       </template>
     </div>
   </div>
 </template>
 
 <script>
+export default {
+  inheritAttrs: false,
+};
+</script>
+
+<script setup>
 import MessageViewItem from "./MessageViewItem.vue";
 
-export default {
-  components: {
-    MessageViewItem,
+defineProps({
+  items: {
+    type: Array,
+    required: true,
   },
-  props: {
-    items: {
-      type: Array,
-      required: true,
-    },
-  },
-};
+});
 </script>
