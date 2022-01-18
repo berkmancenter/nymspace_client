@@ -23,7 +23,7 @@ export default [
         children: [
           {
             path: "",
-            name: "home.featured",
+            name: "home.channelspage",
             component: LandingPage,
           },
           {

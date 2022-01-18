@@ -76,7 +76,7 @@ function register() {
         message.value = "Register successful. Redirecting to home page.";
         showSuccess.value = true;
         setTimeout(() => {
-          router.push({ name: "home.featured" });
+          router.push({ name: "home.channelspage" });
         }, 2000);
       })
       .catch((x) => setError(x.response.data.message, true));

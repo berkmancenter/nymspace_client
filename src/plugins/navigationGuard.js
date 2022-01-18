@@ -35,7 +35,7 @@ export default async (to, from, next) => {
   // Logged in and login/signup page
   if (accessToken && !isGuest && isLoginSignupPage(to)) {
     next({
-      name: "home.featured",
+      name: "home.channelspage",
     });
   }
 
@@ -43,7 +43,7 @@ export default async (to, from, next) => {
   // Allow accessing the threads page with a shared link
   // Allow accessing the channels page with a shared link
   else if (
-    to.name === "home.featured" ||
+    to.name === "home.channelspage" ||
     isThreadsPage(to) ||
     isChannelsPage(to)
   ) {
@@ -54,7 +54,7 @@ export default async (to, from, next) => {
   else if (!isLoginSignupPage(to) && !accessToken) {
     // Redirect to home by default when no token is present
     next({
-      name: "home.featured",
+      name: "home.channelspage",
     });
   } else {
     next();

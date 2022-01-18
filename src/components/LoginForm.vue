@@ -69,7 +69,7 @@ function login() {
         if (router.currentRoute.value.query.to) {
           router.push({ path: router.currentRoute.value.query.to });
         } else {
-          router.push({ name: "home.featured" });
+          router.push({ name: "home.channelspage" });
         }
       })
       .catch((x) => setError(x.response.data.message, true));

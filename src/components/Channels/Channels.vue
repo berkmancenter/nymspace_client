@@ -4,7 +4,7 @@
     style="min-height: 400px"
   >
     <div class="grid grid-cols-2 items-center justify-center mt-1 mb-5">
-      <div class="text-3xl font-bold text-red-600">Featured Channels</div>
+      <div class="text-3xl font-bold text-red-600">Channels</div>
       <div class="justify-self-end">
         <select v-model="sortBy" class="text-lg border-2 border-gray-500">
           <option disabled>Sort By:</option>
