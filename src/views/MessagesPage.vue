@@ -1,5 +1,14 @@
 <template>
-  <h2 class="text-red-500 text-2xl mt-4 mb-2 font-bold">{{ thread.name }}</h2>
+  <div class="flex justify-between items-center gap-2">
+    <h2 class="text-red-500 text-2xl my-2 font-bold">{{ thread.name }}</h2>
+    <div :title="showChatOnly ? 'Show threads list' : 'Show chat only'">
+      <component
+        :is="showChatOnly ? ViewBoardsIcon : EyeIcon"
+        class="w-6 h-6 cursor-pointer hover:text-red-500 text-black"
+        @click="setShowChatOnly(!showChatOnly)"
+      />
+    </div>
+  </div>
   <MessagesView
     :ref="
       (el) => {
@@ -17,12 +26,11 @@
   />
   <textarea
     ref="messageTextArea"
-    contenteditable="true"
     v-model="message"
     id="messageTextArea"
     @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
-    class="w-full block border-2 border-gray-500 text-lg p-2 h-30 mt-4"
+    class="w-full block border-2 border-gray-500 text-sm px-1 h-20 mt-4"
     placeholder="Message (hit enter to send)"
   >
   </textarea>
@@ -44,6 +52,7 @@ import TagList from "../components/Messages/TagList.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
+import { ViewBoardsIcon, EyeIcon, EyeOffIcon } from "@heroicons/vue/outline";
 
 const route = useRoute();
 const {
@@ -57,6 +66,8 @@ const {
   getActivePseudonym,
   getId,
   loadUser,
+  setShowChatOnly,
+  showChatOnly,
 } = useStore;
 
 const messages = getMessages;
@@ -275,3 +286,9 @@ onUnmounted(() => {
   SocketioService.disconnect();
 });
 </script>
+
+<style scoped>
+textarea {
+  resize: none;
+}
+</style>

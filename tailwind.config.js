@@ -7,6 +7,9 @@ module.exports = {
       colors: {
         "harvard-red": "#890309",
       },
+      fontSize: {
+        sm: ["14px", "20px"],
+      },
     },
   },
   variants: {
