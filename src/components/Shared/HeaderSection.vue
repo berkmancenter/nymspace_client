@@ -11,7 +11,12 @@
         />
         <p class="inline-block text-red-600">Threads</p>
       </router-link>
-      <span v-if="showVersion" class="text-sm ml-4">{{ version }}</span>
+      <a
+        v-if="showVersion"
+        class="text-sm ml-4"
+        href="https://github.com/berkmancenter/threads_client/tree/dev"
+        >{{ version }}</a
+      >
     </div>
 
     <div v-if="getMajorError?.trim().length > 0">{{ getMajorError }}</div>
