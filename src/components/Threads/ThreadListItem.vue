@@ -1,6 +1,6 @@
 <template>
   <router-link :to="threadLink" :class="getThreadClass(item)">
-    <div class="col-span-8 text-lg">{{ item.name }}</div>
+    <div class="col-span-8 text-base">{{ item.name }}</div>
     <div class="col-span-1 font-semibold justify-self-end">
       <BookmarkIcon
         :class="item.isFollowed ? 'fill-current text-red-500' : ''"
@@ -36,9 +36,9 @@ const props = defineProps({
 });
 function getThreadClass(item) {
   var className =
-    "grid grid-cols-12 gap-6 p-2 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
+    "grid grid-cols-12 gap-6 px-2 py-1 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
   if (props.item.id == route.params.threadId)
-    className += "  text-red-500 bg-gray-100";
+    className += " text-red-500 bg-gray-200";
   return className;
 }
 

@@ -1,5 +1,14 @@
 <template>
-  <h2 class="text-red-500 text-2xl my-2 font-bold">{{ thread.name }}</h2>
+  <div class="flex justify-between items-center gap-2">
+    <h2 class="text-red-500 text-2xl my-2 font-bold">{{ thread.name }}</h2>
+    <div :title="showChatOnly ? 'Show threads list' : 'Show chat only'">
+      <component
+        :is="showChatOnly ? ViewBoardsIcon : EyeIcon"
+        class="w-6 h-6 cursor-pointer hover:text-red-500 text-black"
+        @click="setShowChatOnly(!showChatOnly)"
+      />
+    </div>
+  </div>
   <MessagesView
     :ref="
       (el) => {
@@ -42,6 +51,7 @@ import TagList from "../components/Messages/TagList.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
+import { ViewBoardsIcon, EyeIcon, EyeOffIcon } from "@heroicons/vue/outline";
 
 const route = useRoute();
 const {
@@ -55,6 +65,8 @@ const {
   getActivePseudonym,
   getId,
   loadUser,
+  setShowChatOnly,
+  showChatOnly,
 } = useStore;
 
 const messages = getMessages;

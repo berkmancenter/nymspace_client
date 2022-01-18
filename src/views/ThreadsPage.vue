@@ -1,15 +1,15 @@
 <template>
   <div class="mx-auto w-11/12 lg:w-3/5">
-    <div class="w-1/2 float-left">
+    <div v-show="!showChatOnly" class="w-1/2 float-left">
       <div class="mr-2">
-        <h2 class="text-red-500 text-2xl mt-4 mb-2 font-bold">
+        <h2 class="text-red-500 text-2xl my-2 font-bold">
           {{ channel.name }}
         </h2>
         <ThreadList :items="sortedThreads" />
         <CreateThread />
       </div>
     </div>
-    <div class="w-1/2 float-right">
+    <div :class="showChatOnly ? '' : 'w-1/2 float-right'">
       <div class="ml-2">
         <router-view></router-view>
       </div>
@@ -22,13 +22,21 @@
 import ThreadList from "../components/Threads/ThreadList.vue";
 import CreateThread from "../components/Threads/CreateThread.vue";
 import useStore from "../composables/global/useStore";
-import { onErrorCaptured, onMounted, computed, ref } from "vue";
-import { useRoute } from "vue-router";
+import {
+  onErrorCaptured,
+  onMounted,
+  computed,
+  ref,
+  onBeforeUnmount,
+} from "vue";
+import { onBeforeRouteLeave, useRoute } from "vue-router";
 const route = useRoute();
 
 onErrorCaptured((e) => {
   console.error(e);
 });
+
+onBeforeUnmount(() => setShowChatOnly(false));
 
 const {
   getThreads,
@@ -39,6 +47,8 @@ const {
   loadUserThreads,
   getUserThreads,
   setActiveChannel,
+  showChatOnly,
+  setShowChatOnly,
 } = useStore;
 
 const items = getThreads;
