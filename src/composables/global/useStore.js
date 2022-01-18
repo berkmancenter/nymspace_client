@@ -21,6 +21,7 @@ const state = reactive({
   userThreads: [],
   majorError: "",
   messages: [],
+  showChatOnly: false,
 });
 
 // Mutations
@@ -70,6 +71,10 @@ function updateMessage(message) {
   } else {
     state.messages.push(message);
   }
+}
+
+function setShowChatOnly(value) {
+  state.showChatOnly = value;
 }
 
 function addChannel(channel) {
@@ -381,6 +386,8 @@ const getId = computed(() => state.uid);
 
 const getActiveChannel = computed(() => state.activeChannel);
 
+const showChatOnly = computed(() => state.showChatOnly);
+
 export default {
   getThread,
   loadThreads,
@@ -450,4 +457,7 @@ export default {
 
   forgotPassword,
   resetPassword,
+
+  showChatOnly,
+  setShowChatOnly,
 };
