@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-red-500 text-2xl mt-4 mb-2 font-bold">{{ thread.name }}</h2>
+  <h2 class="text-red-500 text-2xl my-2 font-bold">{{ thread.name }}</h2>
   <MessagesView
     :ref="
       (el) => {
@@ -16,12 +16,11 @@
   />
   <textarea
     ref="messageTextArea"
-    contenteditable="true"
     v-model="message"
     id="messageTextArea"
     @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
-    class="w-full block border-2 border-gray-500 text-lg p-2 h-30 mt-4"
+    class="w-full block border-2 border-gray-500 text-sm px-1 h-20 mt-4"
     placeholder="Message (hit enter to send)"
   >
   </textarea>
@@ -264,3 +263,9 @@ onUnmounted(() => {
   SocketioService.disconnect();
 });
 </script>
+
+<style scoped>
+textarea {
+  resize: none;
+}
+</style>
