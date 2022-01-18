@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto container-width">
     <SearchBox @update-search="updateSearch" class="my-5" />
-    <FeaturedChannelList :channels="channels" />
+    <Channels :channels="channels" />
     <div class="flex justify-end my-4">
       <CreateChannel />
     </div>
@@ -9,7 +9,7 @@
 </template>
 <script setup>
 import SearchBox from "../components/SearchBox.vue";
-import FeaturedChannelList from "../components/Channels/FeaturedChannelList.vue";
+import Channels from "../components/Channels/Channels.vue";
 import CreateChannel from "../components/Channels/CreateChannel.vue";
 import { computed, onMounted, ref } from "vue";
 import useStore from "../composables/global/useStore";

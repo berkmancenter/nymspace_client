@@ -34,7 +34,7 @@ const { logout, getGuestStatus, createNewPseudonym, getPseudonyms } = store;
 
 async function signout() {
   logout();
-  router.push({ name: "home.featured" });
+  router.push({ name: "home.channelspage" });
 }
 
 /**
