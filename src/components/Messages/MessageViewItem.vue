@@ -13,10 +13,7 @@
       </p>
     </div>
     <div v-if="showVoting" class="max-h-7">
-      <div
-        class="flex items-center -mb-2.5 text-gray-300"
-        :class="getUpVoteClass(item)"
-      >
+      <div class="flex items-center -mb-2.5" :class="getUpVoteClass(item)">
         <ChevronUpIcon
           @click="upvote(item.id, !item.hasUpvoted)"
           class="h-5 w-5"
