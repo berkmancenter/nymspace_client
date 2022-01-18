@@ -1,8 +1,8 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between items-center px-1 text-sm hover:bg-gray-100">
     <div>
       <p
-        class="my-1 thread-message"
+        class="thread-message"
         :class="getMessageClass(item)"
         :title="item.createdAt"
       >
@@ -16,7 +16,7 @@
       <div class="flex items-center -mb-2.5" :class="getUpVoteClass(item)">
         <ChevronUpIcon
           @click="upvote(item.id, !item.hasUpvoted)"
-          class="h-6 w-6"
+          class="h-5 w-5"
           :class="
             item.canVote || item.hasUpvoted
               ? 'cursor-pointer'
@@ -27,7 +27,7 @@
       <div class="flex items-center" :class="getDownVoteClass(item)">
         <ChevronDownIcon
           @click="downvote(item.id, !item.hasDownvoted)"
-          class="h-6 w-6"
+          class="h-5 w-5"
           :class="
             (item.canVote || item.hasDownvoted) &&
             !getGuestStatus.value &&
@@ -125,7 +125,7 @@ const formattedBody = computed(() => {
 
 <style scoped>
 :deep(svg path) {
-  stroke-width: 4px;
+  stroke-width: 3px;
 }
 </style>
 
