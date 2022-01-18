@@ -7,6 +7,7 @@
       }
     "
     :items="updatedMsgs"
+    @tag-click="tagClick"
   />
   <TagList
     :items="filteredTags"
@@ -157,10 +158,14 @@ watchEffect(() => {
 /**
  * Update tag on message to follow a taggable pattern
  */
-function tagClick(value) {
+function tagClick(value, isClickedDirect = false) {
   let pseudonym = `"${value}" `;
-  // Replace last occurrence of word starting with @
-  message.value = message.value.replace(/(\w*)(?=[^@]*)$/, pseudonym);
+  if (!isClickedDirect) {
+    // Replace last occurrence of word starting with @
+    message.value = message.value.replace(/(\w*)(?=[^@]*)$/, pseudonym);
+  } else {
+    message.value = message.value.replace(/$/, `@${pseudonym}`);
+  }
   messageTextArea.value.focus();
 }
 
@@ -188,6 +193,12 @@ function messageHandler(data) {
    */
   if (data.thread.id === route.params.threadId) {
     addMessage(data);
+  }
+
+  /**
+   * Scroll to bottom if the message belongs to current user
+   */
+  if (data.owner === getId.value) {
     scrollToBottom();
   }
 

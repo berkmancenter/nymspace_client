@@ -62,6 +62,8 @@ const props = defineProps({
   },
 });
 
+const emits = defineEmits(["tag-click"]);
+
 const showVoting = computed(
   () => getActiveChannel.value && getActiveChannel.value.votingAllowed
 );
@@ -91,23 +93,15 @@ function getDownVoteClass(item) {
   return className;
 }
 
+// emit to update message in messagespage
 function addToMessage(pseudonym) {
-  let textArea = document.getElementById("messageTextArea");
-  let existingText = textArea.value.trim();
-  if (pseudonym.indexOf(" ") > -1) pseudonym = '"' + pseudonym + '"';
-  if (existingText.indexOf(pseudonym) > -1) return;
-  if (existingText != "") existingText += " ";
-  textArea.value = existingText + "@" + pseudonym + " ";
-  textArea.focus();
+  emits("tag-click", pseudonym, true);
 }
 
 function getMessageClass(item) {
   return item.downVotes.length > 2 ? "text-gray-400" : "text-black";
 }
 
-const threadLink = computed(
-  () => "/threads/" + this.$route.params.channel + "/" + this.item.name
-);
 /**
  * Build html tag for tagged pseudonym
  */
