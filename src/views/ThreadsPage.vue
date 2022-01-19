@@ -22,19 +22,12 @@
 import ThreadList from "../components/Threads/ThreadList.vue";
 import CreateThread from "../components/Threads/CreateThread.vue";
 import useStore from "../composables/global/useStore";
-import {
-  onErrorCaptured,
-  onMounted,
-  computed,
-  ref,
-  onBeforeUnmount,
-} from "vue";
-import { onBeforeRouteLeave, useRoute } from "vue-router";
-const route = useRoute();
+import { onMounted, computed, ref, onBeforeUnmount, onUnmounted } from "vue";
+import { useRoute } from "vue-router";
+import SocketioService from "../service/socket.service";
+import { VueCookieNext } from "vue-cookie-next";
 
-onErrorCaptured((e) => {
-  console.error(e);
-});
+const route = useRoute();
 
 onBeforeUnmount(() => setShowChatOnly(false));
 
@@ -49,6 +42,8 @@ const {
   setActiveChannel,
   showChatOnly,
   setShowChatOnly,
+  getLoggedInStatus,
+  setThread,
 } = useStore;
 
 const items = getThreads;
@@ -77,14 +72,47 @@ const threadsWithFollow = computed(() =>
   }))
 );
 
+/**
+ * Join topic if topic exist and
+ * user is logged in (either guest or user)
+ */
+function joinTopic(topicId) {
+  if (topicId && getLoggedInStatus.value) {
+    SocketioService.joinTopic({
+      topicId: topicId,
+      token: VueCookieNext.getCookie("access_token"),
+    });
+  }
+}
+
+/**
+ * Handle thread creation
+ */
+function threadHandler(data) {
+  if (route.params.channelId === data.topic.id) {
+    const { id, isFollowed, messages, name, slug } = data;
+    setThread({ id, isFollowed, messageCount: messages.length, name, slug });
+  }
+}
+
 onMounted(async () => {
+  SocketioService.setupSocketConnection();
+  SocketioService.addThreadHandler(threadHandler);
+  joinTopic(route.params.channelId);
+
   await loadUserThreads();
   await loadThreads(route.params.channelId);
+
   if (Object.keys(channel.value).length == 0) {
     channel.value = { ...(await loadChannel(route.params.channelId)) };
   } else {
     channel.value = getChannel(route.params.channelId);
   }
+
   setActiveChannel(channel.value);
+});
+
+onUnmounted(() => {
+  SocketioService.disconnect();
 });
 </script>

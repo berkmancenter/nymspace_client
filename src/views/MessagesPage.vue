@@ -68,6 +68,7 @@ const {
   loadUser,
   setShowChatOnly,
   showChatOnly,
+  updateMessage,
 } = useStore;
 
 const messages = getMessages;
@@ -222,6 +223,15 @@ function messageHandler(data) {
 }
 
 /**
+ * Handle message voting
+ */
+function onVoteHandler(data) {
+  if (route.params.threadId === data.thread) {
+    updateMessage(data);
+  }
+}
+
+/**
  * Fetch messages
  */
 async function fetchMessages(threadId) {
@@ -272,13 +282,15 @@ watch(
 );
 
 onMounted(async () => {
-  SocketioService.disconnect();
-  SocketioService.setupSocketConnection(messageHandler);
+  SocketioService.setupSocketConnection();
+  SocketioService.addVotesHandler(onVoteHandler);
+  SocketioService.addMessageHandler(messageHandler);
+  joinThread(route.params.threadId);
+
   const user = await loadUser();
   goodReputation.value = user.goodReputation;
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
-  joinThread(route.params.threadId);
   messageTextArea.value.focus();
 });
 

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded items-center border-2 border-gray-500 max-h-screen overflow-y-auto"
+    class="rounded items-center border-2 border-gray-500 max-h-96 overflow-y-auto"
     style="min-height: 400px"
   >
     <div class="grid">
