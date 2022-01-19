@@ -1,16 +1,12 @@
 import { io } from "socket.io-client";
-
 class SocketioService {
   socket;
   constructor() {}
 
   /**
    * initialize socket connection and connect
-   *
-   * @param {*} onMessageHandler: method to handle new
-   * messages received
    */
-  setupSocketConnection(onMessageHandler) {
+  setupSocketConnection() {
     const socketServerUrl = new URL(import.meta.env.VITE_WEBSOCKET_SERVER_URL);
 
     let path = "";
@@ -23,9 +19,21 @@ class SocketioService {
     this.socket = io(`${socketServerUrl.protocol}//${socketServerUrl.host}`, {
       path: path,
     });
+  }
 
+  addMessageHandler(onMessageHandler) {
     // New message bind
     this.socket.on("message:new", onMessageHandler);
+  }
+
+  addThreadHandler(onThreadHandler) {
+    // New Thread bind
+    this.socket.on("thread:new", onThreadHandler);
+  }
+
+  addVotesHandler(onVoteHandler) {
+    // New vote bind
+    this.socket.on("vote:new", onVoteHandler);
   }
 
   disconnect() {
@@ -40,6 +48,10 @@ class SocketioService {
 
   joinThread(payload) {
     this.socket.emit("thread:join", payload);
+  }
+
+  joinTopic(payload) {
+    this.socket.emit("topic:join", payload);
   }
 }
 

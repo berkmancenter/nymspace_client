@@ -26,7 +26,7 @@
       </router-link>
       <a
         class="hover:text-red-600 text-black"
-        href="https://cyber.harvard.edu/"
+        href="https://cyber.harvard.edu/projects/nymity"
         rel="noopener"
         target="_blank"
         >About Threads<ExternalLinkIcon class="ml-1 inline-block w-4 h-4" />

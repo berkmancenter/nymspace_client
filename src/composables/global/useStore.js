@@ -37,6 +37,10 @@ function setThreads(threads) {
   state.threads = [...threads];
 }
 
+function setThread(thread) {
+  state.threads = [...state.threads, thread];
+}
+
 function setAuth(response) {
   state.auth = [{ ...response }];
 }
@@ -114,7 +118,6 @@ async function deleteChannel(id) {
 
 async function createThread(payload) {
   const threads = await ThreadService.createThread(payload);
-  loadThreads(payload.topicId);
 }
 
 async function followThread(payload) {
@@ -123,7 +126,11 @@ async function followThread(payload) {
 }
 
 async function loadUser() {
-  return await ThreadService.getUser(state.uid);
+  let user = await ThreadService.getUser(state.uid);
+  if (user.pseudonyms) {
+    state.auth = [...user.pseudonyms];
+  }
+  return user;
 }
 
 async function updateUser(payload) {
@@ -191,7 +198,6 @@ async function upvote(id, status) {
     direction: "up",
     status: status,
   });
-  updateMessage(response);
 }
 
 /**
@@ -205,7 +211,6 @@ async function downvote(id, status) {
       direction: "down",
       status: status,
     });
-    updateMessage(response);
   }
 }
 
@@ -377,11 +382,6 @@ const getPseudonyms = computed(() => state.auth);
 
 const getMajorError = computed(() => state.majorError);
 
-const getAuth = computed(() => ({
-  pseudonym: state.auth.pseudonym,
-  token: state.auth.token,
-}));
-
 const getId = computed(() => state.uid);
 
 const getActiveChannel = computed(() => state.activeChannel);
@@ -390,6 +390,7 @@ const showChatOnly = computed(() => state.showChatOnly);
 
 export default {
   getThread,
+  setThread,
   loadThreads,
   loadUserThreads,
   loadThread,
@@ -436,6 +437,7 @@ export default {
 
   postMessage,
   addMessage,
+  updateMessage,
 
   getThreads,
   getLoggedInStatus,
