@@ -1,25 +1,34 @@
 <template>
-  <div class="mx-auto w-11/12 lg:w-3/5 flex gap-2 md:gap-4">
-    <div
-      class="w-full px-2 h-16 leading-relaxed self-cente flex justify-center items-center my-2"
-      v-if="getGuestStatus"
-    >
-      <span class="text-xl">Keep using this one-time pseudonym, or</span>
+  <div class="mx-auto w-11/12 lg:w-3/5">
+    <div class="flex" :class="!getGuestStatus ? 'gap-4' : ''">
+      <div
+        class="w-full px-2 h-16 leading-relaxed self-cente flex justify-center items-center my-2"
+        v-if="getGuestStatus"
+      >
+        <span class="text-xl">Keep using this one-time pseudonym, or</span>
+      </div>
+      <button v-else class="btn" @click="signout">
+        <span>Create a new pseudonym for one session (log out)</span>
+      </button>
+      <button
+        :disabled="getPseudonyms.length >= 5"
+        class="btn"
+        v-if="!getGuestStatus"
+        @click="createPseudonym"
+        :title="getNewPseudonymButtonTitle()"
+      >
+        <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym
+        on your account
+      </button>
+      <button
+        class="btn"
+        :class="getGuestStatus ? 'md:ml-4' : ''"
+        v-else
+        @click="loginViaGuest"
+      >
+        Login
+      </button>
     </div>
-    <button v-else class="btn" @click="signout">
-      <span>Create a new pseudonym for one session (log out)</span>
-    </button>
-    <button
-      :disabled="getPseudonyms.length >= 5"
-      class="btn"
-      v-if="!getGuestStatus"
-      @click="createPseudonym"
-      :title="getNewPseudonymButtonTitle()"
-    >
-      <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym on
-      your account
-    </button>
-    <button class="btn" v-else @click="loginViaGuest">Login</button>
   </div>
 </template>
 
@@ -66,7 +75,7 @@ function getNewPseudonymButtonTitle() {
 
 <style scoped>
 .btn {
-  @apply w-full bg-white border-2 border-gray-500 text-base px-2 h-16 leading-relaxed hover:bg-gray-200 cursor-pointer md:text-lg md:px-1;
+  @apply w-full bg-white border-2 border-gray-500 text-base h-16 leading-relaxed hover:bg-gray-200 cursor-pointer md:text-lg md:px-1;
 }
 
 .btn:disabled {
