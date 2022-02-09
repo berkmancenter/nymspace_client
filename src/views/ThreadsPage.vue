@@ -118,7 +118,7 @@ onUnmounted(() => {
 </script>
 <style scoped>
 .threads-title {
+  @apply overflow-hidden;
   text-overflow: ellipsis;
-  overflow: hidden;
 }
 </style>

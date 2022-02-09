@@ -306,7 +306,7 @@ textarea {
   resize: none;
 }
 .messages-title {
+  @apply overflow-hidden;
   text-overflow: ellipsis;
-  overflow: hidden;
 }
 </style>

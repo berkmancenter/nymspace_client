@@ -133,8 +133,8 @@ const formattedBody = computed(() => {
 
 <style>
 .thread-message {
+  @apply overflow-hidden;
   text-overflow: ellipsis;
-  overflow: hidden;
 }
 .thread-message b {
   @apply cursor-pointer;
