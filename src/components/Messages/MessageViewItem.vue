@@ -1,6 +1,8 @@
 <template>
-  <div class="flex justify-between items-center px-1 text-sm hover:bg-gray-100">
-    <div>
+  <div
+    class="flex justify-between items-center px-1 text-sm w-full overflow-hidden hover:bg-gray-100"
+  >
+    <div style="max-width: 92%">
       <p
         class="thread-message"
         :class="getMessageClass(item)"
@@ -130,6 +132,10 @@ const formattedBody = computed(() => {
 </style>
 
 <style>
+.thread-message {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 .thread-message b {
   @apply cursor-pointer;
 }

@@ -1,6 +1,9 @@
 <template>
   <router-link :to="channelLink" :class="getChannelClass(item)">
-    <div class="col-span-5 text-lg">
+    <div
+      class="col-span-5 text-lg overflow-hidden"
+      style="text-overflow: ellipsis"
+    >
       {{ item.name }}
       <LockClosedIcon v-if="isPrivate(item)" class="h-5 w-5 inline-block" />
     </div>
