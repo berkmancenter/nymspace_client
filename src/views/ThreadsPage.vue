@@ -22,7 +22,14 @@
 import ThreadList from "../components/Threads/ThreadList.vue";
 import CreateThread from "../components/Threads/CreateThread.vue";
 import useStore from "../composables/global/useStore";
-import { onMounted, computed, ref, onBeforeUnmount, onUnmounted } from "vue";
+import {
+  onMounted,
+  computed,
+  ref,
+  onBeforeUnmount,
+  onUnmounted,
+  reactive,
+} from "vue";
 import { useRoute } from "vue-router";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
@@ -47,7 +54,7 @@ const {
 } = useStore;
 
 const items = getThreads;
-
+const wsInstance = reactive({});
 const channel = ref(getChannel(route.params.channelId));
 
 // compare method to Sort the threads to put followed threads at top
@@ -78,7 +85,7 @@ const threadsWithFollow = computed(() =>
  */
 function joinTopic(topicId) {
   if (topicId && getLoggedInStatus.value) {
-    SocketioService.joinTopic({
+    wsInstance.value.joinTopic({
       topicId: topicId,
       token: VueCookieNext.getCookie("access_token"),
     });
@@ -96,8 +103,8 @@ function threadHandler(data) {
 }
 
 onMounted(async () => {
-  SocketioService.setupSocketConnection();
-  SocketioService.addThreadHandler(threadHandler);
+  wsInstance.value = new SocketioService();
+  wsInstance.value.addThreadHandler(threadHandler);
   joinTopic(route.params.channelId);
 
   await loadUserThreads();
@@ -113,6 +120,6 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  SocketioService.disconnectTopic();
+  wsInstance.value.disconnectTopic();
 });
 </script>

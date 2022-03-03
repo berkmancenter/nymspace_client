@@ -46,6 +46,7 @@ import {
   onUnmounted,
   computed,
   watchEffect,
+  reactive,
 } from "vue";
 import MessagesView from "../components/Messages/MessagesView.vue";
 import TagList from "../components/Messages/TagList.vue";
@@ -79,6 +80,7 @@ const messageTextArea = ref(null);
 const thread = ref(getThread(route.params.threadId));
 const searchTag = ref("");
 const goodReputation = ref(false);
+const wsInstance = reactive({});
 /**
  * Get tags based on messages
  */
@@ -140,7 +142,7 @@ const updatedMsgs = computed((x) => {
  */
 async function sendMessage() {
   if (message.value.trim().length > 0) {
-    SocketioService.sendMessage({
+    wsInstance.value.sendMessage({
       message: {
         body: message.value,
         thread: route.params.threadId,
@@ -187,7 +189,7 @@ function tagClick(value, isClickedDirect = false) {
  */
 function joinThread(threadId) {
   if (threadId && getLoggedInStatus.value) {
-    SocketioService.joinThread({
+    wsInstance.value.joinThread({
       threadId: threadId,
       token: VueCookieNext.getCookie("access_token"),
     });
@@ -282,9 +284,9 @@ watch(
 );
 
 onMounted(async () => {
-  SocketioService.setupSocketConnection();
-  SocketioService.addVotesHandler(onVoteHandler);
-  SocketioService.addMessageHandler(messageHandler);
+  wsInstance.value = new SocketioService();
+  wsInstance.value.addVotesHandler(onVoteHandler);
+  wsInstance.value.addMessageHandler(messageHandler);
   joinThread(route.params.threadId);
 
   const user = await loadUser();
@@ -295,7 +297,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  SocketioService.disconnectThread();
+  wsInstance.value.disconnectThread();
 });
 </script>
 
