@@ -113,6 +113,6 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  SocketioService.disconnect();
+  SocketioService.disconnectTopic();
 });
 </script>

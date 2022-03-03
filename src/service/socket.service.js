@@ -36,6 +36,16 @@ class SocketioService {
     this.socket.on("vote:new", onVoteHandler);
   }
 
+  disconnectTopic() {
+    this.socket.emit("topic:disconnect");
+    this.disconnect();
+  }
+
+  disconnectThread() {
+    this.socket.emit("thread:disconnect");
+    this.disconnect();
+  }
+
   disconnect() {
     if (this.socket) {
       this.socket.disconnect();

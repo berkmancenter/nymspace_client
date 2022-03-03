@@ -295,7 +295,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  SocketioService.disconnect();
+  SocketioService.disconnectThread();
 });
 </script>
 
