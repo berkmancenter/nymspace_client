@@ -1,6 +1,11 @@
 <template>
   <router-link :to="threadLink" :class="getThreadClass(item)">
-    <div class="col-span-8 text-base">{{ item.name }}</div>
+    <div
+      class="col-span-8 text-base overflow-hidden"
+      style="text-overflow: ellipsis"
+    >
+      {{ item.name }}
+    </div>
     <div class="col-span-1 font-semibold justify-self-end">
       <BookmarkIcon
         :class="item.isFollowed ? 'fill-current text-red-500' : ''"

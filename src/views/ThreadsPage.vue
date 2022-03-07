@@ -2,7 +2,7 @@
   <div class="mx-auto w-11/12 lg:w-3/5">
     <div v-show="!showChatOnly" class="w-1/2 float-left">
       <div class="mr-2">
-        <h2 class="text-red-500 text-2xl my-2 font-bold">
+        <h2 class="text-red-500 text-2xl my-2 font-bold threads-title">
           {{ channel.name }}
         </h2>
         <ThreadList :items="sortedThreads" />
@@ -116,3 +116,9 @@ onUnmounted(() => {
   SocketioService.disconnect();
 });
 </script>
+<style scoped>
+.threads-title {
+  @apply overflow-hidden;
+  text-overflow: ellipsis;
+}
+</style>

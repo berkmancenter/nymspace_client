@@ -1,6 +1,8 @@
 <template>
   <div class="flex justify-between items-center gap-2">
-    <h2 class="text-red-500 text-2xl my-2 font-bold">{{ thread.name }}</h2>
+    <h2 class="text-red-500 text-2xl my-2 font-bold messages-title">
+      {{ thread.name }}
+    </h2>
     <div :title="showChatOnly ? 'Show threads list' : 'Show chat only'">
       <component
         :is="showChatOnly ? ViewBoardsIcon : EyeIcon"
@@ -302,5 +304,9 @@ onUnmounted(() => {
 <style scoped>
 textarea {
   resize: none;
+}
+.messages-title {
+  @apply overflow-hidden;
+  text-overflow: ellipsis;
 }
 </style>
