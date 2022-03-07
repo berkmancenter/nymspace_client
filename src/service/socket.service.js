@@ -1,58 +1,83 @@
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
+/**
+ * Singleton Socket Service class
+ */
 class SocketioService {
-  socket;
-  constructor() {}
+  _socketInstance = null;
+  constructor() {
+    if (!this._socketInstance) {
+      /**
+       * initialize socket connection and connect
+       */
+      const setupSocketConnection = () => {
+        const socketServerUrl = new URL(
+          import.meta.env.VITE_WEBSOCKET_SERVER_URL
+        );
 
-  /**
-   * initialize socket connection and connect
-   */
-  setupSocketConnection() {
-    const socketServerUrl = new URL(import.meta.env.VITE_WEBSOCKET_SERVER_URL);
-
-    let path = "";
-    if (socketServerUrl.pathname) {
-      path = socketServerUrl.pathname.replace(/\/+$/, "") + "/socket.io";
-    } else {
-      path = "/socket.io";
+        let path = "";
+        if (socketServerUrl.pathname) {
+          path = socketServerUrl.pathname.replace(/\/+$/, "") + "/socket.io";
+        } else {
+          path = "/socket.io";
+        }
+        this._socketInstance = io(
+          `${socketServerUrl.protocol}//${socketServerUrl.host}`,
+          {
+            path: path,
+          }
+        );
+      };
+      setupSocketConnection();
     }
+  }
 
-    this.socket = io(`${socketServerUrl.protocol}//${socketServerUrl.host}`, {
-      path: path,
-    });
+  getInstance() {
+    return this._socketInstance;
   }
 
   addMessageHandler(onMessageHandler) {
     // New message bind
-    this.socket.on("message:new", onMessageHandler);
+    this._socketInstance.on("message:new", onMessageHandler);
   }
 
   addThreadHandler(onThreadHandler) {
     // New Thread bind
-    this.socket.on("thread:new", onThreadHandler);
+    this._socketInstance.on("thread:new", onThreadHandler);
   }
 
   addVotesHandler(onVoteHandler) {
     // New vote bind
-    this.socket.on("vote:new", onVoteHandler);
+    this._socketInstance.on("vote:new", onVoteHandler);
+  }
+
+  disconnectTopic() {
+    this._socketInstance.emit("topic:disconnect");
+    this.disconnect();
+  }
+
+  disconnectThread() {
+    this._socketInstance.emit("thread:disconnect");
+    this.disconnect();
   }
 
   disconnect() {
-    if (this.socket) {
-      this.socket.disconnect();
+    if (this._socketInstance) {
+      this._socketInstance.disconnect();
+      this._socketInstance = null;
     }
   }
 
   sendMessage(payload) {
-    this.socket.emit("message:create", payload);
+    this._socketInstance.emit("message:create", payload);
   }
 
   joinThread(payload) {
-    this.socket.emit("thread:join", payload);
+    this._socketInstance.emit("thread:join", payload);
   }
 
   joinTopic(payload) {
-    this.socket.emit("topic:join", payload);
+    this._socketInstance.emit("topic:join", payload);
   }
 }
 
-export default new SocketioService();
+export default SocketioService;
