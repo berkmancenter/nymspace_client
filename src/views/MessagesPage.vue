@@ -72,6 +72,7 @@ const {
   setShowChatOnly,
   showChatOnly,
   updateMessage,
+  setActiveThread,
 } = useStore;
 
 const messages = getMessages;
@@ -265,6 +266,7 @@ async function fetchThreadDetails(threadId) {
   } else {
     thread.value = getThread(threadId);
   }
+  setActiveThread(thread.value);
 }
 
 /**

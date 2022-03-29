@@ -16,6 +16,7 @@ const state = reactive({
   isGuest: VueCookieNext.getCookie("is_guest") !== null,
   channels: [],
   activeChannel: null,
+  activeThread: null,
   userChannels: [],
   threads: [],
   userThreads: [],
@@ -49,6 +50,10 @@ function setActiveChannel(channel) {
   state.activeChannel = { ...channel };
 }
 
+function setActiveThread(thread) {
+  state.activeThread = { ...thread };
+}
+
 function setChannels(channels) {
   state.channels = [...channels];
 }
@@ -57,6 +62,13 @@ function removeChannel(id) {
   let index = state.channels.findIndex((x) => x.id === id);
   if (index > -1) {
     state.channels.splice(index, 1);
+  }
+}
+
+function removeThread(id) {
+  let index = state.threads.findIndex((x) => x.id === id);
+  if (index > -1) {
+    state.threads.splice(index, 1);
   }
 }
 
@@ -123,6 +135,16 @@ async function createThread(payload) {
 async function followThread(payload) {
   await ThreadService.followThread(payload);
   loadUserThreads();
+}
+
+async function updateThread(payload) {
+  await ThreadService.updateThread(payload);
+  loadThreads(getActiveChannel.value.id);
+}
+
+async function deleteThread(id) {
+  await ThreadService.deleteThread(id);
+  removeThread(id);
 }
 
 async function loadUser() {
@@ -385,6 +407,7 @@ const getMajorError = computed(() => state.majorError);
 const getId = computed(() => state.uid);
 
 const getActiveChannel = computed(() => state.activeChannel);
+const getActiveThread = computed(() => state.activeThread);
 
 const showChatOnly = computed(() => state.showChatOnly);
 
@@ -399,6 +422,10 @@ export default {
   followThread,
   getUserThreads,
   getThreads,
+  updateThread,
+  deleteThread,
+  setActiveThread,
+  getActiveThread,
 
   getChannel,
   loadChannels,

@@ -6,7 +6,18 @@
           {{ channel.name }}
         </h2>
         <ThreadList :items="sortedThreads" />
-        <CreateThread />
+        <div class="flex items-center">
+          <CreateThread />
+          <DeleteThread
+            :show="isThreadActive && canEditDelete(getActiveThread)"
+            :name="getActiveThread?.name ?? ''"
+            @delete-thread="processDelete"
+          />
+          <EditThread
+            :item="getActiveThread ?? {}"
+            :show="isThreadActive && canEditDelete(getActiveThread)"
+          />
+        </div>
       </div>
     </div>
     <div :class="showChatOnly ? '' : 'w-1/2 float-right'">
@@ -29,10 +40,13 @@ import {
   onBeforeUnmount,
   onUnmounted,
   reactive,
+  watch,
 } from "vue";
 import { useRoute } from "vue-router";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
+import DeleteThread from "../components/Threads/DeleteThread.vue";
+import EditThread from "../components/Threads/EditThread.vue";
 
 const route = useRoute();
 
@@ -51,11 +65,33 @@ const {
   setShowChatOnly,
   getLoggedInStatus,
   setThread,
+  getGuestStatus,
+  getId,
+  getActiveThread,
+  deleteThread,
 } = useStore;
 
 const items = getThreads;
 const wsInstance = reactive({});
 const channel = ref(getChannel(route.params.channelId));
+const isThreadActive = ref(false);
+/**
+ * Watch thread id to show/hide edit/delete buttons on the side of
+ * create thread button
+ */
+watch(
+  () => route.params.threadId,
+  async (newId) => {
+    if (newId) {
+      isThreadActive.value = true;
+    } else {
+      isThreadActive.value = false;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 // compare method to Sort the threads to put followed threads at top
 function compare(a, b) {
@@ -100,6 +136,15 @@ function threadHandler(data) {
     const { id, isFollowed, messages, name, slug } = data;
     setThread({ id, isFollowed, messageCount: messages.length, name, slug });
   }
+}
+
+function canEditDelete(item) {
+  // return !getGuestStatus.value && item.owner === getId.value;
+  return true;
+}
+
+async function processDelete() {
+  await deleteThread(getActiveThread.value._id ?? getActiveThread.value.id);
 }
 
 onMounted(async () => {
