@@ -8,14 +8,8 @@
         <ThreadList :items="sortedThreads" />
         <div class="flex items-center">
           <CreateThread />
-          <DeleteThread
-            :show="isThreadActive && canEditDelete(getActiveThread)"
-            :item="getActiveThread ?? {}"
-          />
-          <EditThread
-            :item="getActiveThread ?? {}"
-            :show="isThreadActive && canEditDelete(getActiveThread)"
-          />
+          <DeleteThread :show="canEditDelete" :item="getActiveThread ?? {}" />
+          <EditThread :show="canEditDelete" :item="getActiveThread ?? {}" />
         </div>
       </div>
     </div>
@@ -74,6 +68,9 @@ const items = getThreads;
 const wsInstance = reactive({});
 const channel = ref(getChannel(route.params.channelId));
 const isThreadActive = ref(false);
+const isThreadOwner = computed(
+  () => getId.value === getActiveThread.value?.owner
+);
 /**
  * Watch thread id to show/hide edit/delete buttons on the side of
  * create thread button
@@ -137,10 +134,9 @@ function threadHandler(data) {
   }
 }
 
-function canEditDelete(item) {
-  // return !getGuestStatus.value && item.owner === getId.value;
-  return true;
-}
+const canEditDelete = computed(
+  () => isThreadOwner.value && isThreadActive.value
+);
 
 async function processDelete() {
   await deleteThread(getActiveThread.value._id ?? getActiveThread.value.id)
