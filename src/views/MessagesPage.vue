@@ -27,6 +27,7 @@
     @tag-click="tagClick"
   />
   <textarea
+    v-if="!getActiveThread?.locked || false"
     ref="messageTextArea"
     v-model="message"
     id="messageTextArea"
@@ -72,6 +73,8 @@ const {
   setShowChatOnly,
   showChatOnly,
   updateMessage,
+  setActiveThread,
+  getActiveThread,
 } = useStore;
 
 const messages = getMessages;
@@ -265,6 +268,7 @@ async function fetchThreadDetails(threadId) {
   } else {
     thread.value = getThread(threadId);
   }
+  setActiveThread(thread.value);
 }
 
 /**
@@ -295,7 +299,7 @@ onMounted(async () => {
   goodReputation.value = user.goodReputation;
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
-  messageTextArea.value.focus();
+  messageTextArea.value?.focus();
 });
 
 onUnmounted(() => {

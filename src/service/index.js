@@ -30,6 +30,14 @@ export default {
       .then((x) => x.data);
   },
 
+  updateThread: async function (payload) {
+    return await axios
+      .put("/threads", {
+        ...payload,
+      })
+      .then((x) => x.data);
+  },
+
   createThread: async function (payload) {
     return await axios
       .post("/threads", {
@@ -192,7 +200,8 @@ export default {
   deleteChannel: async function (id) {
     return await axios.delete(`/topics/${id}`).then((x) => x.data);
   },
+
   deleteThread: async function (id) {
-    return await axios.delete(`/deleteThread/${id}`).then((x) => x.data);
+    return await axios.delete(`/threads/${id}`).then((x) => x.data);
   },
 };
