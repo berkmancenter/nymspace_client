@@ -20,7 +20,7 @@
           @click="upvote(item.id, !item.hasUpvoted)"
           class="h-5 w-5"
           :class="
-            item.canVote || item.hasUpvoted
+            !getActiveThread.locked && (item.canVote || item.hasUpvoted)
               ? 'cursor-pointer'
               : 'pointer-events-none'
           "
@@ -31,6 +31,7 @@
           @click="downvote(item.id, !item.hasDownvoted)"
           class="h-5 w-5"
           :class="
+            !getActiveThread.locked &&
             (item.canVote || item.hasDownvoted) &&
             !getGuestStatus.value &&
             item.goodReputation
@@ -49,7 +50,8 @@ import { computed } from "vue";
 
 import useStore from "../../composables/global/useStore";
 
-const { upvote, downvote, getGuestStatus, getActiveChannel } = useStore;
+const { upvote, downvote, getGuestStatus, getActiveChannel, getActiveThread } =
+  useStore;
 
 const props = defineProps({
   item: {
@@ -83,13 +85,17 @@ function checkOwner(votes, id, className) {
 }
 
 function getUpVoteClass(item) {
-  let className = item.canVote ? "hover:text-gray-500" : "";
+  let className =
+    !getActiveThread.value.locked && item.canVote ? "hover:text-gray-500" : "";
   return checkOwner(item.upVotes, useStore.getId.value, className);
 }
 
 function getDownVoteClass(item) {
   let className =
-    item.canVote && !getGuestStatus.value && item.goodReputation
+    !getActiveThread.value.locked &&
+    item.canVote &&
+    !getGuestStatus.value &&
+    item.goodReputation
       ? "hover:text-gray-500"
       : "";
   return checkOwner(item.downVotes, useStore.getId.value, className);

@@ -139,7 +139,12 @@ async function followThread(payload) {
 
 async function updateThread(payload) {
   await ThreadService.updateThread(payload);
-  loadThreads(getActiveChannel.value.id);
+  await loadThreads(getActiveChannel.value.id);
+  if (getActiveThread) {
+    setActiveThread(
+      getThread(getActiveThread.value.id ?? getActiveThread.value._id)
+    );
+  }
 }
 
 async function deleteThread(id) {

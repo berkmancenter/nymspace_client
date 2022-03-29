@@ -10,8 +10,7 @@
           <CreateThread />
           <DeleteThread
             :show="isThreadActive && canEditDelete(getActiveThread)"
-            :name="getActiveThread?.name ?? ''"
-            @delete-thread="processDelete"
+            :item="getActiveThread ?? {}"
           />
           <EditThread
             :item="getActiveThread ?? {}"
@@ -144,7 +143,9 @@ function canEditDelete(item) {
 }
 
 async function processDelete() {
-  await deleteThread(getActiveThread.value._id ?? getActiveThread.value.id);
+  await deleteThread(getActiveThread.value._id ?? getActiveThread.value.id)
+    .then((x) => console.log(x))
+    .catch((err) => console.error(err));
 }
 
 onMounted(async () => {
