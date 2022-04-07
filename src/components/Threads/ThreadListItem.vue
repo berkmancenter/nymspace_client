@@ -1,7 +1,7 @@
 <template>
   <router-link :to="threadLink" :class="getThreadClass(item)">
     <div
-      class="col-span-8 text-base overflow-hidden"
+      class="col-span-7 text-base overflow-hidden"
       style="text-overflow: ellipsis"
     >
       {{ item.name }}
@@ -13,6 +13,9 @@
         class="h-5 w-5 inline-block"
       />
     </div>
+    <div class="col-span-1 font-semibold justify-self-end">
+      <LockClosedIcon v-if="item.locked" class="h-4 w-4 inline-block" />
+    </div>
     <div class="col-span-3 font-semibold justify-self-end">
       {{ item.messageCount }}
       <ChatAltIcon class="h-5 w-5 inline-block" />
@@ -22,6 +25,7 @@
 
 <script setup>
 import { ChatAltIcon, BookmarkIcon } from "@heroicons/vue/outline";
+import { LockClosedIcon } from "@heroicons/vue/solid";
 import { computed } from "vue";
 import useStore from "../../composables/global/useStore";
 import { useRoute } from "vue-router";
