@@ -129,8 +129,15 @@ function joinTopic(topicId) {
  */
 function threadHandler(data) {
   if (route.params.channelId === data.topic.id) {
-    const { id, isFollowed, messages, name, slug } = data;
-    setThread({ id, isFollowed, messageCount: messages.length, name, slug });
+    const { id, isFollowed, messages, name, slug, owner } = data;
+    setThread({
+      id,
+      isFollowed,
+      messageCount: messages.length,
+      name,
+      slug,
+      owner: owner?.id,
+    });
   }
 }
 
