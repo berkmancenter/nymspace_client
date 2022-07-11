@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-gray-200 pb-4 pt-1">
-    <div class="text-center text-2xl pb-4 pt-1">
+  <div class="bg-gray-200 pb-4 pt-4">
+    <div class="text-center text-2xl pb-4 pt-4">
       Hello, [
       <select
         v-if="!getGuestStatus"
@@ -33,7 +33,7 @@
         class="h-5 w-5 inline-block cursor-pointer hover:text-red-500"
         title="Get a new pseudonym"
         @click="refreshPseudonym"
-      />. Would you like to:
+      />, {{welcomeMessage}}
     </div>
     <component
       :is="
@@ -86,6 +86,8 @@ import useStore from "../../composables/global/useStore";
 import { defineAsyncComponent } from "@vue/runtime-core";
 import { TrashIcon, RefreshIcon } from "@heroicons/vue/outline";
 import Modal from "../Shared/Modal.vue";
+import { useRoute } from "vue-router";
+
 const {
   getLoggedInStatus,
   getPseudonyms,
@@ -106,7 +108,26 @@ const isError = ref(true);
 const inactivePseudonyms = computed(() =>
   getPseudonyms.value.filter((x) => !x.active)
 );
+const welcomeMessage = ref();
+const route = useRoute();
 
+/**
+ * watch route params and check if channelId is present
+ * based on its presence update welcome message
+ */
+watch(
+  () => route.params,
+  async (params) => {
+    if (params.hasOwnProperty('channelId')) {
+      welcomeMessage.value = "Select a thread to begin messaging:"
+    } else {
+      welcomeMessage.value = "Select a channel to begin messaging:"
+    }
+  },
+  {
+    immediate: true
+  }
+);
 async function registerOneTime() {
   await registerOnce();
 }
