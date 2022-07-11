@@ -21,6 +21,13 @@
 
     <div v-if="getMajorError?.trim().length > 0">{{ getMajorError }}</div>
     <div class="flex gap-6 items-center">
+      <router-link
+        v-if="getGuestStatus"
+        to="/login"
+        class="hover:text-red-600 text-black"
+        title="Retain a pseudonym across sessions"
+      >Login</router-link>
+
       <router-link to="/" class="">
         <p class="inline-block hover:text-red-600 text-black">All Channels</p>
       </router-link>
@@ -37,6 +44,10 @@
 <script setup>
 import store from "../../composables/global/useStore";
 import { ExternalLinkIcon } from "@heroicons/vue/outline";
+import useStore from "../../composables/global/useStore";
+const {
+  getGuestStatus
+} = useStore;
 const { getMajorError } = store;
 const showVersion = import.meta.env.VITE_SHOW_VERSION === "true";
 const version = __APP_VERSION__;
