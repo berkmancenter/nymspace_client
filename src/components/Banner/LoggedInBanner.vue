@@ -1,13 +1,7 @@
 <template>
   <div class="mx-auto w-11/12 lg:w-3/5">
     <div class="flex" :class="!getGuestStatus ? 'gap-4' : ''">
-      <div
-        class="w-full px-2 h-16 leading-relaxed self-cente flex justify-center items-center my-2"
-        v-if="getGuestStatus"
-      >
-        <span class="text-xl">Keep using this one-time pseudonym, or</span>
-      </div>
-      <button v-else class="btn" @click="signout">
+      <button v-if="!getGuestStatus" class="btn" @click="signout">
         <span>Create a new pseudonym for one session (log out)</span>
       </button>
       <button
@@ -19,14 +13,6 @@
       >
         <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym
         on your account
-      </button>
-      <button
-        class="btn"
-        :class="getGuestStatus ? 'md:ml-4' : ''"
-        v-else
-        @click="loginViaGuest"
-      >
-        Login
       </button>
     </div>
   </div>
