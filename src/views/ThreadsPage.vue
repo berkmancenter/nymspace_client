@@ -71,6 +71,7 @@ const isThreadActive = ref(false);
 const isThreadOwner = computed(
   () => getId.value === getActiveThread.value?.owner
 );
+const isChannelOwner = computed(() => getId.value === channel.value?.owner);
 /**
  * Watch thread id to show/hide edit/delete buttons on the side of
  * create thread button
@@ -142,7 +143,7 @@ function threadHandler(data) {
 }
 
 const canEditDelete = computed(
-  () => isThreadOwner.value && isThreadActive.value
+  () => (isThreadOwner.value || isChannelOwner.value) && isThreadActive.value
 );
 
 async function processDelete() {
