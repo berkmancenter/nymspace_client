@@ -37,10 +37,11 @@
     placeholder="Message (hit enter to send)"
   >
   </textarea>
+  <PromptDirtyDraft :show="prompt" @response="response" />
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
 import {
   onMounted,
   ref,
@@ -53,6 +54,7 @@ import {
 } from "vue";
 import MessagesView from "../components/Messages/MessagesView.vue";
 import TagList from "../components/Messages/TagList.vue";
+import PromptDirtyDraft from "../components/Messages/PromptDirtyDraft.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
@@ -86,6 +88,47 @@ const thread = ref(getThread(route.params.threadId));
 const searchTag = ref("");
 const goodReputation = ref(false);
 const wsInstance = reactive({});
+
+/**
+ * Dialog feature
+ */
+const resolve = ref({});
+const reject = ref({});
+const prompt = ref(false);
+
+onBeforeRouteLeave(async (to, from) => {
+  return await processDirtyMessage();
+});
+
+onBeforeRouteUpdate(async (to, from) => {
+  return await processDirtyMessage();
+});
+
+const processDirtyMessage = async () => {
+  const promise = new Promise((res, rej) => {
+    resolve.value = res;
+    reject.value = rej;
+  });
+  if (message.value.trim().length > 0) {
+    prompt.value = true;
+  } else {
+    resolve.value(true);
+  }
+  let val = await promise;
+  if (val) {
+    message.value = "";
+  }
+  return val;
+};
+
+/**
+ * Dialog prompt response call
+ */
+const response = (value) => {
+  resolve.value(value);
+  prompt.value = false;
+};
+
 /**
  * Get tags based on messages
  */
@@ -311,6 +354,7 @@ onUnmounted(() => {
 textarea {
   resize: none;
 }
+
 .messages-title {
   @apply overflow-hidden;
   text-overflow: ellipsis;
