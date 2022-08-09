@@ -21,7 +21,7 @@
           (until a sufficient number of upvotes are accumulated).
         </p>
 
-        <p>Please email XXX@XXX with any questions about your account.</p>
+        <p>Please email threads_qs@eon.law.harvard.edu with any questions about your account.</p>
       </div>
     </div>
     <router-link

@@ -94,11 +94,23 @@ function setShowChatOnly(value) {
 }
 
 function addChannel(channel) {
-  const channelId = state.channels.indexOf((x) => x.id === channel.id);
+  const channelId = state.channels.findIndex((x) => x.id === channel.id);
   if (channelId > -1) {
     state.channels.splice(channelId, 1, channel);
   } else {
     state.channels.push(channel);
+  }
+}
+
+function upsertThread(thread) {
+  const threadId = state.threads.findIndex((x) => x.id === thread.id);
+  if (threadId > -1) {
+    state.threads.splice(threadId, 1, thread);
+  } else {
+    state.threads.push(thread);
+  }
+  if (getActiveThread.value.id === thread.id) {
+    setActiveThread(thread);
   }
 }
 
@@ -431,6 +443,7 @@ export default {
   deleteThread,
   setActiveThread,
   getActiveThread,
+  upsertThread,
 
   getChannel,
   loadChannels,

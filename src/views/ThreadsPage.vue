@@ -58,6 +58,7 @@ const {
   setShowChatOnly,
   getLoggedInStatus,
   setThread,
+  upsertThread,
   getGuestStatus,
   getId,
   getActiveThread,
@@ -142,6 +143,13 @@ function threadHandler(data) {
   }
 }
 
+/**
+ * Handle thread update
+ */
+function updateThreadHandler(data) {
+  upsertThread(data);
+}
+
 const canEditDelete = computed(
   () => (isThreadOwner.value || isChannelOwner.value) && isThreadActive.value
 );
@@ -155,6 +163,7 @@ async function processDelete() {
 onMounted(async () => {
   wsInstance.value = new SocketioService();
   wsInstance.value.addThreadHandler(threadHandler);
+  wsInstance.value.addThreadUpdateHandler(updateThreadHandler);
   joinTopic(route.params.channelId);
 
   await loadUserThreads();

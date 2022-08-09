@@ -27,16 +27,21 @@
     @tag-click="tagClick"
   />
   <textarea
-    v-if="!getActiveThread?.locked || false"
+    v-if="!shouldHideMessageBox"
     ref="messageTextArea"
     v-model="message"
     id="messageTextArea"
     @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
-    class="w-full block border-2 border-gray-500 text-sm px-1 h-20 mt-4"
+    class="w-full block border-2 text-sm px-1 h-20 mt-4"
+    :class="showLockedMessage ? 'border-red-500' : 'border-gray-500'"
     placeholder="Message (hit enter to send)"
   >
   </textarea>
+  <span v-if="showLockedMessage" class="text-red-500 text-sm font-bold"
+    >Thread is now locked. Message will not be sent. Please copy or delete your
+    draft.</span
+  >
   <PromptDirtyDraft :show="prompt" @response="response" />
 </template>
 
@@ -88,6 +93,8 @@ const thread = ref(getThread(route.params.threadId));
 const searchTag = ref("");
 const goodReputation = ref(false);
 const wsInstance = reactive({});
+const shouldHideMessageBox = ref(false);
+const showLockedMessage = ref(false);
 
 /**
  * Dialog feature
@@ -128,6 +135,34 @@ const response = (value) => {
   resolve.value(value);
   prompt.value = false;
 };
+
+watch(
+  () => getActiveThread.value,
+  async (now, prev) => {
+    showLockedMessage.value = false;
+    if (now?.id == prev?.id) {
+      if (now?.locked) {
+        if (prev !== undefined && !prev?.locked) {
+          if (message.value.trim().length > 0) {
+            shouldHideMessageBox.value = false;
+            showLockedMessage.value = true;
+          } else {
+            shouldHideMessageBox.value = true;
+          }
+        } else {
+          shouldHideMessageBox.value = true;
+        }
+      } else {
+        shouldHideMessageBox.value = false;
+      }
+    } else {
+      shouldHideMessageBox.value = now?.locked;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 /**
  * Get tags based on messages
@@ -189,7 +224,7 @@ const updatedMsgs = computed((x) => {
  * Send message via ws
  */
 async function sendMessage() {
-  if (message.value.trim().length > 0) {
+  if (message.value.trim().length > 0 && !getActiveThread.value?.locked) {
     wsInstance.value.sendMessage({
       message: {
         body: message.value,

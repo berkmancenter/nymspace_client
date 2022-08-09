@@ -45,6 +45,11 @@ class SocketioService {
     this._socketInstance.on("thread:new", onThreadHandler);
   }
 
+  addThreadUpdateHandler(onThreadHandler) {
+    // Update Thread bind
+    this._socketInstance.on("thread:update", onThreadHandler);
+  }
+
   addVotesHandler(onVoteHandler) {
     // New vote bind
     this._socketInstance.on("vote:new", onVoteHandler);
