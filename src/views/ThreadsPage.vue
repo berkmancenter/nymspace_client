@@ -160,11 +160,20 @@ async function processDelete() {
     .catch((err) => console.error(err));
 }
 
-onMounted(async () => {
-  wsInstance.value = new SocketioService();
+/**
+ * Method to reconnect thread websocket calls on
+ * initialization and disconnection
+ */
+const reconnectSockets = () =>{
   wsInstance.value.addThreadHandler(threadHandler);
   wsInstance.value.addThreadUpdateHandler(updateThreadHandler);
   joinTopic(route.params.channelId);
+}
+
+onMounted(async () => {
+  wsInstance.value = new SocketioService();
+  wsInstance.value.addDisconnectHandler(reconnectSockets);
+  reconnectSockets();
 
   await loadUserThreads();
   await loadThreads(route.params.channelId);

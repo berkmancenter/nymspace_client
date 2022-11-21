@@ -35,23 +35,31 @@ class SocketioService {
     return this._socketInstance;
   }
 
+  addDisconnectHandler(onDisconnectHandler){
+    this._socketInstance.on("disconnect", onDisconnectHandler);
+  }
+
   addMessageHandler(onMessageHandler) {
     // New message bind
+    this._socketInstance.off("message:new", onMessageHandler);
     this._socketInstance.on("message:new", onMessageHandler);
   }
 
   addThreadHandler(onThreadHandler) {
     // New Thread bind
+    this._socketInstance.off("thread:new", onThreadHandler);
     this._socketInstance.on("thread:new", onThreadHandler);
   }
 
   addThreadUpdateHandler(onThreadHandler) {
     // Update Thread bind
+    this._socketInstance.off("thread:update", onThreadHandler);
     this._socketInstance.on("thread:update", onThreadHandler);
   }
 
   addVotesHandler(onVoteHandler) {
     // New vote bind
+    this._socketInstance.off("vote:new", onVoteHandler);
     this._socketInstance.on("vote:new", onVoteHandler);
   }
 

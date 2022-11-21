@@ -367,11 +367,20 @@ watch(
   }
 );
 
-onMounted(async () => {
-  wsInstance.value = new SocketioService();
+/**
+ * Method to reconnect message and vote websocket calls on
+ * initialization and disconnection
+ */
+const reconnectSockets = () =>{
   wsInstance.value.addVotesHandler(onVoteHandler);
   wsInstance.value.addMessageHandler(messageHandler);
   joinThread(route.params.threadId);
+}
+
+onMounted(async () => {
+  wsInstance.value = new SocketioService();
+  wsInstance.value.addDisconnectHandler(reconnectSockets);
+  reconnectSockets();
 
   const user = await loadUser();
   goodReputation.value = user.goodReputation;
