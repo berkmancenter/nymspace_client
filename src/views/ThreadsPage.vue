@@ -7,7 +7,7 @@
         </h2>
         <ThreadList :items="sortedThreads" />
         <div class="flex items-center">
-          <CreateThread />
+          <CreateThread :show="canCreate" />
           <DeleteThread :show="canEditDelete" :item="getActiveThread ?? {}" />
           <EditThread :show="canEditDelete" :item="getActiveThread ?? {}" />
         </div>
@@ -73,6 +73,7 @@ const isThreadOwner = computed(
   () => getId.value === getActiveThread.value?.owner
 );
 const isChannelOwner = computed(() => getId.value === channel.value?.owner);
+const isChannelThreadCreationAllowed = computed(() => channel.value?.threadCreationAllowed);
 /**
  * Watch thread id to show/hide edit/delete buttons on the side of
  * create thread button
@@ -149,6 +150,10 @@ function threadHandler(data) {
 function updateThreadHandler(data) {
   upsertThread(data);
 }
+
+const canCreate = computed(
+  () => isChannelOwner.value || isChannelThreadCreationAllowed.value
+);
 
 const canEditDelete = computed(
   () => (isThreadOwner.value || isChannelOwner.value) && isThreadActive.value

@@ -29,6 +29,14 @@
       /><label class="cursor-pointer font-semibold" for="disableVoting"
         >Disable voting</label
       >
+      <input
+        v-model="disableThreadCreation"
+        type="checkbox"
+        id="disableThreadCreation"
+        class="cursor-pointer w-4 h-4 ml-8 mr-2 align-middle"
+      /><label class="cursor-pointer font-semibold" for="disableThreadCreation"
+        >Disable thread creation</label
+      >
     </div>
     <div
       class="mt-8 ring-2 ring-gray-500 rounded-sm px-2 py-1 ring-opacity-50 bg-gray-200"
@@ -72,6 +80,7 @@ const isModalOpen = ref(false);
 const channelType = ref("");
 const channelName = ref("");
 const disableVoting = ref(false);
+const disableThreadCreation = ref(false);
 const email = ref("");
 const message = ref("");
 
@@ -94,6 +103,7 @@ async function openModal() {
   const user = await loadUser();
   channelName.value = "";
   disableVoting.value = false;
+  disableThreadCreation.value = false;
   email.value = user.email || "";
   window.scrollTo({ top: 0, left: 0 });
   isModalOpen.value = true;
@@ -106,6 +116,7 @@ function processCreate() {
       name: channelName.value,
       private: channelType.value === "private",
       votingAllowed: !disableVoting.value,
+      threadCreationAllowed: !disableThreadCreation.value,
       archivable: true,
       archiveEmail: email.value,
     };
