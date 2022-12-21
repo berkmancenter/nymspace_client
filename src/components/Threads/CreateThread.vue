@@ -1,5 +1,6 @@
 <template>
   <button
+    v-if="show"
     @click="openModal"
     class="w-full text-center float-left inline-block border-2 border-gray-500 text-lg px-10 h-10 mt-4 leading-9 hover:bg-gray-100"
   >
@@ -28,6 +29,14 @@ import { ref } from "@vue/reactivity";
 import useStore from "../../composables/global/useStore";
 import Modal from "../Shared/Modal.vue";
 import { useRoute } from "vue-router";
+
+defineProps({
+  show: {
+    type: Boolean,
+    required: true,
+  },
+});
+
 const { createThread } = useStore;
 const isModalOpen = ref(false);
 const threadName = ref("");
