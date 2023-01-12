@@ -138,15 +138,7 @@ watch(
   async (now, prev) => {
     if (now?.id == prev?.id) {
       if (now?.locked) {
-        if (prev !== undefined && !prev?.locked) {
-          if (message.value.trim().length > 0) {
-            shouldDisplayMessageBoxLocked.value = false;
-          } else {
-            shouldDisplayMessageBoxLocked.value = true;
-          }
-        } else {
-          shouldDisplayMessageBoxLocked.value = true;
-        }
+        shouldDisplayMessageBoxLocked.value = true;
       } else {
         shouldDisplayMessageBoxLocked.value = false;
       }
