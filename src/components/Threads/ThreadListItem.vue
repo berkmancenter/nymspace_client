@@ -14,7 +14,7 @@
       />
     </div>
     <div class="col-span-1 font-semibold justify-self-end">
-      <LockClosedIcon v-if="item.locked" class="h-4 w-4 inline-block" />
+      <LockClosedIcon v-if="item.locked" class="h-4 w-4 inline-block" @click="unlockThread" />
     </div>
     <div class="col-span-3 font-semibold justify-self-end">
       {{ item.messageCount }}
@@ -31,7 +31,7 @@ import useStore from "../../composables/global/useStore";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const { followThread, getUserThreads } = useStore;
+const { followThread, updateThread } = useStore;
 
 const threadLink = computed(
   () => `/channels/${route.params.channelId}/threads/${props.item.id}`
@@ -56,5 +56,14 @@ function pinThread() {
     status: !props.item.isFollowed,
     threadId: props.item.id,
   });
+}
+
+async function unlockThread() {
+  let payload = {
+    id: props.item._id ?? props.item.id,
+    locked: false,
+  };
+
+  updateThread(payload);
 }
 </script>
