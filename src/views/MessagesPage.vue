@@ -38,7 +38,7 @@
   >
   </textarea>
   <span v-if="shouldDisplayMessageBoxLocked" class="text-red-500 text-sm font-bold"
-    >Thread is now locked. Message will not be sent.</span
+    >This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.</span
   >
   <PromptDirtyDraft :show="prompt" @response="response" />
 </template>
