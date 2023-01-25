@@ -26,8 +26,19 @@
     :msg-txt-area="messageTextArea"
     @tag-click="tagClick"
   />
+  <div
+    v-if="pseudonymMismatch"
+    class="alert warning"
+    style="margin-top: 1rem;"
+  >
+    <ExclamationIcon
+      class="h-6 w-6 inline-block text-orange-500 rounded"
+    />
+    <span class="text-sm">The pseudonym for this thread is <strong>{{ pseudonymForThread.pseudonym }}</strong>. Please switch to this pseudonym to send a message.</span>
+  </div>
   <textarea
     ref="messageTextArea"
+    v-if="!pseudonymMismatch"
     v-model="message"
     id="messageTextArea"
     @keypress="watchTagging"
@@ -61,7 +72,7 @@ import PromptDirtyDraft from "../components/Messages/PromptDirtyDraft.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
-import { ViewBoardsIcon, EyeIcon, EyeOffIcon } from "@heroicons/vue/outline";
+import { ViewBoardsIcon, EyeIcon, ExclamationIcon } from "@heroicons/vue/outline";
 
 const route = useRoute();
 const {
@@ -72,6 +83,7 @@ const {
   loadThread,
   getLoggedInStatus,
   getThread,
+  getPseudonyms,
   getActivePseudonym,
   getId,
   loadUser,
@@ -88,6 +100,18 @@ const tagListVisible = ref(false);
 const messageViewRef = ref(null);
 const messageTextArea = ref(null);
 const thread = ref(getThread(route.params.threadId));
+const pseudonymForThread = computed(() => {
+  return getPseudonyms.value.filter((x) => {
+    if (!x.threads) {
+      return false;
+    }
+
+    return x.threads.includes(thread.value?.id);
+  })[0];
+});
+const pseudonymMismatch = computed(() => {
+  return pseudonymForThread.value && pseudonymForThread.value?._id !== getActivePseudonym.value?._id;
+});
 const searchTag = ref("");
 const goodReputation = ref(false);
 const wsInstance = reactive({});
@@ -389,5 +413,14 @@ textarea {
 .messages-title {
   @apply overflow-hidden;
   text-overflow: ellipsis;
+}
+
+.alert.warning {
+  @apply bg-yellow-100 text-yellow-800;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.25rem;
 }
 </style>
