@@ -235,7 +235,7 @@ const updatedMsgs = computed((x) => {
  * Send message via ws
  */
 async function sendMessage() {
-  if (message.value.trim().length > 0 && !getActiveThread.value?.locked) {
+  if (message.value.trim().length > 0 && !getActiveThread.value?.locked && !pseudonymMismatch.value) {
     wsInstance.value.sendMessage({
       message: {
         body: message.value,
