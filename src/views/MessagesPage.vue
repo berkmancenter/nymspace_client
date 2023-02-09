@@ -389,15 +389,15 @@ const reconnectSockets = () =>{
 }
 
 onMounted(async () => {
-  wsInstance.value = new SocketioService();
-  wsInstance.value.addDisconnectHandler(reconnectSockets);
-  reconnectSockets();
-
   const user = await loadUser();
   goodReputation.value = user.goodReputation;
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
   messageTextArea.value?.focus();
+
+  wsInstance.value = new SocketioService();
+  wsInstance.value.addDisconnectHandler(reconnectSockets);
+  reconnectSockets();
 });
 
 onUnmounted(() => {
