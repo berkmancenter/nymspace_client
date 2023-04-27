@@ -1,8 +1,10 @@
+import { v4 as uuidv4 } from 'uuid';
 import { io, Socket } from "socket.io-client";
 /**
  * Singleton Socket Service class
  */
 class SocketioService {
+  _requestCache = {};
   _socketInstance = null;
   constructor() {
     if (!this._socketInstance) {
@@ -28,6 +30,9 @@ class SocketioService {
         );
       };
       setupSocketConnection();
+
+      // set up cache
+      this._requestCache = {};
     }
   }
 
@@ -39,10 +44,22 @@ class SocketioService {
     this._socketInstance.on("disconnect", onDisconnectHandler);
   }
 
-  addMessageHandler(onMessageHandler) {
+  addMessageHandler(finalOnMessageHandler) {
+    const onMessageHandler = (data) => {
+      if (data.request) {
+        const { resolve, reject } = this._requestCache[data.request];
+        if (data.error) {
+          reject(data.error);
+        } else {
+          resolve(finalOnMessageHandler(data));
+        }
+        delete this._requestCache[request];
+      }
+    };
+
     // New message bind
     this._socketInstance.off("message:new", onMessageHandler);
-    this._socketInstance.on("message:new", onMessageHandler);
+    this._socketInstance.on("message:new", onMessageHandler); 
   }
 
   addThreadHandler(onThreadHandler) {
@@ -80,8 +97,13 @@ class SocketioService {
     }
   }
 
-  sendMessage(payload) {
-    this._socketInstance.emit("message:create", payload);
+  async sendMessage(payload) {
+    const request = uuidv4();
+
+    return new Promise((resolve, reject) => {
+      this._requestCache[request] = { resolve, reject, payload };
+      this._socketInstance.emit("message:create", { ...payload, request });
+    });
   }
 
   joinThread(payload) {
