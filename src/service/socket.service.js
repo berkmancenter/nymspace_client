@@ -53,7 +53,7 @@ class SocketioService {
         } else {
           resolve(finalOnMessageHandler(data));
         }
-        delete this._requestCache[request];
+        delete this._requestCache[data.request];
       }
     };
 

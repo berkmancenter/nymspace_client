@@ -51,6 +51,12 @@
   <span v-if="shouldDisplayMessageBoxLocked" class="text-red-500 text-sm font-bold"
     >This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.</span
   >
+  <span
+    v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
+    class="text-red-500 text-sm font-bold"
+  >
+    Unable to send message. Please try again later.
+  </span>
   <PromptDirtyDraft :show="prompt" @response="response" />
 </template>
 
@@ -116,6 +122,7 @@ const searchTag = ref("");
 const goodReputation = ref(false);
 const wsInstance = reactive({});
 const shouldDisplayMessageBoxLocked = ref(false);
+const shouldDisplayUnableToSendMessage = ref(false);
 
 /**
  * Dialog feature
@@ -236,16 +243,21 @@ const updatedMsgs = computed((x) => {
  */
 async function sendMessage() {
   if (message.value.trim().length > 0 && !getActiveThread.value?.locked && !pseudonymMismatch.value) {
-    wsInstance.value.sendMessage({
-      message: {
-        body: message.value,
-        thread: route.params.threadId,
-      },
-      token: VueCookieNext.getCookie("access_token"),
-    });
+    try {
+      await wsInstance.value.sendMessage({
+        message: {
+          body: message.value,
+          thread: route.params.threadId,
+        },
+        token: VueCookieNext.getCookie("access_token"),
+      });
 
-    message.value = "";
-    scrollToBottom();
+      shouldDisplayUnableToSendMessage.value = false;
+      message.value = "";
+      scrollToBottom();
+    } catch (error) {
+      shouldDisplayUnableToSendMessage.value = true;
+    }
   }
 }
 
