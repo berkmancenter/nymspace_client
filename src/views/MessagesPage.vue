@@ -44,8 +44,9 @@
     @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
     class="w-full block border-2 text-sm px-1 h-20 mt-4"
-    :class="shouldDisplayMessageBoxLocked ? 'border-red-500' : 'border-gray-500'"
+    :class="(shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage) ? 'border-red-500' : 'border-gray-500'"
     placeholder="Message (hit enter to send)"
+    data-testid="message-text-area"
   >
   </textarea>
   <span v-if="shouldDisplayMessageBoxLocked" class="text-red-500 text-sm font-bold"
@@ -249,6 +250,7 @@ async function sendMessage() {
           body: message.value,
           thread: route.params.threadId,
         },
+        userId: getId.value,
         token: VueCookieNext.getCookie("access_token"),
       });
 
@@ -297,6 +299,15 @@ function joinThread(threadId) {
   if (threadId && getLoggedInStatus.value) {
     wsInstance.value.joinThread({
       threadId: threadId,
+      token: VueCookieNext.getCookie("access_token"),
+    });
+  }
+}
+
+function joinUser() {
+  if (getLoggedInStatus.value) {
+    wsInstance.value.joinUser({
+      userId: getId.value,
       token: VueCookieNext.getCookie("access_token"),
     });
   }
@@ -395,9 +406,16 @@ watch(
  * initialization and disconnection
  */
 const reconnectSockets = () =>{
+  wsInstance.value.addErrorHandler();
   wsInstance.value.addVotesHandler(onVoteHandler);
   wsInstance.value.addMessageHandler(messageHandler);
-  joinThread(route.params.threadId);
+
+  wsInstance.value.onConnect(() => {
+    setTimeout(() => {
+      joinThread(route.params.threadId);
+      joinUser();
+    }, 100);
+  });
 }
 
 onMounted(async () => {

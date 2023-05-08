@@ -13,7 +13,7 @@
         class="h-5 w-5 inline-block"
       />
     </div>
-    <div class="col-span-1 font-semibold justify-self-end">
+    <div class="col-span-1 font-semibold justify-self-end" data-testid="unlock-thread">
       <LockClosedIcon v-if="item.locked" class="h-4 w-4 inline-block" @click="unlockThread" />
     </div>
     <div class="col-span-3 font-semibold justify-self-end">

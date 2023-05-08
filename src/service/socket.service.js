@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { io, Socket } from "socket.io-client";
+import { VueCookieNext } from "vue-cookie-next";
+import { refreshToken } from '../plugins/axios';
+
 /**
  * Singleton Socket Service class
  */
@@ -46,14 +49,12 @@ class SocketioService {
 
   addMessageHandler(finalOnMessageHandler) {
     const onMessageHandler = (data) => {
-      if (data.request) {
-        const { resolve, reject } = this._requestCache[data.request];
-        if (data.error) {
-          reject(data.error);
-        } else {
-          resolve(finalOnMessageHandler(data));
-        }
+      if (data.request && data.request in this._requestCache) {
+        const { resolve } = this._requestCache[data.request];
+        resolve(finalOnMessageHandler(data));
         delete this._requestCache[data.request];
+      } else {
+        finalOnMessageHandler(data);
       }
     };
 
@@ -80,6 +81,41 @@ class SocketioService {
     this._socketInstance.on("vote:new", onVoteHandler);
   }
 
+  async sendMessage(payload) {
+    const request = uuidv4();
+
+    return new Promise((resolve, reject) => {
+      this._requestCache[request] = { resolve, reject, payload };
+      this._socketInstance.emit("message:create", { ...payload, request });
+    });
+  }
+
+  addErrorHandler() {
+    const onErrorHandler = async (data) => {
+      if (data.request) {
+        const { reject, resolve, payload } = this._requestCache[data.request];
+
+        if (data.error === "jwt expired") {
+          await refreshToken();
+          await this.sendMessage({
+            ...payload,
+            token: VueCookieNext.getCookie("access_token"),
+          });
+
+          resolve();
+        } else {
+          reject(data.error);
+        }
+
+        delete this._requestCache[data.request];
+      }
+    };
+
+    // New error bind
+    this._socketInstance.off("error", onErrorHandler);
+    this._socketInstance.on("error", onErrorHandler); 
+  }
+
   disconnectTopic() {
     this._socketInstance.emit("topic:disconnect");
     this.disconnect();
@@ -97,21 +133,20 @@ class SocketioService {
     }
   }
 
-  async sendMessage(payload) {
-    const request = uuidv4();
-
-    return new Promise((resolve, reject) => {
-      this._requestCache[request] = { resolve, reject, payload };
-      this._socketInstance.emit("message:create", { ...payload, request });
-    });
-  }
-
   joinThread(payload) {
     this._socketInstance.emit("thread:join", payload);
   }
 
   joinTopic(payload) {
     this._socketInstance.emit("topic:join", payload);
+  }
+
+  joinUser(payload) {
+    this._socketInstance.emit("user:join", payload);
+  }
+
+  onConnect(onConnectHandler) {
+    this._socketInstance.on("connect", onConnectHandler);
   }
 }
 
