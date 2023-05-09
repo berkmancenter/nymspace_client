@@ -82,6 +82,18 @@ class SocketioService {
   }
 
   async sendMessage(payload) {
+    const cacheWithMatchingPayload = Object.values(this._requestCache).find(
+      (x) => x.payload.message === payload.message
+    );
+
+    if (cacheWithMatchingPayload) {
+      console.debug(cacheWithMatchingPayload);
+
+      debugger;
+
+      return;
+    }
+
     const request = uuidv4();
 
     return new Promise((resolve, reject) => {
@@ -95,19 +107,19 @@ class SocketioService {
       if (data.request) {
         const { reject, resolve, payload } = this._requestCache[data.request];
 
+        delete this._requestCache[data.request];
+
         if (data.error === "jwt expired") {
+          resolve();
           await refreshToken();
           await this.sendMessage({
             ...payload,
             token: VueCookieNext.getCookie("access_token"),
           });
-
-          resolve();
+          
         } else {
           reject(data.error);
         }
-
-        delete this._requestCache[data.request];
       }
     };
 
