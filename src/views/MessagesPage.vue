@@ -234,8 +234,28 @@ const updatedMsgs = computed((x) => {
 /**
  * Send message via ws
  */
+function parseJwt (token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
 async function sendMessage() {
   if (message.value.trim().length > 0 && !getActiveThread.value?.locked && !pseudonymMismatch.value) {
+    const accessToken = VueCookieNext.getCookie("access_token");
+    const decodedAccessToken = parseJwt(accessToken);
+    const expiresAt = new Date(decodedAccessToken.exp * 1000);
+    const oneMinuteFromNow = new Date();
+    oneMinuteFromNow.setMinutes(oneMinuteFromNow.getMinutes() + 1);
+
+    if (expiresAt < oneMinuteFromNow) {
+      await loadUser();
+    }
+
     wsInstance.value.sendMessage({
       message: {
         body: message.value,
@@ -389,15 +409,15 @@ const reconnectSockets = () =>{
 }
 
 onMounted(async () => {
-  wsInstance.value = new SocketioService();
-  wsInstance.value.addDisconnectHandler(reconnectSockets);
-  reconnectSockets();
-
   const user = await loadUser();
   goodReputation.value = user.goodReputation;
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
   messageTextArea.value?.focus();
+
+  wsInstance.value = new SocketioService();
+  wsInstance.value.addDisconnectHandler(reconnectSockets);
+  reconnectSockets();
 });
 
 onUnmounted(() => {

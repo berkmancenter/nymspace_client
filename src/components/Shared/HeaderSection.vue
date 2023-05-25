@@ -4,12 +4,7 @@
   >
     <div>
       <router-link to="/" class="text-4xl">
-        <img
-          src="/images/threads-logo-v1.svg"
-          alt="Threads"
-          class="w-12 inline-block"
-        />
-        <p class="inline-block text-red-600">Threads</p>
+        <p class="inline-block text-red-600">nymspace</p>
       </router-link>
       <a
         v-if="showVersion"
@@ -36,7 +31,7 @@
         href="https://cyber.harvard.edu/projects/nymity"
         rel="noopener"
         target="_blank"
-        >About Threads<ExternalLinkIcon class="ml-1 inline-block w-4 h-4" />
+        >About Nymity<ExternalLinkIcon class="ml-1 inline-block w-4 h-4" />
       </a>
     </div>
   </div>

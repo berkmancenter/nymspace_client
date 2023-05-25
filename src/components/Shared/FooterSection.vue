@@ -8,8 +8,8 @@
       target="_blank"
       class="text-xl self-center"
     >
-      Threads GitHub
-      <img :src="githubLogo" alt="Threads GitHub" class="inline-block w-8" />
+      nymspace GitHub
+      <img :src="githubLogo" alt="nymspace GitHub" class="inline-block w-8" />
     </a>
   </div>
 </template>

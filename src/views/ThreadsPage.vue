@@ -176,10 +176,6 @@ const reconnectSockets = () =>{
 }
 
 onMounted(async () => {
-  wsInstance.value = new SocketioService();
-  wsInstance.value.addDisconnectHandler(reconnectSockets);
-  reconnectSockets();
-
   await loadUserThreads();
   await loadThreads(route.params.channelId);
 
@@ -188,6 +184,10 @@ onMounted(async () => {
   } else {
     channel.value = getChannel(route.params.channelId);
   }
+
+  wsInstance.value = new SocketioService();
+  wsInstance.value.addDisconnectHandler(reconnectSockets);
+  reconnectSockets();
 
   setActiveChannel(channel.value);
 });
