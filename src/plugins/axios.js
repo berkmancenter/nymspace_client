@@ -5,29 +5,29 @@ axios.defaults.headers.common[
   "Authorization"
 ] = `Bearer ${VueCookieNext.getCookie("access_token")}`;
 
+export function refreshToken() {
+  const refreshingCall = axios
+    .post(`${import.meta.env.VITE_API_SERVER_URL}/v1/auth/refresh-tokens`, {
+      refreshToken: VueCookieNext.getCookie("refresh_token"),
+    })
+    .then((res) => {
+      VueCookieNext.setCookie("access_token", res.data.access.token);
+      VueCookieNext.setCookie("refresh_token", res.data.refresh.token);
+
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${res.data.access.token}`;
+
+      return Promise.resolve(true);
+    });
+
+  return refreshingCall;
+}
+
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response ? error.response.status : null;
-
-    function refreshToken() {
-      const refreshingCall = axios
-        .post(`${import.meta.env.VITE_API_SERVER_URL}/v1/auth/refresh-tokens`, {
-          refreshToken: VueCookieNext.getCookie("refresh_token"),
-        })
-        .then((res) => {
-          VueCookieNext.setCookie("access_token", res.data.access.token);
-          VueCookieNext.setCookie("refresh_token", res.data.refresh.token);
-
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${res.data.access.token}`;
-
-          return Promise.resolve(true);
-        });
-
-      return refreshingCall;
-    }
 
     if (
       status === 401 &&

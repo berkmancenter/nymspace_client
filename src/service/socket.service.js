@@ -1,8 +1,13 @@
+import { v4 as uuidv4 } from 'uuid';
 import { io, Socket } from "socket.io-client";
+import { VueCookieNext } from "vue-cookie-next";
+import { refreshToken } from '../plugins/axios';
+
 /**
  * Singleton Socket Service class
  */
 class SocketioService {
+  _requestCache = {};
   _socketInstance = null;
   constructor() {
     if (!this._socketInstance) {
@@ -28,6 +33,9 @@ class SocketioService {
         );
       };
       setupSocketConnection();
+
+      // set up cache
+      this._requestCache = {};
     }
   }
 
@@ -39,10 +47,20 @@ class SocketioService {
     this._socketInstance.on("disconnect", onDisconnectHandler);
   }
 
-  addMessageHandler(onMessageHandler) {
+  addMessageHandler(finalOnMessageHandler) {
+    const onMessageHandler = (data) => {
+      if (data.request && data.request in this._requestCache) {
+        const { resolve } = this._requestCache[data.request];
+        resolve(finalOnMessageHandler(data));
+        delete this._requestCache[data.request];
+      } else {
+        finalOnMessageHandler(data);
+      }
+    };
+
     // New message bind
     this._socketInstance.off("message:new", onMessageHandler);
-    this._socketInstance.on("message:new", onMessageHandler);
+    this._socketInstance.on("message:new", onMessageHandler); 
   }
 
   addThreadHandler(onThreadHandler) {
@@ -63,6 +81,53 @@ class SocketioService {
     this._socketInstance.on("vote:new", onVoteHandler);
   }
 
+  async sendMessage(payload) {
+    const cacheWithMatchingPayload = Object.values(this._requestCache).find(
+      (x) => x.payload.message === payload.message
+    );
+
+    if (cacheWithMatchingPayload) {
+      console.debug(cacheWithMatchingPayload);
+
+      debugger;
+
+      return;
+    }
+
+    const request = uuidv4();
+
+    return new Promise((resolve, reject) => {
+      this._requestCache[request] = { resolve, reject, payload };
+      this._socketInstance.emit("message:create", { ...payload, request });
+    });
+  }
+
+  addErrorHandler() {
+    const onErrorHandler = async (data) => {
+      if (data.request) {
+        const { reject, resolve, payload } = this._requestCache[data.request];
+
+        delete this._requestCache[data.request];
+
+        if (data.error === "jwt expired") {
+          resolve();
+          await refreshToken();
+          await this.sendMessage({
+            ...payload,
+            token: VueCookieNext.getCookie("access_token"),
+          });
+          
+        } else {
+          reject(data.error);
+        }
+      }
+    };
+
+    // New error bind
+    this._socketInstance.off("error", onErrorHandler);
+    this._socketInstance.on("error", onErrorHandler); 
+  }
+
   disconnectTopic() {
     this._socketInstance.emit("topic:disconnect");
     this.disconnect();
@@ -80,16 +145,20 @@ class SocketioService {
     }
   }
 
-  sendMessage(payload) {
-    this._socketInstance.emit("message:create", payload);
-  }
-
   joinThread(payload) {
     this._socketInstance.emit("thread:join", payload);
   }
 
   joinTopic(payload) {
     this._socketInstance.emit("topic:join", payload);
+  }
+
+  joinUser(payload) {
+    this._socketInstance.emit("user:join", payload);
+  }
+
+  onConnect(onConnectHandler) {
+    this._socketInstance.on("connect", onConnectHandler);
   }
 }
 

@@ -44,13 +44,20 @@
     @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
     class="w-full block border-2 text-sm px-1 h-20 mt-4"
-    :class="shouldDisplayMessageBoxLocked ? 'border-red-500' : 'border-gray-500'"
+    :class="(shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage) ? 'border-red-500' : 'border-gray-500'"
     placeholder="Message (hit enter to send)"
+    data-testid="message-text-area"
   >
   </textarea>
   <span v-if="shouldDisplayMessageBoxLocked" class="text-red-500 text-sm font-bold"
     >This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.</span
   >
+  <span
+    v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
+    class="text-red-500 text-sm font-bold"
+  >
+    Unable to send message. Please try again later.
+  </span>
   <PromptDirtyDraft :show="prompt" @response="response" />
 </template>
 
@@ -116,6 +123,7 @@ const searchTag = ref("");
 const goodReputation = ref(false);
 const wsInstance = reactive({});
 const shouldDisplayMessageBoxLocked = ref(false);
+const shouldDisplayUnableToSendMessage = ref(false);
 
 /**
  * Dialog feature
@@ -246,26 +254,22 @@ function parseJwt (token) {
 
 async function sendMessage() {
   if (message.value.trim().length > 0 && !getActiveThread.value?.locked && !pseudonymMismatch.value) {
-    const accessToken = VueCookieNext.getCookie("access_token");
-    const decodedAccessToken = parseJwt(accessToken);
-    const expiresAt = new Date(decodedAccessToken.exp * 1000);
-    const oneMinuteFromNow = new Date();
-    oneMinuteFromNow.setMinutes(oneMinuteFromNow.getMinutes() + 1);
+    try {
+      await wsInstance.value.sendMessage({
+        message: {
+          body: message.value,
+          thread: route.params.threadId,
+        },
+        userId: getId.value,
+        token: VueCookieNext.getCookie("access_token"),
+      });
 
-    if (expiresAt < oneMinuteFromNow) {
-      await loadUser();
+      shouldDisplayUnableToSendMessage.value = false;
+      message.value = "";
+      scrollToBottom();
+    } catch (error) {
+      shouldDisplayUnableToSendMessage.value = true;
     }
-
-    wsInstance.value.sendMessage({
-      message: {
-        body: message.value,
-        thread: route.params.threadId,
-      },
-      token: VueCookieNext.getCookie("access_token"),
-    });
-
-    message.value = "";
-    scrollToBottom();
   }
 }
 
@@ -305,6 +309,15 @@ function joinThread(threadId) {
   if (threadId && getLoggedInStatus.value) {
     wsInstance.value.joinThread({
       threadId: threadId,
+      token: VueCookieNext.getCookie("access_token"),
+    });
+  }
+}
+
+function joinUser() {
+  if (getLoggedInStatus.value) {
+    wsInstance.value.joinUser({
+      userId: getId.value,
       token: VueCookieNext.getCookie("access_token"),
     });
   }
@@ -403,9 +416,16 @@ watch(
  * initialization and disconnection
  */
 const reconnectSockets = () =>{
+  wsInstance.value.addErrorHandler();
   wsInstance.value.addVotesHandler(onVoteHandler);
   wsInstance.value.addMessageHandler(messageHandler);
-  joinThread(route.params.threadId);
+
+  wsInstance.value.onConnect(() => {
+    setTimeout(() => {
+      joinThread(route.params.threadId);
+      joinUser();
+    }, 100);
+  });
 }
 
 onMounted(async () => {

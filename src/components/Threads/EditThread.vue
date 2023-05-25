@@ -4,6 +4,7 @@
     @click.prevent="openModal"
     title="Edit Thread"
     class="border-2 border-gray-500 h-10 w-12 mt-4 ml-2 hover:bg-gray-200"
+    data-testid="edit-thread"
   >
     <PencilIcon
       class="h-6 w-6 inline-block hover:text-black hover:fill-current rounded cursor-pointer"
@@ -25,13 +26,14 @@
         type="checkbox"
         id="lockThread"
         class="cursor-pointer w-4 h-4 mr-2 align-middle"
+        data-testid="lock-thread"
       /><label class="cursor-pointer font-semibold" for="lockThread"
         >Lock Thread</label
       >
     </div>
     <div class="text-red-500">{{ message }}</div>
     <template v-slot:actions>
-      <button class="btn success" @click="processUpdate">Update</button>
+      <button class="btn success" @click="processUpdate" data-testid="update-thread">Update</button>
       <button class="btn error" @click="closeModal">Cancel</button>
     </template>
   </Modal>
