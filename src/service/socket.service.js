@@ -47,12 +47,19 @@ class SocketioService {
     this._socketInstance.on("disconnect", onDisconnectHandler);
   }
 
-  addMessageHandler(finalOnMessageHandler) {
+  addMessageHandler(finalOnMessageHandler, user) {
     const onMessageHandler = (data) => {
       if (data.request && data.request in this._requestCache) {
         const { resolve } = this._requestCache[data.request];
         resolve(finalOnMessageHandler(data));
         delete this._requestCache[data.request];
+      } else if (data?.owner && user?.id && data.owner === user.id) {
+        const matchingKey = Object.keys(this._requestCache).find(
+          (key) => this._requestCache[key].payload.message.body === data.body
+        );
+        const { resolve } = this._requestCache[matchingKey];
+        resolve(finalOnMessageHandler(data));
+        delete this._requestCache[matchingKey];
       } else {
         finalOnMessageHandler(data);
       }

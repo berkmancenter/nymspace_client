@@ -415,10 +415,10 @@ watch(
  * Method to reconnect message and vote websocket calls on
  * initialization and disconnection
  */
-const reconnectSockets = () =>{
+const reconnectSockets = (user) => {
   wsInstance.value.addErrorHandler();
   wsInstance.value.addVotesHandler(onVoteHandler);
-  wsInstance.value.addMessageHandler(messageHandler);
+  wsInstance.value.addMessageHandler(messageHandler, user);
 
   wsInstance.value.onConnect(() => {
     setTimeout(() => {
@@ -437,7 +437,7 @@ onMounted(async () => {
 
   wsInstance.value = new SocketioService();
   wsInstance.value.addDisconnectHandler(reconnectSockets);
-  reconnectSockets();
+  reconnectSockets(user);
 });
 
 onUnmounted(() => {
