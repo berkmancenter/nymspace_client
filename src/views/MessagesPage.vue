@@ -337,11 +337,9 @@ function messageHandler(data) {
   }
 
   /**
-   * Scroll to bottom if the message belongs to current user
+   * Scroll to bottom
    */
-  if (data.owner === getId.value) {
-    scrollToBottom();
-  }
+  scrollToBottom();
 
   /**
    * Update thread's message count
