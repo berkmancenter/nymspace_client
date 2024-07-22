@@ -53,7 +53,7 @@ class SocketioService {
         const { resolve } = this._requestCache[data.request];
         resolve(finalOnMessageHandler(data));
         delete this._requestCache[data.request];
-      } else if (data?.owner && user?.id && data.owner === user.id) {
+      } else if (data?.owner && user?.id && data.owner === user.id && data.request in this._requestCache) {
         const matchingKey = Object.keys(this._requestCache).find(
           (key) => this._requestCache[key].payload.message.body === data.body
         );
