@@ -5,7 +5,7 @@
     </h2>
     <div :title="showChatOnly ? 'Show threads list' : 'Show chat only'">
       <component
-        :is="showChatOnly ? ViewBoardsIcon : EyeIcon"
+        :is="showChatOnly ? ArrowLeftIcon : ArrowsExpandIcon"
         class="w-6 h-6 cursor-pointer hover:text-red-500 text-black"
         @click="setShowChatOnly(!showChatOnly)"
       />
@@ -26,15 +26,13 @@
     :msg-txt-area="messageTextArea"
     @tag-click="tagClick"
   />
-  <div
-    v-if="pseudonymMismatch"
-    class="alert warning"
-    style="margin-top: 1rem;"
-  >
-    <ExclamationIcon
-      class="h-6 w-6 inline-block text-orange-500 rounded"
-    />
-    <span class="text-sm">The pseudonym for this thread is <strong>{{ pseudonymForThread.pseudonym }}</strong>. Please switch to this pseudonym to send a message.</span>
+  <div v-if="pseudonymMismatch" class="alert warning" style="margin-top: 1rem">
+    <ExclamationIcon class="h-6 w-6 inline-block text-orange-500 rounded" />
+    <span class="text-sm"
+      >The pseudonym for this thread is
+      <strong>{{ pseudonymForThread.pseudonym }}</strong
+      >. Please switch to this pseudonym to send a message.</span
+    >
   </div>
   <textarea
     ref="messageTextArea"
@@ -44,13 +42,20 @@
     @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
     class="w-full block border-2 text-sm px-1 h-20 mt-4"
-    :class="(shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage) ? 'border-red-500' : 'border-gray-500'"
+    :class="
+      shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage
+        ? 'border-red-500'
+        : 'border-gray-500'
+    "
     placeholder="Message (hit enter to send)"
     data-testid="message-text-area"
   >
   </textarea>
-  <span v-if="shouldDisplayMessageBoxLocked" class="text-red-500 text-sm font-bold"
-    >This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.</span
+  <span
+    v-if="shouldDisplayMessageBoxLocked"
+    class="text-red-500 text-sm font-bold"
+    >This thread is now locked. Messages cannot be sent until it is unlocked by
+    the thread creator.</span
   >
   <span
     v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
@@ -79,7 +84,11 @@ import PromptDirtyDraft from "../components/Messages/PromptDirtyDraft.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
-import { ViewBoardsIcon, EyeIcon, ExclamationIcon } from "@heroicons/vue/outline";
+import {
+  ArrowLeftIcon,
+  ArrowsExpandIcon,
+  ExclamationIcon,
+} from "@heroicons/vue/outline";
 
 const route = useRoute();
 const {
@@ -117,7 +126,10 @@ const pseudonymForThread = computed(() => {
   })[0];
 });
 const pseudonymMismatch = computed(() => {
-  return pseudonymForThread.value && pseudonymForThread.value?._id !== getActivePseudonym.value?._id;
+  return (
+    pseudonymForThread.value &&
+    pseudonymForThread.value?._id !== getActivePseudonym.value?._id
+  );
 });
 const searchTag = ref("");
 const goodReputation = ref(false);
@@ -242,18 +254,28 @@ const updatedMsgs = computed((x) => {
 /**
  * Send message via ws
  */
-function parseJwt (token) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+function parseJwt(token) {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
 
   return JSON.parse(jsonPayload);
 }
 
 async function sendMessage() {
-  if (message.value.trim().length > 0 && !getActiveThread.value?.locked && !pseudonymMismatch.value) {
+  if (
+    message.value.trim().length > 0 &&
+    !getActiveThread.value?.locked &&
+    !pseudonymMismatch.value
+  ) {
     try {
       await wsInstance.value.sendMessage({
         message: {
@@ -426,7 +448,7 @@ const reconnectSockets = (user) => {
       joinUser();
     }, 100);
   });
-}
+};
 
 onMounted(async () => {
   const user = await loadUser();
