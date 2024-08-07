@@ -1,54 +1,88 @@
 <template>
-  <div
-    class="flex justify-between items-center px-1 text-sm w-full overflow-hidden hover:bg-gray-100"
-  >
-    <div style="max-width: 92%">
-      <p
-        class="thread-message"
-        :class="getMessageClass(item)"
-        :title="item.createdAt"
-      >
-        <b @click="addToMessage(item.pseudonym)">{{
-          item.pseudonym || item.owner
-        }}</b
-        >: <span v-html="formattedBody"></span>
-      </p>
-    </div>
-    <div v-if="showVoting" class="max-h-7">
-      <div class="flex items-center -mb-2.5" :class="getUpVoteClass(item)">
-        <ChevronUpIcon
-          @click="upvote(item.id, !item.hasUpvoted)"
-          class="h-5 w-5"
-          :class="
-            !getActiveThread.locked && (item.canVote || item.hasUpvoted)
-              ? 'cursor-pointer'
-              : 'pointer-events-none'
-          "
-        /><span class="text-sm font-bold">{{ item.upVotes.length }}</span>
+  <div class="group hover:bg-gray-100 py-1">
+    <div class="flex justify-between items-center px-1 text-sm w-full relative">
+      <div style="max-width: 92%">
+        <p
+          class="thread-message"
+          :class="getMessageClass(item)"
+          :title="item.createdAt"
+        >
+          <div @click="addToMessage(item.pseudonym)" class="font-bold">
+            {{ item.pseudonym || item.owner }}
+            <span v-if="item.owner === userId" class="font-thin">(you) </span>
+            <span class="text-gray font-thin"> {{ util.timeFromNow(item.createdAt) }}</span>
+          </div>
+          <div v-html="formattedBody"></div>
+        </p>
       </div>
-      <div class="flex items-center" :class="getDownVoteClass(item)">
-        <ChevronDownIcon
-          @click="downvote(item.id, !item.hasDownvoted)"
-          class="h-5 w-5"
-          :class="
-            !getActiveThread.locked &&
-            (item.canVote || item.hasDownvoted) &&
-            !getGuestStatus.value &&
-            item.goodReputation
-              ? 'cursor-pointer'
-              : 'pointer-events-none'
-          "
-        /><span class="text-sm font-bold">{{ item.downVotes.length }}</span>
+      <div
+        v-if="showVoting && item.owner !== userId"
+        class="ml-2 opacity-0 group-hover:opacity-100 bg-white rounded border  -top-4 right-2 px-3 py-0.5 absolute flex items-center gap-2"
+      >
+        <div class="flex items-center" :class="getUpVoteClass(item)">
+          <ChevronUpIcon
+            @click="upvote(item.id, !item.hasUpvoted)"
+            class="h-5 w-5"
+            :class="
+              !getActiveThread.locked && (item.canVote || item.hasUpvoted)
+                ? 'cursor-pointer'
+                : 'pointer-events-none'
+            "
+          />
+        </div>
+        <div
+          v-if="!getGuestStatus"
+          class="flex items-center"
+          :class="getDownVoteClass(item)"
+        >
+          <ChevronDownIcon
+            @click="downvote(item.id, !item.hasDownvoted)"
+            class="h-5 w-5"
+            :class="
+              !getActiveThread.locked &&
+              (item.canVote || item.hasDownvoted) &&
+              !getGuestStatus.value &&
+              item.goodReputation
+                ? 'cursor-pointer'
+                : 'pointer-events-none'
+            "
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="item.upVotes.length || item.downVotes.length"
+      class="text-gray-500 flex ml-1 mt-1 mb-1"
+    >
+      <div
+        v-if="item.upVotes.length"
+        class="mr-1 flex gap-1 items-center bg-blue-50 ring-1 ring-blue-200 rounded-full px-2 py-1"
+      >
+        <ChevronUpIcon class="h-3 w-3" /><span class="text-xs">{{
+          item.upVotes.length
+        }}</span>
+      </div>
+      <div
+        v-if="item.downVotes.length"
+        class="mr-1 flex gap-1 items-center bg-gray-100 ring-1 ring-blue-200 rounded-full px-2 py -1"
+      >
+        <ChevronDownIcon class="h-3 w-3" /><span class="text-xs">{{
+          item.downVotes.length
+        }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/vue/outline";
+import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@heroicons/vue/outline";
 import { computed } from "vue";
 
 import useStore from "../../composables/global/useStore";
+import util from "../../utils";
 
 const { upvote, downvote, getGuestStatus, getActiveChannel, getActiveThread } =
   useStore;
@@ -56,6 +90,10 @@ const { upvote, downvote, getGuestStatus, getActiveChannel, getActiveThread } =
 const props = defineProps({
   item: {
     type: Object,
+    required: true,
+  },
+  userId: {
+    type: String,
     required: true,
   },
 });
