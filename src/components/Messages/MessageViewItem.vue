@@ -1,7 +1,7 @@
 <template>
-  <div class="group hover:bg-gray-100 py-1">
-    <div class="flex justify-between items-center px-1 text-sm w-full relative">
-      <div style="max-width: 92%">
+  <div class="shrink flex-auto group hover:bg-gray-100 py-1">
+    <div class="flex justify-between items-center px-1 text-sm relative">
+      <div style="max-width: 92%" class="">
         <p
           class="thread-message"
           :class="getMessageClass(item)"
@@ -10,7 +10,7 @@
           <div @click="addToMessage(item.pseudonym)" class="font-bold">
             {{ item.pseudonym || item.owner }}
             <span v-if="item.owner === userId" class="font-thin">(you) </span>
-            <span class="text-gray font-thin"> {{ util.timeFromNow(item.createdAt) }}</span>
+            <span class="text-gray font-thin"> {{ new Date(item.createdAt).toLocaleString("en-US", {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit'}).split(",").join(" at ") }}</span>
           </div>
           <div v-html="formattedBody"></div>
         </p>
@@ -82,7 +82,6 @@ import {
 import { computed } from "vue";
 
 import useStore from "../../composables/global/useStore";
-import util from "../../utils";
 
 const { upvote, downvote, getGuestStatus, getActiveChannel, getActiveThread } =
   useStore;
