@@ -20,6 +20,14 @@
     :items="updatedMsgs"
     @tag-click="tagClick"
   />
+  <div class="text-xs flex justify-center">
+    <span
+      @click="scrollToBottom('smooth')"
+      :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
+      class="bg-red-600 cursor-pointer w-min whitespace-nowrap text-white p-1 rounded-t -mt-6 transition-all"
+      >New messages</span
+    >
+  </div>
   <TagList
     :items="filteredTags"
     :visible="tagListVisible"
@@ -34,6 +42,7 @@
       >. Please switch to this pseudonym to send a message.</span
     >
   </div>
+
   <textarea
     ref="messageTextArea"
     v-if="!pseudonymMismatch"
@@ -108,7 +117,7 @@ const {
   updateMessage,
   setActiveThread,
   getActiveThread,
-  getThreads
+  getThreads,
 } = useStore;
 
 const messages = getMessages;
@@ -137,7 +146,8 @@ const goodReputation = ref(false);
 const wsInstance = reactive({});
 const shouldDisplayMessageBoxLocked = ref(false);
 const shouldDisplayUnableToSendMessage = ref(false);
-const threads = getThreads;
+const newMessagesNotice = ref(false);
+const lastMessageScrollOffset = ref(true);
 
 /**
  * Dialog feature
@@ -353,6 +363,7 @@ function joinUser() {
  */
 function messageHandler(data) {
   const threadToUpdate = getThread(data.thread.id);
+
   /**
    * Update message if current thread matches the received
    * message thread
@@ -363,9 +374,12 @@ function messageHandler(data) {
 
   /**
    * Scroll to bottom if the message belongs to current user
+   * or if the user is already scrolled to the bottom
    */
-  if (data.owner === getId.value) {
+  if (data.owner === getId.value || lastMessageScrollOffset.value > -5) {
     scrollToBottom();
+  } else {
+    newMessagesNotice.value = true;
   }
 
   /**
@@ -397,12 +411,15 @@ async function fetchMessages(threadId) {
 /**
  * Scoroll messages pane to bottom
  */
-async function scrollToBottom() {
+async function scrollToBottom(behavior) {
   await nextTick();
-  messageViewRef.value.$el.scrollTo({
-    top: messageViewRef.value.$el.scrollHeight,
-    left: 0,
-  });
+  setTimeout(() => {
+    messageViewRef.value.$el.scrollTo({
+      top: messageViewRef.value.$el.scrollHeight,
+      left: 0,
+      behavior: behavior ? behavior : "instant",
+    });
+  }, 50);
 }
 
 /**
@@ -440,7 +457,7 @@ watch(
  * Join all threads on page load so that their
  * message counts stay in sync
  */
- watch(
+watch(
   () => getThreads.value,
   async (threads) => {
     threads.forEach((thread) => {
@@ -448,7 +465,6 @@ watch(
     });
   }
 );
-
 
 /**
  * Method to reconnect message and vote websocket calls on
@@ -477,6 +493,25 @@ onMounted(async () => {
   wsInstance.value = new SocketioService();
   wsInstance.value.addDisconnectHandler(reconnectSockets);
   reconnectSockets(user);
+
+  /**
+   * watch window scroll and unset new message notice
+   * if scrolled to bottom
+   */
+  messageViewRef.value.$el.addEventListener(
+    "scroll",
+    () => {
+      lastMessageScrollOffset.value =
+        messageViewRef.value.$el.scrollTop -
+        (messageViewRef.value.$el.scrollHeight -
+          messageViewRef.value.$el.offsetHeight);
+
+      if (lastMessageScrollOffset.value > -5) {
+        newMessagesNotice.value = false;
+      }
+    },
+    { passive: true }
+  );
 });
 
 onUnmounted(() => {
