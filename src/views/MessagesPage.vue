@@ -25,7 +25,7 @@
     <span
       @click="scrollToBottom('smooth')"
       :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
-      class="bg-red-600 cursor-pointer w-min whitespace-nowrap text-white p-1 rounded-t -mt-6 transition-all"
+      class="bg-red-600 z-50 cursor-pointer w-min whitespace-nowrap text-white p-1 rounded-t -mt-6 transition-all"
       >New messages</span
     >
   </div>
