@@ -1,8 +1,8 @@
 <template>
   <div
-    class="rounded items-center border-2 border-gray-500 h-96 max-h-96 overflow-y-auto"
+    class="rounded items-center border-2 border-gray-500 w-full h-96 max-h-96 overflow-y-auto"
   >
-    <div class="grid">
+    <div class="w-full flex flex-col">
       <span class="text-red-500 text-center" v-if="items.length === 0"
         >No messages. Start a conversation.</span
       >
