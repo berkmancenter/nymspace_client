@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded items-center border-2 border-gray-500 sm:h-96 max-h-96 overflow-y-auto"
+    class="rounded items-center border-2 border-gray-500 h-96 max-h-96 overflow-y-auto"
   >
     <div class="grid">
       <span class="text-red-500" v-if="items.length === 0"
