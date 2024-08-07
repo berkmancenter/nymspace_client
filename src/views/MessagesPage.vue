@@ -18,6 +18,7 @@
       }
     "
     :items="updatedMsgs"
+    :userId="userId"
     @tag-click="tagClick"
   />
   <div class="text-xs flex justify-center">
@@ -148,7 +149,7 @@ const shouldDisplayMessageBoxLocked = ref(false);
 const shouldDisplayUnableToSendMessage = ref(false);
 const newMessagesNotice = ref(false);
 const lastMessageScrollOffset = ref(true);
-
+const userId = ref("");
 /**
  * Dialog feature
  */
@@ -485,6 +486,7 @@ const reconnectSockets = (user) => {
 
 onMounted(async () => {
   const user = await loadUser();
+  userId.value = user.id;
   goodReputation.value = user.goodReputation;
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
