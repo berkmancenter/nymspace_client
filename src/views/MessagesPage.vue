@@ -108,6 +108,7 @@ const {
   updateMessage,
   setActiveThread,
   getActiveThread,
+  getThreads
 } = useStore;
 
 const messages = getMessages;
@@ -136,6 +137,7 @@ const goodReputation = ref(false);
 const wsInstance = reactive({});
 const shouldDisplayMessageBoxLocked = ref(false);
 const shouldDisplayUnableToSendMessage = ref(false);
+const threads = getThreads;
 
 /**
  * Dialog feature
@@ -290,6 +292,7 @@ async function sendMessage() {
       message.value = "";
       scrollToBottom();
     } catch (error) {
+      console.log(error);
       shouldDisplayUnableToSendMessage.value = true;
     }
   }
@@ -432,6 +435,20 @@ watch(
     }
   }
 );
+
+/**
+ * Join all threads on page load so that their
+ * message counts stay in sync
+ */
+ watch(
+  () => getThreads.value,
+  async (threads) => {
+    threads.forEach((thread) => {
+      joinThread(thread.id);
+    });
+  }
+);
+
 
 /**
  * Method to reconnect message and vote websocket calls on
