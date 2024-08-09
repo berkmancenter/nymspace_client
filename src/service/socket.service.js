@@ -66,7 +66,7 @@ class SocketioService {
     };
 
     // New message bind
-    this._socketInstance.off("message:new", onMessageHandler);
+    this._socketInstance.off("message:new");
     this._socketInstance.on("message:new", onMessageHandler); 
   }
 
