@@ -387,7 +387,7 @@ function messageHandler(data) {
    * Update thread's message count
    */
   if (threadToUpdate) {
-    threadToUpdate.messageCount = data.thread.messages.length;
+    threadToUpdate.messageCount = data.count;
   }
 }
 
@@ -462,7 +462,9 @@ watch(
   () => getThreads.value,
   async (threads) => {
     threads.forEach((thread) => {
-      joinThread(thread.id);
+      if (thread.id) {
+        joinThread(thread.id);
+      }
     });
   }
 );
