@@ -5,7 +5,7 @@
     </h2>
     <div :title="showChatOnly ? 'Show threads list' : 'Show chat only'">
       <component
-        :is="showChatOnly ? ViewBoardsIcon : EyeIcon"
+        :is="showChatOnly ? ArrowLeftIcon : ArrowsExpandIcon"
         class="w-6 h-6 cursor-pointer hover:text-red-500 text-black"
         @click="setShowChatOnly(!showChatOnly)"
       />
@@ -18,24 +18,32 @@
       }
     "
     :items="updatedMsgs"
+    :userId="userId"
     @tag-click="tagClick"
   />
+  <div class="text-xs flex justify-center">
+    <span
+      @click="scrollToBottom('smooth')"
+      :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
+      class="bg-red-600 z-50 cursor-pointer w-min whitespace-nowrap text-white p-1 rounded-t -mt-6 transition-all"
+      >New messages</span
+    >
+  </div>
   <TagList
     :items="filteredTags"
     :visible="tagListVisible"
     :msg-txt-area="messageTextArea"
     @tag-click="tagClick"
   />
-  <div
-    v-if="pseudonymMismatch"
-    class="alert warning"
-    style="margin-top: 1rem;"
-  >
-    <ExclamationIcon
-      class="h-6 w-6 inline-block text-orange-500 rounded"
-    />
-    <span class="text-sm">The pseudonym for this thread is <strong>{{ pseudonymForThread.pseudonym }}</strong>. Please switch to this pseudonym to send a message.</span>
+  <div v-if="pseudonymMismatch" class="alert warning" style="margin-top: 1rem">
+    <ExclamationIcon class="h-6 w-6 inline-block text-orange-500 rounded" />
+    <span class="text-sm"
+      >The pseudonym for this thread is
+      <strong>{{ pseudonymForThread.pseudonym }}</strong
+      >. Please switch to this pseudonym to send a message.</span
+    >
   </div>
+
   <textarea
     ref="messageTextArea"
     v-if="!pseudonymMismatch"
@@ -44,13 +52,20 @@
     @keypress="watchTagging"
     @keydown.enter.prevent="sendMessage"
     class="w-full block border-2 text-sm px-1 h-20 mt-4"
-    :class="(shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage) ? 'border-red-500' : 'border-gray-500'"
+    :class="
+      shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage
+        ? 'border-red-500'
+        : 'border-gray-500'
+    "
     placeholder="Message (hit enter to send)"
     data-testid="message-text-area"
   >
   </textarea>
-  <span v-if="shouldDisplayMessageBoxLocked" class="text-red-500 text-sm font-bold"
-    >This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.</span
+  <span
+    v-if="shouldDisplayMessageBoxLocked"
+    class="text-red-500 text-sm font-bold"
+    >This thread is now locked. Messages cannot be sent until it is unlocked by
+    the thread creator.</span
   >
   <span
     v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
@@ -79,7 +94,11 @@ import PromptDirtyDraft from "../components/Messages/PromptDirtyDraft.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
-import { ViewBoardsIcon, EyeIcon, ExclamationIcon } from "@heroicons/vue/outline";
+import {
+  ArrowLeftIcon,
+  ArrowsExpandIcon,
+  ExclamationIcon,
+} from "@heroicons/vue/outline";
 
 const route = useRoute();
 const {
@@ -99,6 +118,7 @@ const {
   updateMessage,
   setActiveThread,
   getActiveThread,
+  getThreads,
 } = useStore;
 
 const messages = getMessages;
@@ -117,14 +137,19 @@ const pseudonymForThread = computed(() => {
   })[0];
 });
 const pseudonymMismatch = computed(() => {
-  return pseudonymForThread.value && pseudonymForThread.value?._id !== getActivePseudonym.value?._id;
+  return (
+    pseudonymForThread.value &&
+    pseudonymForThread.value?._id !== getActivePseudonym.value?._id
+  );
 });
 const searchTag = ref("");
 const goodReputation = ref(false);
 const wsInstance = reactive({});
 const shouldDisplayMessageBoxLocked = ref(false);
 const shouldDisplayUnableToSendMessage = ref(false);
-
+const newMessagesNotice = ref(false);
+const lastMessageScrollOffset = ref(true);
+const userId = ref("");
 /**
  * Dialog feature
  */
@@ -242,18 +267,28 @@ const updatedMsgs = computed((x) => {
 /**
  * Send message via ws
  */
-function parseJwt (token) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+function parseJwt(token) {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
 
   return JSON.parse(jsonPayload);
 }
 
 async function sendMessage() {
-  if (message.value.trim().length > 0 && !getActiveThread.value?.locked && !pseudonymMismatch.value) {
+  if (
+    message.value.trim().length > 0 &&
+    !getActiveThread.value?.locked &&
+    !pseudonymMismatch.value
+  ) {
     try {
       await wsInstance.value.sendMessage({
         message: {
@@ -268,6 +303,7 @@ async function sendMessage() {
       message.value = "";
       scrollToBottom();
     } catch (error) {
+      console.log(error);
       shouldDisplayUnableToSendMessage.value = true;
     }
   }
@@ -328,6 +364,7 @@ function joinUser() {
  */
 function messageHandler(data) {
   const threadToUpdate = getThread(data.thread.id);
+
   /**
    * Update message if current thread matches the received
    * message thread
@@ -338,16 +375,19 @@ function messageHandler(data) {
 
   /**
    * Scroll to bottom if the message belongs to current user
+   * or if the user is already scrolled to the bottom
    */
-  if (data.owner === getId.value) {
+  if (data.owner === getId.value || lastMessageScrollOffset.value > -5) {
     scrollToBottom();
+  } else {
+    newMessagesNotice.value = true;
   }
 
   /**
    * Update thread's message count
    */
   if (threadToUpdate) {
-    threadToUpdate.messageCount = data.thread.messages.length;
+    threadToUpdate.messageCount = data.count;
   }
 }
 
@@ -372,12 +412,15 @@ async function fetchMessages(threadId) {
 /**
  * Scoroll messages pane to bottom
  */
-async function scrollToBottom() {
+async function scrollToBottom(behavior) {
   await nextTick();
-  messageViewRef.value.$el.scrollTo({
-    top: messageViewRef.value.$el.scrollHeight,
-    left: 0,
-  });
+  setTimeout(() => {
+    messageViewRef.value.$el.scrollTo({
+      top: messageViewRef.value.$el.scrollHeight,
+      left: 0,
+      behavior: behavior ? behavior : "instant",
+    });
+  }, 50);
 }
 
 /**
@@ -412,6 +455,21 @@ watch(
 );
 
 /**
+ * Join all threads on page load so that their
+ * message counts stay in sync
+ */
+watch(
+  () => getThreads.value,
+  async (threads) => {
+    threads.forEach((thread) => {
+      if (thread.id) {
+        joinThread(thread.id);
+      }
+    });
+  }
+);
+
+/**
  * Method to reconnect message and vote websocket calls on
  * initialization and disconnection
  */
@@ -426,10 +484,11 @@ const reconnectSockets = (user) => {
       joinUser();
     }, 100);
   });
-}
+};
 
 onMounted(async () => {
   const user = await loadUser();
+  userId.value = user.id;
   goodReputation.value = user.goodReputation;
   await fetchMessages(route.params.threadId);
   await fetchThreadDetails(route.params.threadId);
@@ -438,6 +497,25 @@ onMounted(async () => {
   wsInstance.value = new SocketioService();
   wsInstance.value.addDisconnectHandler(reconnectSockets);
   reconnectSockets(user);
+
+  /**
+   * watch window scroll and unset new message notice
+   * if scrolled to bottom
+   */
+  messageViewRef.value.$el.addEventListener(
+    "scroll",
+    () => {
+      lastMessageScrollOffset.value =
+        messageViewRef.value.$el.scrollTop -
+        (messageViewRef.value.$el.scrollHeight -
+          messageViewRef.value.$el.offsetHeight);
+
+      if (lastMessageScrollOffset.value > -5) {
+        newMessagesNotice.value = false;
+      }
+    },
+    { passive: true }
+  );
 });
 
 onUnmounted(() => {

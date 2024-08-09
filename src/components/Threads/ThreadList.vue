@@ -1,7 +1,6 @@
 <template>
   <div
-    class="rounded items-center border-2 border-gray-500 max-h-96 overflow-y-auto"
-    style="min-height: 400px"
+    class="rounded items-center border-2 border-gray-500 sm:h-96 max-h-96 overflow-y-auto"
   >
     <div class="grid">
       <span class="px-2 py-1 text-lg font-bold">All Threads:</span>

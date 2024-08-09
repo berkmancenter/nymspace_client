@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto w-11/12 lg:w-3/5">
-    <div v-show="!showChatOnly" class="w-1/2 float-left">
+    <div v-show="!showChatOnly" class="sm:w-1/2 sm:float-left">
       <div class="mr-2">
         <h2 class="text-red-500 text-2xl my-2 font-bold threads-title">
           {{ channel.name }}
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div :class="showChatOnly ? '' : 'w-1/2 float-right'">
+    <div :class="showChatOnly ? '' : 'sm:w-1/2 sm:float-right'">
       <div class="ml-2">
         <router-view></router-view>
       </div>
@@ -73,7 +73,9 @@ const isThreadOwner = computed(
   () => getId.value === getActiveThread.value?.owner
 );
 const isChannelOwner = computed(() => getId.value === channel.value?.owner);
-const isChannelThreadCreationAllowed = computed(() => channel.value?.threadCreationAllowed);
+const isChannelThreadCreationAllowed = computed(
+  () => channel.value?.threadCreationAllowed
+);
 /**
  * Watch thread id to show/hide edit/delete buttons on the side of
  * create thread button
@@ -152,7 +154,7 @@ function updateThreadHandler(data) {
 }
 
 const canCreate = computed(
-  () => isChannelOwner.value || isChannelThreadCreationAllowed.value
+  () => isChannelOwner.value || isChannelThreadCreationAllowed.value || false
 );
 
 const canEditDelete = computed(
@@ -169,11 +171,11 @@ async function processDelete() {
  * Method to reconnect thread websocket calls on
  * initialization and disconnection
  */
-const reconnectSockets = () =>{
+const reconnectSockets = () => {
   wsInstance.value.addThreadHandler(threadHandler);
   wsInstance.value.addThreadUpdateHandler(updateThreadHandler);
   joinTopic(route.params.channelId);
-}
+};
 
 onMounted(async () => {
   await loadUserThreads();
