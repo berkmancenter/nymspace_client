@@ -154,7 +154,7 @@ function updateThreadHandler(data) {
 }
 
 const canCreate = computed(
-  () => isChannelOwner.value || isChannelThreadCreationAllowed.value
+  () => isChannelOwner.value || isChannelThreadCreationAllowed.value || false
 );
 
 const canEditDelete = computed(
