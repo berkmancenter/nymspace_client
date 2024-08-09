@@ -3,10 +3,7 @@
     class="rounded items-center border-2 border-gray-500 w-full h-96 max-h-96 overflow-y-auto"
   >
     <div class="w-full flex flex-col">
-      <span class="text-red-500 text-center" v-if="items.length === 0"
-        >No messages. Start a conversation.</span
-      >
-      <span class="text-red-500 text-center py-2" v-if="items.length > 0"
+      <span class="text-red-500 text-center py-2"
         >This is the beginning of the thread.</span
       >
       <template v-for="item in items" :key="item.id">
