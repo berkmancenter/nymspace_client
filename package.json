@@ -7,7 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@heroicons/vue": "^2.1.5",
+    "@heroicons/vue": "^1.0.6",
     "axios": "^0.24.0",
     "socket.io-client": "^4.4.0",
     "uuid": "^9.0.0",
@@ -25,5 +25,9 @@
     "prettier": "^2.5.0",
     "tailwindcss": "^2.2.19",
     "vite": "^2.6.4"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.8",
+    "utf-8-validate": "^5.0.10"
   }
 }
