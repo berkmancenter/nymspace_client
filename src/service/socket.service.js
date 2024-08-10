@@ -29,6 +29,7 @@ class SocketioService {
           `${socketServerUrl.protocol}//${socketServerUrl.host}`,
           {
             path: path,
+            transports: ["websocket"],
           }
         );
       };
