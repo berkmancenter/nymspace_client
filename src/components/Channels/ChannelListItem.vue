@@ -1,14 +1,18 @@
 <template>
-  <router-link :to="channelLink" :class="getChannelClass(item)">
+  <router-link
+    :to="channelLink"
+    :class="getChannelClass(item)"
+    class="mb-8 sm:mb-0"
+  >
     <div
-      class="col-span-5 text-lg overflow-hidden"
+      class="col-span-3 text-lg overflow-hidden"
       style="text-overflow: ellipsis"
     >
       {{ item.name }}
       <LockClosedIcon v-if="isPrivate(item)" class="h-5 w-5 inline-block" />
     </div>
     <div
-      class="col-span-3 font-semibold justify-self-end flex items-center justify-around gap-x-4"
+      class="col-span-4 font-semibold justify-self-end flex items-center justify-around gap-x-4"
     >
       <EditChannel :item="item" :show="canEditDelete(item)" />
 
@@ -24,7 +28,7 @@
         class="h-5 w-5 inline-block cursor-pointer hover:text-black hover:stroke-current"
       />
     </div>
-    <div class="col-span-2 font-semibold justify-self-end">
+    <div class="col-span-3 font-semibold justify-self-end">
       {{ item.threadCount }} threads
     </div>
     <div class="col-span-2 font-semibold justify-self-end">
