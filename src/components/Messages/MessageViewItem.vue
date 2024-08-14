@@ -64,7 +64,7 @@
       </div>
       <div
         v-if="item.downVotes.length"
-        class="mr-1 flex gap-1 items-center bg-gray-100 ring-1 ring-blue-200 rounded-full px-2 py -1"
+        class="mr-1 flex gap-1 items-center bg-blue-50 ring-1 ring-blue-200 rounded-full px-2 py-1"
       >
         <ChevronDownIcon class="h-3 w-3" /><span class="text-xs">{{
           item.downVotes.length
