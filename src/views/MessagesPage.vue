@@ -359,7 +359,12 @@ function tagClick(value, isClickedDirect = false) {
  * user is logged in (either guest or user)
  */
 function joinThread(threadId) {
-  if (threadId && getLoggedInStatus.value && wsInstance.value.joinThread) {
+  if (
+    threadId &&
+    getLoggedInStatus.value &&
+    wsInstance.value &&
+    wsInstance.value.joinThread
+  ) {
     wsInstance.value.joinThread({
       threadId: threadId,
       token: VueCookieNext.getCookie("access_token"),
