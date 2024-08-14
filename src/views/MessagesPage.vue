@@ -46,7 +46,7 @@
 
   <textarea
     ref="messageTextArea"
-    v-if="!pseudonymMismatch"
+    v-if="!pseudonymMismatch && !sending"
     v-model="message"
     id="messageTextArea"
     @keypress="watchTagging"
@@ -59,8 +59,15 @@
     "
     placeholder="Message (hit enter to send)"
     data-testid="message-text-area"
+    :disabled="sending"
   >
   </textarea>
+  <p
+    v-if="sending"
+    class="animate-pulse w-full block border-2 text-sm px-1 h-20 mt-4"
+  >
+    {{ message }}
+  </p>
   <span
     v-if="shouldDisplayMessageBoxLocked"
     class="text-red-500 text-sm font-bold"
@@ -156,6 +163,7 @@ const userId = ref("");
 const resolve = ref({});
 const reject = ref({});
 const prompt = ref(false);
+const sending = ref(false);
 
 onBeforeRouteLeave(async (to, from) => {
   return await processDirtyMessage();
@@ -284,6 +292,14 @@ function parseJwt(token) {
 }
 
 async function sendMessage() {
+  let complete = false;
+  const checkComplete = setInterval(() => {
+    sending.value = true;
+    if (complete) {
+      sending.value = false;
+      clearInterval(checkComplete);
+    }
+  }, 100);
   if (
     message.value.trim().length > 0 &&
     !getActiveThread.value?.locked &&
@@ -307,6 +323,7 @@ async function sendMessage() {
       shouldDisplayUnableToSendMessage.value = true;
     }
   }
+  complete = true;
 }
 
 /**
@@ -342,7 +359,7 @@ function tagClick(value, isClickedDirect = false) {
  * user is logged in (either guest or user)
  */
 function joinThread(threadId) {
-  if (threadId && getLoggedInStatus.value) {
+  if (threadId && getLoggedInStatus.value && wsInstance.value.joinThread) {
     wsInstance.value.joinThread({
       threadId: threadId,
       token: VueCookieNext.getCookie("access_token"),
