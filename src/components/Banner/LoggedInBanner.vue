@@ -1,19 +1,28 @@
 <template>
   <div class="mx-auto w-11/12 lg:w-3/5">
     <div class="flex" :class="!getGuestStatus ? 'gap-4' : ''">
-      <button v-if="!getGuestStatus" class="btn" @click="signout">
-        <span>Create a new pseudonym for one session (log out)</span>
-      </button>
-      <button
-        :disabled="getPseudonyms.length >= 5"
-        class="btn"
-        v-if="!getGuestStatus"
-        @click="createPseudonym"
-        :title="getNewPseudonymButtonTitle()"
-      >
-        <RefreshIcon class="ml-1 h6 w-6 inline-block" /> Create a new pseudonym
-        on your account
-      </button>
+      <div class="flex flex-col space-y-1 flex-1 text-center">
+        <button
+          v-if="!getGuestStatus"
+          class="flex justify-center bg-white px-2 py-1 border-2 border-gray-500"
+          @click="signout"
+        >
+          <span>Logout</span>
+        </button>
+        <span class="text-xs">Get a new temp pseudonym</span>
+      </div>
+      <div class="flex flex-col space-y-1 flex-1 text-center">
+        <button
+          :disabled="getPseudonyms.length >= 5"
+          class="flex justify-center bg-white px-2 py-1 border-2 border-gray-500 items-center gap-1"
+          v-if="!getGuestStatus"
+          @click="createPseudonym"
+          :title="getNewPseudonymButtonTitle()"
+        >
+          <RefreshIcon class="h-5 w-5" /> new pseudonym
+        </button>
+        <span class="text-xs">Creates a new psuedonym on your account</span>
+      </div>
     </div>
   </div>
 </template>
