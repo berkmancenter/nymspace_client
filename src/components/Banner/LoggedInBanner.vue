@@ -9,7 +9,9 @@
         >
           <span>Logout</span>
         </button>
-        <span class="text-xs">Get a new temp pseudonym</span>
+        <span v-if="!getGuestStatus" class="text-xs"
+          >Get a new temp pseudonym</span
+        >
       </div>
       <div class="flex flex-col space-y-1 flex-1 text-center">
         <button
@@ -21,7 +23,9 @@
         >
           <RefreshIcon class="h-5 w-5" /> new pseudonym
         </button>
-        <span class="text-xs">Creates a new psuedonym on your account</span>
+        <span v-if="!getGuestStatus" class="text-xs"
+          >Creates a new psuedonym on your account</span
+        >
       </div>
     </div>
   </div>
