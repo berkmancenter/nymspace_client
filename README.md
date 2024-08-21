@@ -1,37 +1,22 @@
 # Threads Client
 
-## Running project for production
+## Description
 
-- Add `.env` file to the root of project with following key and and values to point to the threads server api and websocket. Note: below config shows version number on the application, which comes from `version` property of `package.json`
+This is the Frontend vue app which depends on the [berkmancenter/threads_server](https://github.com/berkmancenter/threads_client) repo to run.
 
-```
-VITE_API_SERVER_URL=http://localhost:3000
-VITE_API_VERSION=v1
-VITE_WEBSOCKET_SERVER_URL=http://localhost:5555
-VITE_SHOW_VERSION=true
-# anything except true will hide the version number
-```
+## Installation
 
-- Install the packages by running following command on root of project
+- Install and start [berkmancenter/threads_server](https://github.com/berkmancenter/threads_server).
+- Come back to this repo and `yarn install` to install packages.
+- Connect backend by copying `.env.example` to `.env.local`. Make sure the ports are correctly configured in threads_server repo.
+- Run `yarn dev --port 3001` and browse the app at https://localhost:3001.
 
-```
-yarn
-```
+## Tests
 
-- For building the project for deployment, run the command
+### Unit and integration tests
 
-```
-yarn build
-```
+There are no unit or integration tests in this repo.
 
-The built files are put to the `dist` directory. These files can be served using any web server.
+### Stress testing
 
----
-
-## Vue 3 + Vite
-
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-### Recommended IDE Setup
-
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+Stress tests can be run from the client repo in the [k6 directory](https://github.com/berkmancenter/threads_client/blob/main/k6).
