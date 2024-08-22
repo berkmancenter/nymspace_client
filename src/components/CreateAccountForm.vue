@@ -39,7 +39,7 @@
       </div>
       <div>
         Already have a username?
-        <router-link to="login" class="underline">Login</router-link>
+        <router-link :to="`${path}/login`" class="underline">Login</router-link>
       </div>
     </div>
     <div v-show="!isEmailValid" class="text-harvard-red mt-5 w-full">
@@ -61,6 +61,7 @@ import { useRouter } from "vue-router";
 import userStore from "../composables/global/useStore";
 const { registerUser } = userStore;
 const router = useRouter();
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 const username = ref("");
 const password = ref("");
 const password2 = ref("");

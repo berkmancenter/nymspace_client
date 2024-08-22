@@ -53,6 +53,8 @@ const isModalOpen = ref(false);
 const threadName = ref("");
 const message = ref("");
 const route = useRoute();
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
+
 function closeModal() {
   document.querySelector("body").classList.remove("modal-open");
   isModalOpen.value = false;

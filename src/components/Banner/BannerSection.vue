@@ -49,7 +49,7 @@
           <div role="none">
             <div class="mt-2 p-2 space-y-2" role="none">
               <router-link
-                to="/login"
+                :to="`${path}/login`"
                 v-if="getGuestStatus"
                 class="text-black flex gap-2 items-center"
                 title="Retain a pseudonym across sessions"
@@ -162,6 +162,7 @@ const {
   deletePseudonym,
 } = useStore;
 
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 const activeToken = ref("");
 const pseudonymToDelete = ref("");
 const isModalOpen = ref(false);

@@ -40,8 +40,9 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const { followThread, updateThread } = useStore;
 
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 const threadLink = computed(
-  () => `/channels/${route.params.channelId}/threads/${props.item.id}`
+  () => `${path}/channels/${route.params.channelId}/threads/${props.item.id}`
 );
 
 const props = defineProps({

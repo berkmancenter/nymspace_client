@@ -29,11 +29,14 @@
     </div>
     <router-link
       class="inline-block hover:underline underline font-bold my-10"
-      to="/"
+      :to="path"
       >Return Home</router-link
     >
   </div>
 </template>
+<script setup>
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "/";
+</script>
 <script>
 import LoginForm from "../components/LoginForm.vue";
 export default { components: { LoginForm } };
