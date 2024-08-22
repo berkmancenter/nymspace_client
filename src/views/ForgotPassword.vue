@@ -30,19 +30,24 @@
           Don't have a username?
           <router-link
             to="create-account"
-            class="text-red-500 hover:underline font-bold"
+            class="text-harvard-red hover:underline font-bold"
             >Signup</router-link
           >
         </div>
         <div>
           Already have a username?
-          <router-link to="login" class="text-red-500 hover:underline font-bold"
+          <router-link
+            to="login"
+            class="text-harvard-red hover:underline font-bold"
             >Login</router-link
           >
         </div>
       </div>
 
-      <div v-show="showError" class="text-red-500 mt-5 w-full border-red-500">
+      <div
+        v-show="showError"
+        class="text-harvard-red mt-5 w-full border-harvard-red"
+      >
         *
         {{ errorMessage }}
       </div>

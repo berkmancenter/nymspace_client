@@ -1,43 +1,45 @@
 <template>
   <form @submit.prevent="login">
-    <h1 class="text-center text-3xl font-bold">Login</h1>
+    <h1 class="text-xl font-bold">Login</h1>
     <p class="mt-4">
       Log in to retain a pseudonym across sessions, develop reputation, and
       create channels:
     </p>
     <input
-      class="border-2 border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
+      class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
       type="text"
       placeholder="username"
       v-model="username"
     />
     <input
-      class="border-2 border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
+      class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
       type="password"
       placeholder="password"
       v-model="password"
     />
     <div class="flex gap-4 flex-col mt-4">
       <div>
-        <input class="log-in-btn" type="submit" value="Login" />
+        <button
+          type="submit"
+          class="w-full rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        >
+          Login
+        </button>
       </div>
       <div>
         Don't have a username?
-        <router-link
-          to="create-account"
-          class="text-red-500 hover:underline font-bold"
-          >Signup</router-link
-        >
+        <router-link to="create-account" class="underline">Signup</router-link>
       </div>
       <div>
         Forgot password?
-        <router-link to="reset" class="text-red-500 hover:underline font-bold"
-          >Reset password</router-link
-        >
+        <router-link to="reset" class="underline">Reset password</router-link>
       </div>
     </div>
 
-    <div v-show="showError" class="text-red-500 mt-5 w-full border-red-500">
+    <div
+      v-show="showError"
+      class="text-harvard-red mt-5 w-full border-harvard-red"
+    >
       *
       {{ errorMessage }}
     </div>

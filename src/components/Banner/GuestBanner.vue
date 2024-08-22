@@ -1,16 +1,14 @@
 <template>
-  <div class="mx-auto w-11/12 lg:w-3/5 flex gap-2 md:gap-4">
-    <button class="btn" @click="$emit('login')">
-      Use pseudonym for one session
-    </button>
+  <button class="btn" @click="$emit('login')">
+    Use pseudonym for one session
+  </button>
 
-    <router-link
-      to="/login"
-      class="btn"
-      title="Retain a pseudonym across sessions"
-      >Login</router-link
-    >
-  </div>
+  <router-link
+    to="/login"
+    class="btn"
+    title="Retain a pseudonym across sessions"
+    >Login</router-link
+  >
 </template>
 
 <style scoped>

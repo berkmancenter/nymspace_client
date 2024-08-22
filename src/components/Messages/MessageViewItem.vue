@@ -1,28 +1,74 @@
 <template>
-  <div class="shrink flex-auto group hover:bg-gray-100 py-1">
+  <div
+    class="pl-4 shrink flex-auto group hover:bg-gray-100 py-2"
+    :class="
+      item.hasDownvoted || item.hasUpvoted
+        ? 'bg-yellow-50 hover:bg-yellow-100'
+        : ''
+    "
+  >
     <div class="flex justify-between items-center px-1 text-sm relative">
       <div style="max-width: 92%" class="">
-        <p
+        <div
           class="thread-message"
+          v-linkified
           :class="getMessageClass(item)"
           :title="item.createdAt"
         >
           <div @click="addToMessage(item.pseudonym)" class="font-bold">
             {{ item.pseudonym || item.owner }}
             <span v-if="item.owner === userId" class="font-thin">(you) </span>
-            <span class="text-gray font-thin"> {{ new Date(item.createdAt).toLocaleString("en-US", {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit'}).split(",").join(" at ") }}</span>
+            <span class="text-gray font-thin">
+              {{
+                new Date(item.createdAt)
+                  .toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                  .split(",")
+                  .join(" at ")
+              }}</span
+            >
           </div>
           <div v-html="formattedBody"></div>
-        </p>
+        </div>
       </div>
       <div
         v-if="showVoting && item.owner !== userId"
-        class="ml-2 opacity-0 group-hover:opacity-100 bg-white rounded border  -top-4 right-2 px-3 py-0.5 absolute flex items-center gap-2"
+        class="ml-2 opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-2 px-3 py-0.5 absolute flex items-center gap-2"
       >
-        <div class="flex items-center" :class="getUpVoteClass(item)">
+        <div v-if="isVoting">
+          <svg
+            class="animate-spin h-5 w-5 text-gray-600"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+        </div>
+        <div
+          v-if="!isVoting && !item.hasDownvoted"
+          class="flex items-center"
+          :class="getUpVoteClass(item)"
+        >
           <ChevronUpIcon
-            @click="upvote(item.id, !item.hasUpvoted)"
-            class="h-5 w-5"
+            @click="_upvote(item)"
+            class="h-4 w-4"
             :class="
               !getActiveThread.locked && (item.canVote || item.hasUpvoted)
                 ? 'cursor-pointer'
@@ -31,13 +77,13 @@
           />
         </div>
         <div
-          v-if="!getGuestStatus"
+          v-if="!isVoting && !getGuestStatus && !item.hasUpvoted"
           class="flex items-center"
           :class="getDownVoteClass(item)"
         >
           <ChevronDownIcon
-            @click="downvote(item.id, !item.hasDownvoted)"
-            class="h-5 w-5"
+            @click="_downvote(item)"
+            class="h-4 w-4"
             :class="
               !getActiveThread.locked &&
               (item.canVote || item.hasDownvoted) &&
@@ -75,16 +121,34 @@
 </template>
 
 <script setup>
-import {
-  ChevronUpIcon,
-  ChevronDownIcon,
-} from "@heroicons/vue/outline";
-import { computed } from "vue";
-
+import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/vue/outline";
+import { ref, computed } from "vue";
 import useStore from "../../composables/global/useStore";
 
 const { upvote, downvote, getGuestStatus, getActiveChannel, getActiveThread } =
   useStore;
+
+const isVoting = ref(false);
+
+async function _upvote(item) {
+  let complete = false;
+  const checkComplete = setInterval(() => {
+    isVoting.value = true;
+    if (complete) {
+      isVoting.value = false;
+      clearInterval(checkComplete);
+    }
+  }, 400);
+
+  await upvote(item.id, !item.hasUpvoted);
+  complete = true;
+}
+
+async function _downvote(item) {
+  isVoting.value = true;
+  await downvote(item.id, !item.hasDownvoted);
+  isVoting.value = false;
+}
 
 const props = defineProps({
   item: {
@@ -110,7 +174,7 @@ function checkOwner(votes, id, className) {
     for (let i = 0; i < votes.length; i++) {
       if (votes[i].owner && votes[i].owner == id) {
         // current user has voted, so turn red
-        className = "text-red-500";
+        className = "text-harvard-red";
         break;
       }
     }
@@ -184,5 +248,9 @@ const formattedBody = computed(() => {
 }
 .tag {
   @apply font-bold mx-0.5;
+}
+.linkified {
+  text-decoration: underline;
+  color: blue;
 }
 </style>

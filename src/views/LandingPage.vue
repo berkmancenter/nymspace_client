@@ -1,16 +1,12 @@
 <template>
-  <div class="mx-auto container-width">
-    <SearchBox @update-search="updateSearch" class="my-5" />
-    <Channels :channels="channels" />
-    <div class="flex justify-end my-4">
-      <CreateChannel />
-    </div>
+  <div
+    class="sm:mx-auto sm:flex-1 sm:w-11/12 lg:w-3/5 flex flex-col justify-center"
+  >
+    <Channels :channels="channelsWithFollow" />
   </div>
 </template>
 <script setup>
-import SearchBox from "../components/SearchBox.vue";
 import Channels from "../components/Channels/Channels.vue";
-import CreateChannel from "../components/Channels/CreateChannel.vue";
 import { computed, onMounted, ref } from "vue";
 import useStore from "../composables/global/useStore";
 const { loadChannels, getChannels, getUserChannels, loadUserChannels } =
@@ -26,21 +22,8 @@ const channelsWithFollow = computed(() => {
   }));
 });
 
-const channels = computed(() => {
-  const filteredChannels = channelsWithFollow.value.filter((x) => {
-    if (searchText.value.trim().length == 0) {
-      return true;
-    } else {
-      return x.name?.toLowerCase().indexOf(searchText.value) > -1;
-    }
-  });
-  return filteredChannels;
-});
-
 onMounted(async () => {
   await loadUserChannels();
   await loadChannels();
 });
-
-const updateSearch = (value) => (searchText.value = value?.toLowerCase());
 </script>

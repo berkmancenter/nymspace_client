@@ -1,16 +1,16 @@
 <template>
-  <div class="flex justify-between items-center gap-2">
-    <h2 class="text-red-500 text-2xl my-2 font-bold messages-title">
+  <div
+    class="bg-white rounded-tl h-11 gap-6 border-b p-2 sm:pl-5 flex justify-between shadow-sm"
+  >
+    <h2 class="pl-6 sm:pl-0 text-lg font-thin threads-title">
       {{ thread.name }}
     </h2>
-    <div :title="showChatOnly ? 'Show threads list' : 'Show chat only'">
-      <component
-        :is="showChatOnly ? ArrowLeftIcon : ArrowsExpandIcon"
-        class="w-6 h-6 cursor-pointer hover:text-red-500 text-black"
-        @click="setShowChatOnly(!showChatOnly)"
-      />
+    <div class="flex gap-2 items-center">
+      <DeleteThread :show="canEditDelete" :item="thread" />
+      <EditThread :show="canEditDelete" :item="thread" />
     </div>
   </div>
+
   <MessagesView
     :ref="
       (el) => {
@@ -21,70 +21,117 @@
     :userId="userId"
     @tag-click="tagClick"
   />
-  <div class="text-xs flex justify-center">
+
+  <div class="text-xs mt-5">
     <span
+      v-if="newMessagesNotice"
       @click="scrollToBottom('smooth')"
       :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
-      class="bg-red-600 z-50 cursor-pointer w-min whitespace-nowrap text-white p-1 rounded-t -mt-6 transition-all"
+      class="bg-harvard-red z-50 cursor-pointer w-min whitespace-nowrap text-white p-1 rounded-t -mt-6 transition-all"
       >New messages</span
     >
+    <div
+      v-if="pseudonymMismatch"
+      class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
+      style="margin-top: 1rem"
+    >
+      The pseudonym for this thread is
+      <strong>{{ pseudonymForThread.pseudonym }}</strong
+      >. Please switch to this pseudonym to send a message.
+    </div>
+
+    <div
+      v-if="message.length > 249"
+      class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
+    >
+      You are over the character limit and cannot send this message.
+    </div>
+    <div
+      v-if="shouldDisplayMessageBoxLocked"
+      class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
+    >
+      This thread is now locked. Messages cannot be sent until it is unlocked by
+      the thread creator.
+    </div>
+    <div
+      v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
+      class="bg-harvard-red z-50 w-full text-white p-1 sm:rounded-t transition-all text-center"
+    >
+      Unable to send message. Please try again later.
+    </div>
+    <PromptDirtyDraft :show="prompt" @response="response" />
   </div>
+
   <TagList
     :items="filteredTags"
     :visible="tagListVisible"
     :msg-txt-area="messageTextArea"
     @tag-click="tagClick"
   />
-  <div v-if="pseudonymMismatch" class="alert warning" style="margin-top: 1rem">
-    <ExclamationIcon class="h-6 w-6 inline-block text-orange-500 rounded" />
-    <span class="text-sm"
-      >The pseudonym for this thread is
-      <strong>{{ pseudonymForThread.pseudonym }}</strong
-      >. Please switch to this pseudonym to send a message.</span
-    >
-  </div>
 
-  <textarea
-    ref="messageTextArea"
-    v-if="!pseudonymMismatch && !sending"
-    v-model="message"
-    id="messageTextArea"
-    @keypress="watchTagging"
-    @keydown.enter.prevent="sendMessage"
-    class="w-full block border-2 text-sm px-1 h-20 mt-4"
-    :class="
-      shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage
-        ? 'border-red-500'
-        : 'border-gray-500'
-    "
-    placeholder="Message (hit enter to send)"
-    data-testid="message-text-area"
-    :disabled="sending"
-  >
-  </textarea>
-  <p
-    v-if="sending"
-    class="animate-pulse w-full block border-2 text-sm px-1 h-20 mt-4"
-  >
-    {{ message }}
-  </p>
-  <span
-    v-if="shouldDisplayMessageBoxLocked"
-    class="text-red-500 text-sm font-bold"
-    >This thread is now locked. Messages cannot be sent until it is unlocked by
-    the thread creator.</span
-  >
-  <span
-    v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
-    class="text-red-500 text-sm font-bold"
-  >
-    Unable to send message. Please try again later.
-  </span>
-  <PromptDirtyDraft :show="prompt" @response="response" />
+  <div class="flex flex-col pl-4">
+    <div
+      class="mb-2"
+      v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked"
+      :class="sending ? 'animate-pulse' : ''"
+    >
+      <div
+        class="block border rounded text-sm p-1 mr-4 shadow-sm"
+        :class="
+          shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage
+            ? 'border-harvard-red'
+            : 'border-gray-500'
+        "
+      >
+        <textarea
+          ref="messageTextArea"
+          v-model="message"
+          id="messageTextArea"
+          @keypress="watchTagging"
+          @keydown.enter.prevent="sendMessage"
+          class="w-full outline-none h-20 bg-white"
+          placeholder="Message (hit enter to send)"
+          data-testid="message-text-area"
+          :disabled="sending"
+        >
+        </textarea>
+
+        <button
+          class="text-black w-full flex justify-end"
+          @click="sendMessage"
+          :disabled="message.length > 249"
+          :class="message.length > 249 ? 'text-gray-400' : ''"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6 block"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+            />
+          </svg>
+        </button>
+      </div>
+      <p class="text-xs">
+        <span :class="message.length > 249 ? 'text-harvard-red' : ''">{{
+          message.length
+        }}</span
+        >/250 character limit
+      </p>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
+import DeleteThread from "../components/Threads/DeleteThread.vue";
+import EditThread from "../components/Threads/EditThread.vue";
 import {
   onMounted,
   ref,
@@ -101,11 +148,7 @@ import PromptDirtyDraft from "../components/Messages/PromptDirtyDraft.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
-import {
-  ArrowLeftIcon,
-  ArrowsExpandIcon,
-  ExclamationIcon,
-} from "@heroicons/vue/outline";
+import { ArrowLeftIcon, ExclamationIcon } from "@heroicons/vue/outline";
 
 const route = useRoute();
 const {
@@ -120,8 +163,6 @@ const {
   getActivePseudonym,
   getId,
   loadUser,
-  setShowChatOnly,
-  showChatOnly,
   updateMessage,
   setActiveThread,
   getActiveThread,
@@ -151,6 +192,11 @@ const pseudonymMismatch = computed(() => {
 });
 const searchTag = ref("");
 const goodReputation = ref(false);
+
+const isThreadOwner = computed(
+  () => getId.value === getActiveThread.value?.owner
+);
+
 const wsInstance = reactive({});
 const shouldDisplayMessageBoxLocked = ref(false);
 const shouldDisplayUnableToSendMessage = ref(false);
@@ -164,6 +210,13 @@ const resolve = ref({});
 const reject = ref({});
 const prompt = ref(false);
 const sending = ref(false);
+const chars = ref(0);
+
+const canEditDelete = computed(() => isThreadOwner.value);
+
+function charLimit(e) {
+  chars.value = e.target.value.length;
+}
 
 onBeforeRouteLeave(async (to, from) => {
   return await processDirtyMessage();
@@ -292,6 +345,10 @@ function parseJwt(token) {
 }
 
 async function sendMessage() {
+  if (message.value.length > 249) {
+    return;
+  }
+
   let complete = false;
   const checkComplete = setInterval(() => {
     sending.value = true;
@@ -300,6 +357,7 @@ async function sendMessage() {
       clearInterval(checkComplete);
     }
   }, 100);
+
   if (
     message.value.trim().length > 0 &&
     !getActiveThread.value?.locked &&
@@ -553,14 +611,5 @@ textarea {
 .messages-title {
   @apply overflow-hidden;
   text-overflow: ellipsis;
-}
-
-.alert.warning {
-  @apply bg-yellow-100 text-yellow-800;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 0.25rem;
 }
 </style>

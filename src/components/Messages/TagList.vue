@@ -8,7 +8,7 @@
       <TagListItem :item="item" @tag-click="tagClick" />
     </template>
     <template v-if="items && items.length === 0">
-      <div class="cursor-not-allowed text-red-500">No pseudonym found</div>
+      <div class="cursor-not-allowed text-harvard-red">No pseudonym found</div>
     </template>
   </div>
 </template>
