@@ -1,6 +1,6 @@
 <template>
   <div
-    class="px-2 py-1 text-gray-500 font-bold hover:text-gray-900 flex justify-between gap-2 items-center"
+    class="px-2 py-1 bg-gray-50 text-gray-500 font-bold hover:text-gray-900 flex justify-between gap-2 items-center"
   >
     <div>
       <router-link :to="path" class="text-lg sm:text-2xl">
@@ -28,5 +28,5 @@ const { getGuestStatus } = useStore;
 const { getMajorError } = store;
 const showVersion = import.meta.env.VITE_SHOW_VERSION === "true";
 const version = __APP_VERSION__;
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "/";
 </script>

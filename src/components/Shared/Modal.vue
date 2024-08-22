@@ -42,7 +42,7 @@ body.modal-open {
 }
 
 .modal {
-  @apply absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50;
+  @apply z-50 absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50;
 }
 
 .modal-content {

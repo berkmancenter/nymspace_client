@@ -1,16 +1,4 @@
 <template>
-  <div
-    class="bg-white rounded-tl h-11 gap-6 border-b p-2 sm:pl-5 flex justify-between shadow-sm"
-  >
-    <h2 class="pl-6 sm:pl-0 text-lg font-thin threads-title">
-      {{ thread.name }}
-    </h2>
-    <div class="flex gap-2 items-center">
-      <DeleteThread :show="canEditDelete" :item="thread" />
-      <EditThread :show="canEditDelete" :item="thread" />
-    </div>
-  </div>
-
   <MessagesView
     :ref="
       (el) => {
@@ -130,8 +118,6 @@
 
 <script setup>
 import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
-import DeleteThread from "../components/Threads/DeleteThread.vue";
-import EditThread from "../components/Threads/EditThread.vue";
 import {
   onMounted,
   ref,
@@ -193,10 +179,6 @@ const pseudonymMismatch = computed(() => {
 const searchTag = ref("");
 const goodReputation = ref(false);
 
-const isThreadOwner = computed(
-  () => getId.value === getActiveThread.value?.owner
-);
-
 const wsInstance = reactive({});
 const shouldDisplayMessageBoxLocked = ref(false);
 const shouldDisplayUnableToSendMessage = ref(false);
@@ -211,8 +193,6 @@ const reject = ref({});
 const prompt = ref(false);
 const sending = ref(false);
 const chars = ref(0);
-
-const canEditDelete = computed(() => isThreadOwner.value);
 
 function charLimit(e) {
   chars.value = e.target.value.length;
