@@ -16,12 +16,17 @@
           Please enter you registered email to get the password reset email.
         </p>
         <input
-          class="border-2 border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
+          class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
           type="text"
           placeholder="email"
           v-model="email"
         />
-        <input class="log-in-btn mt-4" type="submit" value="Reset" />
+        <button
+          class="mt-2 w-full rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+          type="submit"
+        >
+          Reset
+        </button>
       </template>
 
       <div class="flex gap-4 flex-col mt-4 items-center">
