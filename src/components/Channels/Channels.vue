@@ -1,5 +1,7 @@
 <template>
-  <div class="my-6 bg-white p-2 sm:p-4 shadow-sm sm:rounded-lg sm:shadow">
+  <div
+    class="my-6 bg-white p-2 sm:p-4 shadow-sm sm:rounded-lg sm:shadow flex-shrink flex-1 flex flex-col"
+  >
     <div class="flex items-center justify-between">
       <h2 class="font-bold text-xl">Channels</h2>
 
@@ -19,12 +21,14 @@
 
     <SearchBox @update-search="updateSearch" class="my-2" />
 
-    <ul>
-      <ChannelList v-show="finalItems.length > 0" :items="finalItems" />
-      <li v-show="finalItems.length === 0" class="text-xl text-center my-10">
-        No channels available
-      </li>
-    </ul>
+    <div class="flex flex-col flex-1 overflow-y-auto">
+      <ul class="h-1 flex-shrink flex flex-col">
+        <ChannelList v-show="finalItems.length > 0" :items="finalItems" />
+        <li v-show="finalItems.length === 0" class="text-xl text-center my-10">
+          No channels available
+        </li>
+      </ul>
+    </div>
 
     <div class="flex justify-end my-4">
       <CreateChannel />

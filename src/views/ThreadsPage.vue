@@ -1,8 +1,5 @@
 <template>
-  <div class="mt-2 sm:m-4 flex-1 flex flex-col">
-    <button @click="toggleThreadsMenu" class="sm:hidden absolute top-14 left-1">
-      <ViewListIcon class="w-6 h-6" />
-    </button>
+  <div class="sm:mt-2 sm:p-4 flex-1 flex flex-col bg-gray-50">
     <div class="flex-1 flex flex-col-reverse gap-2 sm:gap-0 sm:flex-row">
       <div
         class="transition-all sm:transition-none ease-in-out duration-500 h-full w-full sm:w-52 bg-gray-100 sm:bg-gray-100 flex flex-col flex-1 sm:flex-initial sm:rounded-l shadow absolute sm:relative z-10 sm:z-0 top-0 sm:left-0 pl-20 sm:pl-0 border-r border-gray-300"
@@ -50,10 +47,25 @@
           <CreateThread :show="canCreate" />
         </div>
       </div>
-
       <div
         class="sm:rounded-r shadow overflow-hidden bg-white flex-1 shrink flex flex-col"
       >
+        <div
+          class="bg-white rounded-tl h-11 gap-6 border-b p-2 sm:pl-5 flex justify-between shadow-sm"
+        >
+          <div class="flex gap-2">
+            <button @click="toggleThreadsMenu" class="sm:hidden">
+              <ViewListIcon class="w-6 h-7 text-black" />
+            </button>
+            <h2 class="text-lg font-thin threads-title">
+              {{ maybeThread.name }}
+            </h2>
+          </div>
+          <div class="flex gap-2 items-center">
+            <DeleteThread :show="canEditDeleteThread" :item="maybeThread" />
+            <EditThread :show="canEditDeleteThread" :item="maybeThread" />
+          </div>
+        </div>
         <div
           v-if="!isThreadActive && sortedThreads.length"
           class="text-gray-500 p-2 flex-1 flex flex-col w-full text-center justify-center"
@@ -67,7 +79,6 @@
         >
           Create a thread
         </div>
-
         <router-view></router-view>
       </div>
     </div>
@@ -78,6 +89,8 @@
 import ThreadList from "../components/Threads/ThreadList.vue";
 import CreateThread from "../components/Threads/CreateThread.vue";
 import useStore from "../composables/global/useStore";
+import DeleteThread from "../components/Threads/DeleteThread.vue";
+import EditThread from "../components/Threads/EditThread.vue";
 import {
   onMounted,
   computed,
@@ -100,6 +113,7 @@ onBeforeUnmount(() => setShowChatOnly(false));
 
 const {
   getThreads,
+  getThread,
   loadThreads,
   getChannel,
   loadChannel,
@@ -115,11 +129,11 @@ const {
   deleteChannel,
 } = useStore;
 
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 const router = useRouter();
 const items = getThreads;
 const wsInstance = reactive({});
 const channel = ref(getChannel(route.params.channelId));
+const maybeThread = ref(getThread(route.params.threadId));
 const isThreadActive = ref(false);
 const isChannelOwner = computed(() => getId.value === channel.value?.owner);
 const isChannelThreadCreationAllowed = computed(
@@ -139,6 +153,7 @@ watch(
   async (newId) => {
     if (newId) {
       isThreadActive.value = true;
+      maybeThread.value = getThread(newId);
     } else {
       isThreadActive.value = false;
     }
@@ -218,6 +233,9 @@ async function processDeleteChannel() {
 function canEditDeleteChannel(item) {
   return !getGuestStatus.value && item.owner === getId.value;
 }
+const canEditDeleteThread = computed(
+  () => maybeThread.value.owner === getId.value
+);
 
 /**
  * Method to reconnect thread websocket calls on
@@ -238,6 +256,7 @@ onMounted(async () => {
   } else {
     channel.value = getChannel(route.params.channelId);
   }
+  maybeThread.value = getThread(route.params.threadId);
 
   wsInstance.value = new SocketioService();
   wsInstance.value.addDisconnectHandler(reconnectSockets);

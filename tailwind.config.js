@@ -10,6 +10,15 @@ module.exports = {
       fontSize: {
         sm: ["14px", "20px"],
       },
+      height: {
+        screen: "100svh",
+      },
+      maxHeight: {
+        screen: "100svh",
+      },
+      minHeight: {
+        screen: "100svh",
+      },
     },
   },
   variants: {

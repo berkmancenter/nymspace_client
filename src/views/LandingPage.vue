@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sm:mx-auto sm:flex-1 sm:w-11/12 lg:w-3/5 flex flex-col justify-center"
+    class="sm:mx-auto sm:flex-1 sm:w-11/12 lg:w-3/5 flex flex-col justify-center flex-1"
   >
     <Channels :channels="channelsWithFollow" />
   </div>
