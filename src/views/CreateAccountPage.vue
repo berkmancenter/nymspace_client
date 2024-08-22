@@ -13,11 +13,14 @@
         </p>
       </div>
     </div>
-    <router-link class="inline-block underline font-bold my-10" to="/"
+    <router-link class="inline-block underline font-bold my-10" :to="path"
       >Return Home</router-link
     >
   </div>
 </template>
+<script setup>
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "/";
+</script>
 <script>
 import CreateAccountForm from "../components/CreateAccountForm.vue";
 export default { components: { CreateAccountForm } };

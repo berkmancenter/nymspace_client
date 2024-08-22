@@ -83,7 +83,8 @@ function isPrivate(item) {
   return Object.keys(item).includes("private") && item.private;
 }
 
-const channelLink = computed(() => `/channels/${props.item.id}/`);
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
+const channelLink = computed(() => `${path}/channels/${props.item.id}/`);
 
 function pinChannel() {
   followChannel({

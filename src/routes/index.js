@@ -12,7 +12,7 @@ const NotFound = () => import("../views/NotFound.vue");
 
 export default [
   {
-    path: "/",
+    path: import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "",
     name: "home.layout",
     component: HomePageLayout,
     children: [

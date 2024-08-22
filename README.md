@@ -11,6 +11,10 @@ This is the Frontend vue app which depends on the [berkmancenter/threads_server]
 - Connect backend by copying `.env.example` to `.env.local`. Make sure the ports are correctly configured in threads_server repo.
 - Run `yarn dev --port 3001` and browse the app at https://localhost:3001.
 
+## Custom Base Path
+
+You can add a `VITE_PATH=/your/base/path` env variable to the env file and this app will use that for routing.
+
 ## Tests
 
 ### Unit and integration tests

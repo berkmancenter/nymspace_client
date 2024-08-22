@@ -115,6 +115,7 @@ const {
   deleteChannel,
 } = useStore;
 
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 const router = useRouter();
 const items = getThreads;
 const wsInstance = reactive({});

@@ -6,7 +6,7 @@
       <img :src="berkmanLogo" alt="Berkman Klein Center" class="h-12" />
     </a>
     <div class="flex gap-4 items-center">
-      <router-link to="/" class="">
+      <router-link :to="path" class="">
         <p class="inline-block hover:text-harvard-red text-black">Home</p>
       </router-link>
       <a
@@ -32,4 +32,5 @@
 import githubLogo from "../../assets/GitHub-Mark-64px.png";
 import berkmanLogo from "../../assets/berkman-klein-center-logo.png";
 import { ExternalLinkIcon } from "@heroicons/vue/outline";
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 </script>

@@ -9,6 +9,12 @@
   </div>
   <div class="text-center my-16 text-2xl">
     Go to homepage
-    <router-link to="/" class="text-harvard-red underline">Threads</router-link>
+    <router-link :to="path" class="text-harvard-red underline"
+      >Threads</router-link
+    >
   </div>
 </template>
+
+<script setup>
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
+</script>
