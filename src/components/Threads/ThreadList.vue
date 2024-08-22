@@ -1,13 +1,11 @@
 <template>
-  <div
-    class="rounded items-center border-2 border-gray-500 sm:h-96 max-h-96 overflow-y-auto"
-  >
-    <div class="grid">
-      <span class="px-2 py-1 text-lg font-bold">All Threads:</span>
-      <template v-for="item in items" :key="item.id">
-        <ThreadListItem :item="item" />
-      </template>
-    </div>
+  <div class="items-center sm:h-96 max-h-96">
+    <template v-for="item in items" :key="item.id">
+      <ThreadListItem
+        :item="item"
+        :toggleThreadsMenu="props.toggleThreadsMenu"
+      />
+    </template>
   </div>
 </template>
 
@@ -18,6 +16,10 @@ const props = defineProps({
   items: {
     type: Array,
     required: true,
+  },
+  toggleThreadsMenu: {
+    type: Function,
+    required: false,
   },
 });
 </script>

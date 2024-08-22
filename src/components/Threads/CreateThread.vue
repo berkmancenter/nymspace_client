@@ -2,9 +2,9 @@
   <button
     v-if="show"
     @click="openModal"
-    class="w-full text-center float-left inline-block border-2 border-gray-500 text-lg px-10 h-10 mt-4 leading-9 hover:bg-gray-100"
+    class="flex gap-2 justify-start items-center"
   >
-    Create new thread
+    <PlusCircleIcon class="w-5 h-5" /> new thread
   </button>
   <Modal :is-open="isModalOpen" @close-modal="closeModal">
     <template v-slot:title>Create New Thread</template>
@@ -12,14 +12,24 @@
     <div>
       <input
         v-model="threadName"
-        class="rounded border-2 border-gray-500 w-full h-12 px-3 text-xl my-1"
+        class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
         type="text"
       />
     </div>
-    <div class="text-red-500">{{ message }}</div>
+    <div class="text-harvard-red">{{ message }}</div>
     <template v-slot:actions>
-      <button class="btn success" @click="processCreate">Create</button>
-      <button class="btn error" @click="closeModal">Cancel</button>
+      <button
+        class="rounded bg-gray-300 px-2 py-2 font-semibold shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        @click="closeModal"
+      >
+        Cancel
+      </button>
+      <button
+        class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        @click="processCreate"
+      >
+        Create
+      </button>
     </template>
   </Modal>
 </template>
@@ -29,6 +39,7 @@ import { ref } from "@vue/reactivity";
 import useStore from "../../composables/global/useStore";
 import Modal from "../Shared/Modal.vue";
 import { useRoute } from "vue-router";
+import { PlusCircleIcon } from "@heroicons/vue/outline";
 
 defineProps({
   show: {

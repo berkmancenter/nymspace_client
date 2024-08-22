@@ -7,7 +7,9 @@
       </div>
       <div class="mt-4 text-2xl">
         Password changed successfully.
-        <router-link to="login" class="text-red-500 hover:underline font-bold"
+        <router-link
+          to="login"
+          class="text-harvard-red hover:underline font-bold"
           >Login</router-link
         >
         to use the threads application.
@@ -30,7 +32,10 @@
         />
         <input class="log-in-btn mt-4" type="submit" value="Reset Password" />
       </template>
-      <div v-show="showError" class="text-red-500 mt-5 w-full border-red-500">
+      <div
+        v-show="showError"
+        class="text-harvard-red mt-5 w-full border-harvard-red"
+      >
         *
         {{ errorMessage }}
       </div>

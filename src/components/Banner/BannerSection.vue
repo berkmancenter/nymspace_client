@@ -1,49 +1,99 @@
 <template>
-  <div class="bg-gray-200 pb-4 pt-4">
-    <div class="text-center text-2xl pb-4 pt-4">
-      Hello, [
-      <select
-        v-if="!getGuestStatus"
-        v-model="activeToken"
-        :disabled="getGuestStatus"
-        class="bg-gray-200 text-red-500"
-        @change="activateToken"
-        id="pseudonymSelect"
-      >
-        <option
-          v-for="pseudonym in getPseudonyms"
-          class="text-red-500"
-          :value="pseudonym.token"
+  <div class="flex w-full justify-end flex-1 gap-4">
+    <div class="relative inline-block text-left mt-1 w-full">
+      <div div class="flex items-center justify-end gap-2 w-full">
+        <div
+          v-if="!getGuestStatus"
+          class="w-full gap-3 flex justify-end items-center"
         >
-          {{ pseudonym.pseudonym }}
-        </option>
-      </select>
-      <span v-else class="text-red-500">{{
-        getActivePseudonym.pseudonym
-      }}</span>
-      ]
-      <TrashIcon
-        v-if="getPseudonyms.length > 1"
-        class="h-5 w-5 inline-block cursor-pointer hover:text-red-500"
-        title="Delete pseudonym"
-        @click="openModal"
-      />
-      <RefreshIcon
-        v-if="getGuestStatus"
-        class="h-5 w-5 inline-block cursor-pointer hover:text-red-500"
-        title="Get a new pseudonym"
-        @click="refreshPseudonym"
-      />, {{welcomeMessage}}
+          <RefreshIcon class="h-4 w-4" />
+          <select
+            v-model="activeToken"
+            :disabled="getGuestStatus"
+            class="shadow rounded-md border-0 py-0.5 pl-1 pr-1 text-gray-900 ring-0 border-b-1 ring-inset ring-gray-300 focus:ring-0 sm:text-sm sm:leading-6"
+            @change="activateToken"
+            id="pseudonymSelect"
+          >
+            <option v-for="pseudonym in getPseudonyms" :value="pseudonym.token">
+              {{ pseudonym.pseudonym }}
+            </option>
+          </select>
+        </div>
+        <div v-if="getGuestStatus">
+          {{ getActivePseudonym.pseudonym }}
+        </div>
+        <button
+          type="button"
+          class=""
+          id="menu-button"
+          aria-expanded="true"
+          aria-haspopup="true"
+          @click="toggleMenu"
+        >
+          <DotsVerticalIcon class="w-5" />
+        </button>
+      </div>
+
+      <div
+        class="fixed inset-0 z-10"
+        @click="menuOpen = false"
+        :class="menuOpen ? '' : 'hidden'"
+      >
+        <div
+          class="absolute right-2 z-0 mt-10 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="menu-button"
+          tabindex="-1"
+        >
+          <div role="none">
+            <div class="mt-2 p-2 space-y-2" role="none">
+              <router-link
+                to="/login"
+                v-if="getGuestStatus"
+                class="text-black flex gap-2 items-center"
+                title="Retain a pseudonym across sessions"
+              >
+                <LoginIcon class="w-4 h-4" />
+                Login</router-link
+              >
+              <button
+                v-if="getPseudonyms.length > 1"
+                @click="openModal"
+                class="flex gap-2 items-center"
+              >
+                <TrashIcon
+                  class="h-4 w-4 inline-block cursor-pointer"
+                  title="Delete pseudonym"
+                />
+                Delete pseudonym
+              </button>
+
+              <button
+                v-if="getGuestStatus"
+                @click="refreshPseudonym"
+                class="flex gap-2 items-center"
+              >
+                <RefreshIcon
+                  class="h-4 w-4 inline-block cursor-pointer hover:text-harvard-red"
+                  title="Get a new pseudonym"
+                />
+                New pseudonym
+              </button>
+
+              <component
+                :is="
+                  getLoggedInStatus
+                    ? defineAsyncComponent(() => import('./LoggedInBanner.vue'))
+                    : defineAsyncComponent(() => import('./GuestBanner.vue'))
+                "
+                @create-pseudonym="adjustSelect"
+              ></component>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <component
-      :is="
-        getLoggedInStatus
-          ? defineAsyncComponent(() => import('./LoggedInBanner.vue'))
-          : defineAsyncComponent(() => import('./GuestBanner.vue'))
-      "
-      @login="registerOneTime"
-      @create-pseudonym="adjustSelect"
-    ></component>
 
     <Modal :is-open="isModalOpen" @close-modal="closeModal">
       <template v-slot:title>Delete Pseudonym</template>
@@ -52,14 +102,13 @@
         Please select the pseudonym to delete
         <select
           v-model="pseudonymToDelete"
-          class="bg-gray-200 text-red-500"
+          class="shadow rounded-md border-0 py-0.5 pl-1 pr-1 text-gray-900 ring-0 border-b-1 ring-inset ring-gray-300 focus:ring-0 sm:text-sm sm:leading-6"
           id="pseudonymDelete"
           @change="message = ''"
         >
           <option disabled value="">Select Pseudonym</option>
           <option
             v-for="pseudonym in inactivePseudonyms"
-            class="text-red-500"
             :value="pseudonym._id"
           >
             {{ pseudonym.pseudonym }}
@@ -70,11 +119,19 @@
         If you want to delete the active pseudonym, please activate other
         pseudonym first and come back here.
       </div>
-      <div :class="isError ? 'text-red-500' : 'text-green-500'" class="mt-4">
+      <div
+        :class="isError ? 'text-harvard-red' : 'text-green-500'"
+        class="mt-4"
+      >
         {{ message }}
       </div>
       <template v-slot:actions>
-        <button class="btn success" @click="processDelete">Delete</button>
+        <button
+          @click="processDelete"
+          class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        >
+          Delete
+        </button>
       </template>
     </Modal>
   </div>
@@ -84,7 +141,12 @@
 import { onMounted, watch, ref, computed, nextTick } from "vue";
 import useStore from "../../composables/global/useStore";
 import { defineAsyncComponent } from "@vue/runtime-core";
-import { TrashIcon, RefreshIcon } from "@heroicons/vue/outline";
+import {
+  TrashIcon,
+  RefreshIcon,
+  LoginIcon,
+  DotsVerticalIcon,
+} from "@heroicons/vue/outline";
 import Modal from "../Shared/Modal.vue";
 import { useRoute } from "vue-router";
 
@@ -108,26 +170,16 @@ const isError = ref(true);
 const inactivePseudonyms = computed(() =>
   getPseudonyms.value.filter((x) => !x.active)
 );
-const welcomeMessage = ref();
-const route = useRoute();
+const menuOpen = ref(false);
+function toggleMenu() {
+  menuOpen.value = !menuOpen.value;
+}
 
 /**
  * watch route params and check if channelId is present
  * based on its presence update welcome message
  */
-watch(
-  () => route.params,
-  async (params) => {
-    if (params.hasOwnProperty('channelId')) {
-      welcomeMessage.value = "Select a thread to begin messaging:"
-    } else {
-      welcomeMessage.value = "Select a channel to begin messaging:"
-    }
-  },
-  {
-    immediate: true
-  }
-);
+
 async function registerOneTime() {
   await registerOnce();
 }
@@ -191,7 +243,6 @@ function adjustSelect() {
     tempSelect.style.position = "fixed";
     tempSelect.appendChild(tempOption);
     sel.after(tempSelect);
-    sel.style.width = `${+tempSelect.clientWidth + 4}px`;
     tempSelect.remove();
   }
 }
@@ -218,9 +269,3 @@ onMounted(async () => {
   });
 });
 </script>
-
-<style scoped>
-select#pseudonymDelete {
-  @apply text-lg font-semibold ring-1 ring-red-500;
-}
-</style>

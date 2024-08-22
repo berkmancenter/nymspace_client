@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "harvard-red": "#890309",
+        "harvard-red": "#A41D30",
       },
       fontSize: {
         sm: ["14px", "20px"],

@@ -3,12 +3,13 @@
     v-if="show"
     @click.prevent="openModal"
     title="Edit Thread"
-    class="border-2 border-gray-500 h-10 w-12 mt-4 ml-2 hover:bg-gray-200"
     data-testid="edit-thread"
+    class="flex gap-2 justify-start items-center"
   >
     <PencilIcon
-      class="h-6 w-6 inline-block hover:text-black hover:fill-current rounded cursor-pointer"
+      class="h-4 w-4 inline-block hover:text-black hover:fill-current rounded cursor-pointer"
     />
+    <span class="sr-only">Edit</span>
   </button>
   <Modal :is-open="isModalOpen" @close-modal="closeModal">
     <template v-slot:title>Edit Thread</template>
@@ -16,7 +17,7 @@
     <div>
       <input
         v-model="threadName"
-        class="rounded border-2 border-gray-500 w-full h-12 px-3 text-xl my-1"
+        class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
         type="text"
       />
     </div>
@@ -31,10 +32,21 @@
         >Lock Thread</label
       >
     </div>
-    <div class="text-red-500">{{ message }}</div>
+    <div class="text-harvard-red">{{ message }}</div>
     <template v-slot:actions>
-      <button class="btn success" @click="processUpdate" data-testid="update-thread">Update</button>
-      <button class="btn error" @click="closeModal">Cancel</button>
+      <button
+        class="rounded bg-gray-300 px-2 py-2 font-semibold shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        @click="closeModal"
+      >
+        Cancel
+      </button>
+      <button
+        class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        @click="processUpdate"
+        data-testid="update-thread"
+      >
+        Update
+      </button>
     </template>
   </Modal>
 </template>
@@ -108,17 +120,3 @@ function isFormValid() {
   return isNameValid();
 }
 </script>
-
-<style scoped>
-.btn {
-  @apply w-20 my-2 bg-white border-2 border-gray-500 text-lg h-10 leading-3 hover:text-white cursor-pointer;
-}
-
-.btn.success {
-  @apply hover:bg-green-500;
-}
-
-.btn.error {
-  @apply hover:bg-red-500;
-}
-</style>
