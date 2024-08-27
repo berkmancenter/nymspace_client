@@ -2,7 +2,7 @@
   <select
     v-model="channelType"
     @change="openModal"
-    class="border-2 border-gray-400 p-1"
+    class="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
     v-if="getLoggedInStatus && !getGuestStatus"
   >
     <option disabled selected value="">Create New Channel</option>
@@ -15,7 +15,7 @@
     <div>
       <input
         v-model="channelName"
-        class="rounded border-2 border-gray-500 w-full h-12 px-3 text-xl my-1"
+        class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
         type="text"
         placeholder="Enter channel name"
       />
@@ -38,34 +38,42 @@
         >Disable thread creation</label
       >
     </div>
-    <div
-      class="mt-8 ring-2 ring-gray-500 rounded-sm px-2 py-1 ring-opacity-50 bg-gray-200"
-    >
-      <div class="font-semibold">Reminder:</div>
+    <div class="mt-8 rounded-md bg-yellow-50 p-4 text-yellow-700">
+      <div class="font-semibold text-yellow-800">Reminder:</div>
       <div class="mb-4">
         Channels remain on the Threads interface for 90 days after their last
         use. At that time, channel owners can be emailed a reminder, offering
         the option for the channel to permanently remain on the interface. Enter
         an email address that will receive that reminder (optional):
       </div>
-      <div class="font-semibold">
+      <div class="font-semibold text-yellow-800">
         Email address:
         <input
           v-model="email"
           type="text"
           id="email"
           placeholder="Optional"
-          class="rounded border-2 border-gray-500 w-full h-12 px-3 text-xl my-1"
+          class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
         />
       </div>
     </div>
-    <div class="text-red-500">{{ message }}</div>
-    <div v-show="!isEmailValid" class="text-red-500 mt-5 w-full">
+    <div class="text-harvard-red">{{ message }}</div>
+    <div v-show="!isEmailValid" class="text-harvard-red mt-5 w-full">
       * Please enter a valid email address
     </div>
     <template v-slot:actions>
-      <button class="btn success" @click="processCreate">Create</button>
-      <button class="btn error" @click="closeModal">Cancel</button>
+      <button
+        @click="closeModal"
+        class="rounded bg-gray-300 px-2 py-2 font-semibold shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+      >
+        Cancel
+      </button>
+      <button
+        class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        @click="processCreate"
+      >
+        Create
+      </button>
     </template>
   </Modal>
 </template>
@@ -133,17 +141,3 @@ function isFormValid() {
   return (channelName.value.trim().length > 0) & isEmailValid.value;
 }
 </script>
-
-<style scoped>
-.btn {
-  @apply w-20 my-2 bg-white border-2 border-gray-500 text-lg h-10 leading-3 hover:text-white cursor-pointer;
-}
-
-.btn.success {
-  @apply hover:bg-green-500;
-}
-
-.btn.error {
-  @apply hover:bg-red-500;
-}
-</style>

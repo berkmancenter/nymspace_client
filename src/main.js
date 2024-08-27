@@ -5,7 +5,10 @@ import routes from "./routes";
 import { createRouter, createWebHistory } from "vue-router";
 import { VueCookieNext } from "vue-cookie-next";
 import navigationGuard from "./plugins/navigationGuard";
+import linkify from "vue-linkify";
+
 const app = createApp(App);
+app.directive("linkified", linkify);
 
 VueCookieNext.config({ expire: "30d" });
 app.use(VueCookieNext);

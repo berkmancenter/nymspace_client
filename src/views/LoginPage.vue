@@ -1,10 +1,10 @@
 <template>
-  <div class="mx-auto w-4/5 lg:w-3/5 login-bg">
+  <div class="mx-auto w-4/5 lg:w-3/5 login-bg flex-1">
     <div class="flex gap-12 flex-col lg:flex-row">
       <div class="lg:w-2/5">
         <LoginForm />
       </div>
-      <div class="ring-gray-500 ring-2 p-2 lg:mt-4 lg:w-3/5 lg:self-center">
+      <div class="ring-gray-500 lg:mt-10 lg:w-3/5 lg:self-center">
         <p>Logged in, your pseudonyms develop <b>reputation</b>.</p>
 
         <p>You may create up to 5 pseudonyms assocated with one account.</p>
@@ -21,16 +21,22 @@
           (until a sufficient number of upvotes are accumulated).
         </p>
 
-        <p>Please email threads_qs@eon.law.harvard.edu with any questions about your account.</p>
+        <p>
+          Please email threads_qs@eon.law.harvard.edu with any questions about
+          your account.
+        </p>
       </div>
     </div>
     <router-link
-      class="inline-block hover:underline text-red-500 font-bold mt-10"
-      to="/"
+      class="inline-block hover:underline underline font-bold my-10"
+      :to="path"
       >Return Home</router-link
     >
   </div>
 </template>
+<script setup>
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "/";
+</script>
 <script>
 import LoginForm from "../components/LoginForm.vue";
 export default { components: { LoginForm } };

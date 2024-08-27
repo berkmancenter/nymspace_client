@@ -1,48 +1,51 @@
 <template>
   <form @submit.prevent="register">
-    <h1 class="text-center text-3xl font-bold">Signup</h1>
+    <h1 class="text-xl font-bold">Signup</h1>
     <p class="mt-4">
       Create an account to be able to login on this application:
     </p>
     <input
-      class="border-2 border-gray-500 w-full h-12 px-3 text-lg mt-4"
+      class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
       type="text"
       placeholder="new username"
       v-model="username"
     />
     <input
-      class="border-2 border-gray-500 w-full h-12 px-3 text-lg mt-4"
+      class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
       type="password"
       placeholder="password"
       v-model="password"
     />
     <input
-      class="border-2 border-gray-500 w-full h-12 px-3 text-lg mt-4"
+      class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
       type="password"
       placeholder="confirm password"
       v-model="password2"
     />
     <input
-      class="border-2 border-gray-500 w-full h-12 px-3 text-lg mt-4"
+      class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
       type="email"
       placeholder="Email (optional)"
       v-model="email"
     />
     <div class="flex gap-4 flex-col mt-4">
       <div>
-        <input class="signup-btn" type="submit" value="Signup" />
+        <button
+          type="submit"
+          class="w-full rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        >
+          Signup
+        </button>
       </div>
       <div>
         Already have a username?
-        <router-link to="login" class="text-red-500 hover:underline font-bold"
-          >Login</router-link
-        >
+        <router-link :to="`${path}/login`" class="underline">Login</router-link>
       </div>
     </div>
-    <div v-show="!isEmailValid" class="text-red-500 mt-5 w-full">
+    <div v-show="!isEmailValid" class="text-harvard-red mt-5 w-full">
       * Please enter a valid email address
     </div>
-    <div v-show="showError" class="text-red-500 mt-1 w-full">
+    <div v-show="showError" class="text-harvard-red mt-1 w-full">
       *
       {{ message }}
     </div>
@@ -58,6 +61,7 @@ import { useRouter } from "vue-router";
 import userStore from "../composables/global/useStore";
 const { registerUser } = userStore;
 const router = useRouter();
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 const username = ref("");
 const password = ref("");
 const password2 = ref("");

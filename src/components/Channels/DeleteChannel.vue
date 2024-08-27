@@ -1,20 +1,32 @@
 <template>
-  <TrashIcon
+  <button
     v-if="show"
-    class="h-6 w-6 inline-block hover:text-black hover:fill-current rounded cursor-pointer"
     @click.prevent="openModal"
-  />
+    class="flex items-center gap-x-0.5 rounded-md py-1 hover:text-gray-900"
+  >
+    <TrashIcon class="h-4 w-4" />
+    <span class="sr-only">Delete</span>
+  </button>
   <Modal :is-open="isModalOpen" @close-modal="closeModal">
     <template v-slot:title>Delete Channel</template>
-    <div class="font-semibold">
-      Are you sure you want to delete channel
-      <span class="text-red-500">{{ name }}</span> ?
+    <div>
+      Are you sure you want to delete
+      <span class="text-harvard-red">{{ name }}</span
+      >?
     </div>
     <template v-slot:actions>
-      <button class="btn success" @click="emit('delete-channel')">
+      <button
+        @click="closeModal"
+        class="rounded bg-gray-300 px-2 py-2 font-semibold shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+      >
+        Cancel
+      </button>
+      <button
+        class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        @click="emit('delete-channel')"
+      >
         Delete
       </button>
-      <button class="btn error" @click="closeModal">Cancel</button>
     </template>
   </Modal>
 </template>
@@ -50,17 +62,3 @@ function openModal() {
   isModalOpen.value = true;
 }
 </script>
-
-<style scoped>
-.btn {
-  @apply w-20 my-2 bg-white border-2 border-gray-500 text-lg h-10 leading-3 hover:text-white cursor-pointer;
-}
-
-.btn.success {
-  @apply hover:bg-green-500;
-}
-
-.btn.error {
-  @apply hover:bg-red-500;
-}
-</style>

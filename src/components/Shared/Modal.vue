@@ -2,9 +2,7 @@
   <teleport to="body">
     <div v-if="isOpen" class="modal">
       <div class="modal-content">
-        <div
-          class="my-3 text-2xl bg-red-500 px-2 py-1 font-semibold text-white"
-        >
+        <div class="my-3 text-2xl py-1 font-semibold">
           <slot name="title">Modal Title</slot>
           <XIcon
             class="mt-1 float-right h-6 w-6 inline-block cursor-pointer"
@@ -44,11 +42,11 @@ body.modal-open {
 }
 
 .modal {
-  @apply absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50;
+  @apply z-50 absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50;
 }
 
 .modal-content {
-  @apply px-6 py-2 bg-white divide-y divide-gray-500 w-2/5 flex flex-col justify-evenly;
+  @apply px-6 py-2 bg-white  w-full md:w-3/5 flex flex-col justify-evenly;
 }
 .btn {
   @apply w-20 my-2 bg-white border-2 border-gray-500 text-lg h-10 leading-3 hover:text-white cursor-pointer;
@@ -59,6 +57,6 @@ body.modal-open {
 }
 
 .btn.error {
-  @apply hover:bg-red-500;
+  @apply hover:bg-harvard-red;
 }
 </style>

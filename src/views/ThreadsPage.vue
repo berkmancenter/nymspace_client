@@ -1,24 +1,100 @@
 <template>
-  <div class="mx-auto w-11/12 lg:w-3/5">
-    <div v-show="!showChatOnly" class="sm:w-1/2 sm:float-left">
-      <div class="mr-2">
-        <h2 class="text-red-500 text-2xl my-2 font-bold threads-title">
-          {{ channel.name }}
-        </h2>
-        <ThreadList :items="sortedThreads" />
-        <div class="flex items-center">
+  <div class="sm:mt-2 sm:p-4 flex-1 flex flex-col bg-gray-50">
+    <div class="flex-1 flex flex-col-reverse gap-2 sm:gap-0 sm:flex-row">
+      <div
+        class="transition-all sm:transition-none ease-in-out duration-500 h-full w-full sm:w-52 bg-gray-100 sm:bg-gray-100 flex flex-col flex-1 sm:flex-initial sm:rounded-l shadow absolute sm:relative z-10 sm:z-0 top-0 sm:left-0 pl-20 sm:pl-0 border-r border-gray-300"
+        :class="threadsMenuOpen ? '-left-20 sm:left-0' : '-left-full sm:left-0'"
+      >
+        <div class="sm:hidden flex justify-between items-center">
+          <router-link
+            to="/"
+            class="text-lg sm:text-2xl pl-4 font-bold text-harvard-red"
+            >nymspace
+          </router-link>
+          <button
+            @click="toggleThreadsMenu"
+            class="w-full flex justify-end p-4"
+          >
+            <XIcon class="w-6 h-6" />
+          </button>
+        </div>
+        <div
+          class="rounded-tl gap-6 sm:border-b border-gray-300 pt-4 px-4 sm:p-2 flex items-center justify-between sm:shadow-sm rounded-tr h-11"
+        >
+          <h2 class="text-xl font-bold threads-title truncate">
+            <button @click="openModal" class="truncate w-full">
+              {{ channel.name }}
+            </button>
+          </h2>
+
+          <div class="flex gap-2 items-center">
+            <EditChannel
+              :item="channel"
+              :show="canEditDeleteChannel(channel)"
+            />
+            <DeleteChannel
+              :show="canEditDeleteChannel(channel)"
+              :name="channel.name"
+              @delete-channel="processDeleteChannel"
+            />
+          </div>
+        </div>
+        <div class="flex-1 overflow-y-auto">
+          <ThreadList
+            :items="sortedThreads"
+            :toggleThreadsMenu="toggleThreadsMenu"
+          />
+        </div>
+        <div class="flex flex-col gap-1 p-4">
           <CreateThread :show="canCreate" />
-          <DeleteThread :show="canEditDelete" :item="getActiveThread ?? {}" />
-          <EditThread :show="canEditDelete" :item="getActiveThread ?? {}" />
         </div>
       </div>
-    </div>
-    <div :class="showChatOnly ? '' : 'sm:w-1/2 sm:float-right'">
-      <div class="ml-2">
+      <div
+        class="sm:rounded-r shadow overflow-hidden bg-white flex-1 shrink flex flex-col"
+      >
+        <div
+          class="bg-white rounded-tl h-11 gap-6 border-b p-2 sm:pl-5 flex justify-between shadow-sm"
+        >
+          <div class="flex gap-2 truncate">
+            <button @click="toggleThreadsMenu" class="sm:hidden">
+              <ViewListIcon class="w-6 h-7 text-black" />
+            </button>
+            <h2 class="text-lg font-thin threads-title truncate">
+              <button @click="openThreadModal" class="truncate w-full">
+                {{ maybeThread.name }}
+              </button>
+            </h2>
+          </div>
+          <div class="flex gap-2 items-center">
+            <DeleteThread :show="canEditDeleteThread" :item="maybeThread" />
+            <EditThread :show="canEditDeleteThread" :item="maybeThread" />
+          </div>
+        </div>
+        <div
+          v-if="!isThreadActive && sortedThreads.length"
+          class="text-gray-500 p-2 flex-1 flex flex-col w-full text-center justify-center"
+        >
+          Select a thread
+        </div>
+
+        <div
+          v-if="!isThreadActive && !sortedThreads.length"
+          class="text-gray-500 p-2 flex-1 flex flex-col w-full text-center justify-center"
+        >
+          Create a thread
+        </div>
         <router-view></router-view>
       </div>
     </div>
-    <div class="clear-both"></div>
+    <Modal :is-open="isModalOpen" @close-modal="closeModal">
+      <template v-slot:title>{{ channel.name }}</template>
+      <div class="text-xl"></div>
+    </Modal>
+    <Modal :is-open="isThreadModalOpen" @close-modal="closeThreadModal">
+      <template v-slot:title>{{ maybeThread.name }}</template>
+      <div class="text-xl">in the {{ channel.name }} channel</div>
+      <div class="text-lg mt-3">{{ maybeThread.messageCount }} messages</div>
+    </Modal>
   </div>
 </template>
 
@@ -26,6 +102,8 @@
 import ThreadList from "../components/Threads/ThreadList.vue";
 import CreateThread from "../components/Threads/CreateThread.vue";
 import useStore from "../composables/global/useStore";
+import DeleteThread from "../components/Threads/DeleteThread.vue";
+import EditThread from "../components/Threads/EditThread.vue";
 import {
   onMounted,
   computed,
@@ -35,11 +113,13 @@ import {
   reactive,
   watch,
 } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
-import DeleteThread from "../components/Threads/DeleteThread.vue";
-import EditThread from "../components/Threads/EditThread.vue";
+import DeleteChannel from "../components/Channels/DeleteChannel.vue";
+import EditChannel from "../components/Channels/EditChannel.vue";
+import { ViewListIcon, XIcon } from "@heroicons/vue/outline";
+import Modal from "../components/Shared/Modal.vue";
 
 const route = useRoute();
 
@@ -47,35 +127,59 @@ onBeforeUnmount(() => setShowChatOnly(false));
 
 const {
   getThreads,
+  getThread,
   loadThreads,
   getChannel,
   loadChannel,
-  getChannels,
   loadUserThreads,
   getUserThreads,
   setActiveChannel,
-  showChatOnly,
   setShowChatOnly,
   getLoggedInStatus,
   setThread,
   upsertThread,
   getGuestStatus,
   getId,
-  getActiveThread,
-  deleteThread,
+  deleteChannel,
 } = useStore;
 
+const router = useRouter();
 const items = getThreads;
 const wsInstance = reactive({});
 const channel = ref(getChannel(route.params.channelId));
+const maybeThread = ref(getThread(route.params.threadId));
 const isThreadActive = ref(false);
-const isThreadOwner = computed(
-  () => getId.value === getActiveThread.value?.owner
-);
 const isChannelOwner = computed(() => getId.value === channel.value?.owner);
 const isChannelThreadCreationAllowed = computed(
   () => channel.value?.threadCreationAllowed
 );
+const isModalOpen = ref(false);
+const isThreadModalOpen = ref(false);
+
+function openModal() {
+  document.querySelector("body").classList.add("modal-open");
+  isModalOpen.value = true;
+}
+
+function closeModal() {
+  document.querySelector("body").classList.remove("modal-open");
+  isModalOpen.value = false;
+}
+
+function openThreadModal() {
+  document.querySelector("body").classList.add("modal-open");
+  isThreadModalOpen.value = true;
+}
+
+function closeThreadModal() {
+  document.querySelector("body").classList.remove("modal-open");
+  isThreadModalOpen.value = false;
+}
+
+const threadsMenuOpen = ref(route.params.threadId ? false : true);
+function toggleThreadsMenu() {
+  threadsMenuOpen.value = !threadsMenuOpen.value;
+}
 /**
  * Watch thread id to show/hide edit/delete buttons on the side of
  * create thread button
@@ -85,6 +189,7 @@ watch(
   async (newId) => {
     if (newId) {
       isThreadActive.value = true;
+      maybeThread.value = getThread(newId);
     } else {
       isThreadActive.value = false;
     }
@@ -157,15 +262,16 @@ const canCreate = computed(
   () => isChannelOwner.value || isChannelThreadCreationAllowed.value || false
 );
 
-const canEditDelete = computed(
-  () => (isThreadOwner.value || isChannelOwner.value) && isThreadActive.value
-);
-
-async function processDelete() {
-  await deleteThread(getActiveThread.value._id ?? getActiveThread.value.id)
-    .then((x) => console.log(x))
-    .catch((err) => console.error(err));
+async function processDeleteChannel() {
+  await deleteChannel(route.params.channelId);
+  router.push("/");
 }
+function canEditDeleteChannel(item) {
+  return !getGuestStatus.value && item.owner === getId.value;
+}
+const canEditDeleteThread = computed(
+  () => maybeThread.value.owner === getId.value
+);
 
 /**
  * Method to reconnect thread websocket calls on
@@ -186,6 +292,7 @@ onMounted(async () => {
   } else {
     channel.value = getChannel(route.params.channelId);
   }
+  maybeThread.value = getThread(route.params.threadId);
 
   wsInstance.value = new SocketioService();
   wsInstance.value.addDisconnectHandler(reconnectSockets);

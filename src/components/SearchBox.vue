@@ -1,9 +1,9 @@
 <template>
   <input
     v-model="searchText"
-    class="rounded border-2 border-gray-500 w-full h-12 px-3 text-xl"
+    class="rounded border border-gray-500 w-full px-3 py-1"
     type="text"
-    placeholder="Search for a channel by keyword"
+    placeholder="Filter channels by keyword"
     @keyup="emit('update-search', searchText)"
   />
 </template>

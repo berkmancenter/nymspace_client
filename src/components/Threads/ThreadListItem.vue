@@ -1,24 +1,31 @@
 <template>
-  <router-link :to="threadLink" :class="getThreadClass(item)">
-    <div
-      class="col-span-7 text-base overflow-hidden"
-      style="text-overflow: ellipsis"
-    >
-      {{ item.name }}
+  <router-link
+    :to="threadLink"
+    :class="getThreadClass(item)"
+    @click="props.toggleThreadsMenu"
+  >
+    <div class="flex-1 flex gap-1 truncate">
+      <div class="font-semibold justify-self-end">
+        <BookmarkIcon
+          :class="item.isFollowed ? 'fill-current text-harvard-red' : ''"
+          @click.prevent="pinThread"
+          class="h-4 w-4 inline-block"
+        />
+      </div>
+      <div class="font-semibold justify-self-end" data-testid="unlock-thread">
+        <LockClosedIcon
+          v-if="item.locked"
+          class="h-4 w-4 inline-block"
+          @click="unlockThread"
+        />
+      </div>
+      <div class="text-base truncate">
+        {{ item.name }}
+      </div>
     </div>
-    <div class="col-span-1 font-semibold justify-self-end">
-      <BookmarkIcon
-        :class="item.isFollowed ? 'fill-current text-red-500' : ''"
-        @click.prevent="pinThread"
-        class="h-5 w-5 inline-block"
-      />
-    </div>
-    <div class="col-span-1 font-semibold justify-self-end" data-testid="unlock-thread">
-      <LockClosedIcon v-if="item.locked" class="h-4 w-4 inline-block" @click="unlockThread" />
-    </div>
-    <div class="col-span-3 font-semibold justify-self-end">
-      {{ item.messageCount }}
-      <ChatAltIcon class="h-5 w-5 inline-block" />
+    <div class="font-thin text-sm justify-self-end">
+      {{ new Intl.NumberFormat("en-US").format(item.messageCount) }}
+      <ChatAltIcon class="h-4 w-4 inline-block" />
     </div>
   </router-link>
 </template>
@@ -33,8 +40,9 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const { followThread, updateThread } = useStore;
 
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 const threadLink = computed(
-  () => `/channels/${route.params.channelId}/threads/${props.item.id}`
+  () => `${path}/channels/${route.params.channelId}/threads/${props.item.id}`
 );
 
 const props = defineProps({
@@ -42,12 +50,15 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  toggleThreadsMenu: {
+    type: Function,
+    required: false,
+  },
 });
 function getThreadClass(item) {
   var className =
-    "grid grid-cols-12 gap-6 px-2 py-1 text-gray-700 hover:text-red-500 hover:bg-gray-100 cursor-pointer";
-  if (props.item.id == route.params.threadId)
-    className += " text-red-500 bg-gray-200";
+    "px-4 flex items-center gap-2 justify-between py-1 text-gray-700 hover:bg-gray-300 cursor-pointer";
+  if (props.item.id == route.params.threadId) className += " bg-gray-300";
   return className;
 }
 

@@ -1,44 +1,46 @@
 <template>
   <div
-    class="rounded p-3 items-center border-2 border-gray-500 max-h-96 overflow-y-auto"
-    style="min-height: 400px"
+    class="my-6 bg-white p-2 sm:p-4 shadow-sm sm:rounded-lg sm:shadow flex-shrink flex-1 flex flex-col"
   >
-    <div class="grid grid-cols-2 items-center justify-center mt-1 mb-5">
-      <div class="text-3xl font-bold text-red-600">Channels</div>
-      <div class="justify-self-end">
-        <select v-model="sortBy" class="text-lg border-2 border-gray-500">
-          <option disabled>Sort By:</option>
-          <template v-for="sortByItem in sortByItems">
-            <option :value="sortByItem.value">{{ sortByItem.name }}</option>
-          </template>
-        </select>
-      </div>
+    <div class="flex items-center justify-between">
+      <h2 class="font-bold text-xl">Channels</h2>
+
+      <label for="sort" class="sr-only">Sort by</label>
+      <select
+        v-model="sortBy"
+        id="sort"
+        name="sort"
+        class="mt-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
+      >
+        <option disabled>Sort By:</option>
+        <template v-for="sortByItem in sortByItems">
+          <option :value="sortByItem.value">{{ sortByItem.name }}</option>
+        </template>
+      </select>
     </div>
-    <ChannelList v-show="finalItems.length > 0" :items="finalItems" />
-    <div class="text-red-600" v-show="finalItems.length === 0">
-      No channels available
+
+    <SearchBox @update-search="updateSearch" class="my-2" />
+
+    <div class="flex flex-col flex-1 overflow-y-auto">
+      <ul class="h-1 flex-shrink flex flex-col">
+        <ChannelList v-show="finalItems.length > 0" :items="finalItems" />
+        <li v-show="finalItems.length === 0" class="text-xl text-center my-10">
+          No channels available
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex justify-end my-4">
+      <CreateChannel />
     </div>
   </div>
 </template>
 
 <script setup>
 import ChannelList from "./ChannelList.vue";
+import CreateChannel from "../Channels/CreateChannel.vue";
 import { computed, ref } from "vue";
-
-const sortByItems = [
-  {
-    name: "Default",
-    value: "defaultSortAverage",
-  },
-  {
-    name: "Recent",
-    value: "latestMessageCreatedAt",
-  },
-  {
-    name: "Activity",
-    value: "messageCount",
-  },
-];
+import SearchBox from "../SearchBox.vue";
 
 const props = defineProps({
   channels: {
@@ -47,13 +49,25 @@ const props = defineProps({
   },
 });
 
-const sortBy = ref("defaultSortAverage");
-const order = ref("desc");
+const searchText = ref("");
 
-const finalItems = computed(() => [
-  ...props.channels.filter((x) => x.isFollowed),
-  ...sortedItems.value,
-]);
+const sortByItems = [
+  {
+    name: "Recent",
+    value: "latestMessageCreatedAt",
+  },
+  {
+    name: "Activity",
+    value: "messageCount",
+  },
+  {
+    name: "Default",
+    value: "defaultSortAverage",
+  },
+];
+
+const sortBy = ref("latestMessageCreatedAt");
+const order = ref("desc");
 
 const sortedItems = computed(() => [
   ...props.channels
@@ -70,4 +84,18 @@ const sortedItems = computed(() => [
       }
     }),
 ]);
+
+const finalItems = computed(() =>
+  [...props.channels.filter((x) => x.isFollowed), ...sortedItems.value].filter(
+    (x) => {
+      if (searchText.value.trim().length == 0) {
+        return true;
+      } else {
+        return x.name?.toLowerCase().indexOf(searchText.value) > -1;
+      }
+    }
+  )
+);
+
+const updateSearch = (value) => (searchText.value = value?.toLowerCase());
 </script>

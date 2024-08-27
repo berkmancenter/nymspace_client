@@ -1,14 +1,17 @@
 <template>
   <div
-    class="rounded items-center border-2 border-gray-500 w-full h-96 max-h-96 overflow-y-auto"
+    class="h-1 flex-shrink flex-1 flex flex-col rounded-b items-center border-gray-500 w-full overflow-y-auto"
   >
-    <div class="w-full flex flex-col">
-      <span class="text-red-500 text-center py-2"
-        >This is the beginning of the thread.</span
-      >
+    <div v-if="items.length" class="w-full h-1 flex-shrink flex flex-col">
       <template v-for="item in items" :key="item.id">
         <MessageViewItem :item="item" v-bind="$attrs" :userId="userId" />
       </template>
+    </div>
+    <div
+      v-if="!items.length"
+      class="text-gray-500 p-2 flex-1 flex flex-col w-full text-center justify-center"
+    >
+      Start chatting
     </div>
   </div>
 </template>

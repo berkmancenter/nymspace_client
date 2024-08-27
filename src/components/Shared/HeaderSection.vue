@@ -1,10 +1,10 @@
 <template>
   <div
-    class="px-3 py-1 text-gray-500 font-bold hover:text-gray-900 flex justify-between"
+    class="px-2 py-1 bg-gray-50 text-gray-500 font-bold hover:text-gray-900 flex justify-between gap-2 items-center"
   >
     <div>
-      <router-link to="/" class="text-base sm:text-4xl">
-        <p class="inline-block text-red-600">nymspace</p>
+      <router-link :to="path" class="text-lg sm:text-2xl">
+        <p class="inline-block text-harvard-red">nymspace</p>
       </router-link>
       <a
         v-if="showVersion"
@@ -15,34 +15,18 @@
     </div>
 
     <div v-if="getMajorError?.trim().length > 0">{{ getMajorError }}</div>
-    <div class="flex gap-6 items-center">
-      <router-link
-        v-if="getGuestStatus"
-        to="/login"
-        class="hover:text-red-600 text-black"
-        title="Retain a pseudonym across sessions"
-        >Login</router-link
-      >
-
-      <router-link to="/" class="">
-        <p class="inline-block hover:text-red-600 text-black">Channels</p>
-      </router-link>
-      <a
-        class="hover:text-red-600 text-black"
-        href="https://cyber.harvard.edu/projects/nymity"
-        rel="noopener"
-        target="_blank"
-        >About <ExternalLinkIcon class="ml-1 inline-block w-4 h-4" />
-      </a>
+    <div class="flex flex-col flex-1 gap-6 items-center">
+      <BannerSection />
     </div>
   </div>
 </template>
 <script setup>
+import BannerSection from "../../components/Banner/BannerSection.vue";
 import store from "../../composables/global/useStore";
-import { ExternalLinkIcon } from "@heroicons/vue/outline";
 import useStore from "../../composables/global/useStore";
 const { getGuestStatus } = useStore;
 const { getMajorError } = store;
 const showVersion = import.meta.env.VITE_SHOW_VERSION === "true";
 const version = __APP_VERSION__;
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "/";
 </script>

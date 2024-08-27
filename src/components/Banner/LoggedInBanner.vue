@@ -1,40 +1,37 @@
 <template>
-  <div class="mx-auto w-11/12 lg:w-3/5">
-    <div class="flex" :class="!getGuestStatus ? 'gap-4' : ''">
-      <div class="flex flex-col space-y-1 flex-1 text-center">
-        <button
-          v-if="!getGuestStatus"
-          class="flex justify-center bg-white px-2 py-1 border-2 border-gray-500"
-          @click="signout"
-        >
-          <span>Logout</span>
-        </button>
-        <span v-if="!getGuestStatus" class="text-xs"
-          >Get a new temp pseudonym</span
-        >
-      </div>
-      <div class="flex flex-col space-y-1 flex-1 text-center">
-        <button
-          :disabled="getPseudonyms.length >= 5"
-          class="flex justify-center bg-white px-2 py-1 border-2 border-gray-500 items-center gap-1"
-          v-if="!getGuestStatus"
-          @click="createPseudonym"
-          :title="getNewPseudonymButtonTitle()"
-        >
-          <RefreshIcon class="h-5 w-5" /> new pseudonym
-        </button>
-        <span v-if="!getGuestStatus" class="text-xs"
-          >Creates a new psuedonym on your account</span
-        >
-      </div>
-    </div>
+  <button
+    :disabled="getPseudonyms.length >= 5"
+    v-if="!getGuestStatus && getPseudonyms.length < 5"
+    @click="createPseudonym"
+    :title="getNewPseudonymButtonTitle()"
+    class="flex gap-2 items-center"
+  >
+    <PlusCircleIcon class="w-4 h-4" />
+    New pseudonym
+  </button>
+  <div
+    v-if="getPseudonyms.length == 5"
+    class="flex gap-2 items-center text-gray-400"
+  >
+    <PlusCircleIcon class="w-4 h-4" /> limit reached
   </div>
+  <button
+    v-if="!getGuestStatus"
+    @click="signout"
+    class="flex gap-2 items-center"
+  >
+    <LogoutIcon class="h-4 w-4" /> Logout
+  </button>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router";
 import store from "../../composables/global/useStore";
-import { RefreshIcon } from "@heroicons/vue/outline";
+import {
+  LogoutIcon,
+  PlusCircleIcon,
+  RefreshIcon,
+} from "@heroicons/vue/outline";
 
 const emit = defineEmits(["create-pseudonym"]);
 const router = useRouter();
