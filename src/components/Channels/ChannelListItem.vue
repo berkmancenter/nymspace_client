@@ -1,7 +1,7 @@
 <template>
   <li
     :class="getChannelClass(item)"
-    class="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 py-5 sm:flex-nowrap"
+    class="flex items-center justify-between gap-x-6 gap-y-4 py-5 sm:flex-nowrap"
   >
     <div class="flex gap-1 items-start">
       <BookmarkIcon

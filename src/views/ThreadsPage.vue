@@ -22,7 +22,9 @@
           class="rounded-tl gap-6 sm:border-b border-gray-300 pt-4 px-4 sm:p-2 flex items-center justify-between sm:shadow-sm rounded-tr h-11"
         >
           <h2 class="text-xl font-bold threads-title truncate">
-            {{ channel.name }}
+            <button @click="openModal" class="truncate w-full">
+              {{ channel.name }}
+            </button>
           </h2>
 
           <div class="flex gap-2 items-center">
@@ -53,12 +55,14 @@
         <div
           class="bg-white rounded-tl h-11 gap-6 border-b p-2 sm:pl-5 flex justify-between shadow-sm"
         >
-          <div class="flex gap-2">
+          <div class="flex gap-2 truncate">
             <button @click="toggleThreadsMenu" class="sm:hidden">
               <ViewListIcon class="w-6 h-7 text-black" />
             </button>
-            <h2 class="text-lg font-thin threads-title">
-              {{ maybeThread.name }}
+            <h2 class="text-lg font-thin threads-title truncate">
+              <button @click="openThreadModal" class="truncate w-full">
+                {{ maybeThread.name }}
+              </button>
             </h2>
           </div>
           <div class="flex gap-2 items-center">
@@ -82,6 +86,15 @@
         <router-view></router-view>
       </div>
     </div>
+    <Modal :is-open="isModalOpen" @close-modal="closeModal">
+      <template v-slot:title>{{ channel.name }}</template>
+      <div class="text-xl"></div>
+    </Modal>
+    <Modal :is-open="isThreadModalOpen" @close-modal="closeThreadModal">
+      <template v-slot:title>{{ maybeThread.name }}</template>
+      <div class="text-xl">in the {{ channel.name }} channel</div>
+      <div class="text-lg mt-3">{{ maybeThread.messageCount }} messages</div>
+    </Modal>
   </div>
 </template>
 
@@ -106,6 +119,7 @@ import { VueCookieNext } from "vue-cookie-next";
 import DeleteChannel from "../components/Channels/DeleteChannel.vue";
 import EditChannel from "../components/Channels/EditChannel.vue";
 import { ViewListIcon, XIcon } from "@heroicons/vue/outline";
+import Modal from "../components/Shared/Modal.vue";
 
 const route = useRoute();
 
@@ -139,6 +153,28 @@ const isChannelOwner = computed(() => getId.value === channel.value?.owner);
 const isChannelThreadCreationAllowed = computed(
   () => channel.value?.threadCreationAllowed
 );
+const isModalOpen = ref(false);
+const isThreadModalOpen = ref(false);
+
+function openModal() {
+  document.querySelector("body").classList.add("modal-open");
+  isModalOpen.value = true;
+}
+
+function closeModal() {
+  document.querySelector("body").classList.remove("modal-open");
+  isModalOpen.value = false;
+}
+
+function openThreadModal() {
+  document.querySelector("body").classList.add("modal-open");
+  isThreadModalOpen.value = true;
+}
+
+function closeThreadModal() {
+  document.querySelector("body").classList.remove("modal-open");
+  isThreadModalOpen.value = false;
+}
 
 const threadsMenuOpen = ref(route.params.threadId ? false : true);
 function toggleThreadsMenu() {
