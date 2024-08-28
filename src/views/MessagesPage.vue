@@ -23,8 +23,18 @@
       class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
       style="margin-top: 1rem"
     >
-      The pseudonym for this thread is. Please switch to this pseudonym to send
-      a message.
+      The pseudonym for this thread is
+      <strong>{{ pseudonymForThread.pseudonym }}</strong
+      >. Please switch to this pseudonym to send a message.
+    </div>
+
+    <div
+      v-if="!pseudonymForThread"
+      class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
+      style="margin-top: 1rem"
+    >
+      The pseudonym for this thread has been deleted. You can no longer post
+      from this account.
     </div>
 
     <div
@@ -59,7 +69,11 @@
   <div class="flex flex-col pl-4">
     <div
       class="mb-2"
-      v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked"
+      v-if="
+        pseudonymForThread &&
+        !pseudonymMismatch &&
+        !shouldDisplayMessageBoxLocked
+      "
       :class="sending ? 'animate-pulse' : ''"
     >
       <div
@@ -168,6 +182,7 @@ const pseudonymForThread = computed(() => {
     return x.threads.includes(thread.value?.id);
   })[0];
 });
+
 const pseudonymMismatch = computed(() => {
   return (
     pseudonymForThread.value &&
