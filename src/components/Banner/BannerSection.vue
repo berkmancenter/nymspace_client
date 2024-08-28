@@ -6,7 +6,6 @@
           v-if="!getGuestStatus"
           class="w-full gap-3 flex justify-end items-center"
         >
-          <RefreshIcon class="h-4 w-4" />
           <select
             v-model="activeToken"
             :disabled="getGuestStatus"
