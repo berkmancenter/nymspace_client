@@ -27,6 +27,6 @@ export default defineConfig(({ command, mode }) => {
     define: {
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     },
-    base: env.VITE_PATH ? env.VITE_PATH : "/",
+    base: `${env.VITE_PATH}/` ? env.VITE_PATH : "/",
   };
 });

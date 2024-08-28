@@ -28,5 +28,5 @@ const { getGuestStatus } = useStore;
 const { getMajorError } = store;
 const showVersion = import.meta.env.VITE_SHOW_VERSION === "true";
 const version = __APP_VERSION__;
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "/";
+const path = import.meta.env.VITE_PATH ? `${import.meta.env.VITE_PATH}/` : "/";
 </script>
