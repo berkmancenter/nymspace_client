@@ -2,7 +2,7 @@
   <div
     class="px-2 py-1 bg-gray-50 text-gray-500 font-bold hover:text-gray-900 flex justify-between gap-2 items-center"
   >
-    <div>
+    <div class="flex items-center">
       <router-link :to="path" class="text-lg sm:text-2xl">
         <p class="inline-block text-harvard-red">nymspace</p>
       </router-link>

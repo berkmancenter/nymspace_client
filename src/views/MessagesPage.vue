@@ -23,13 +23,12 @@
       class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
       style="margin-top: 1rem"
     >
-      The pseudonym for this thread is
-      <strong>{{ pseudonymForThread.pseudonym }}</strong
-      >. Please switch to this pseudonym to send a message.
+      The pseudonym for this thread is. Please switch to this pseudonym to send
+      a message.
     </div>
 
     <div
-      v-if="message.length > 249"
+      v-if="message.length > 999"
       class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
     >
       You are over the character limit and cannot send this message.
@@ -87,8 +86,8 @@
         <button
           class="text-black w-full flex justify-end"
           @click="sendMessage"
-          :disabled="message.length > 249"
-          :class="message.length > 249 ? 'text-gray-400' : ''"
+          :disabled="message.length > 999"
+          :class="message.length > 999 ? 'text-gray-400' : ''"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -107,10 +106,10 @@
         </button>
       </div>
       <p class="text-xs">
-        <span :class="message.length > 249 ? 'text-harvard-red' : ''">{{
+        <span :class="message.length > 999 ? 'text-harvard-red' : ''">{{
           message.length
         }}</span
-        >/250 character limit
+        >/1,000 character limit
       </p>
     </div>
   </div>
@@ -134,7 +133,6 @@ import PromptDirtyDraft from "../components/Messages/PromptDirtyDraft.vue";
 import useStore from "../composables/global/useStore";
 import SocketioService from "../service/socket.service";
 import { VueCookieNext } from "vue-cookie-next";
-import { ArrowLeftIcon, ExclamationIcon } from "@heroicons/vue/outline";
 
 const route = useRoute();
 const {
@@ -192,11 +190,6 @@ const resolve = ref({});
 const reject = ref({});
 const prompt = ref(false);
 const sending = ref(false);
-const chars = ref(0);
-
-function charLimit(e) {
-  chars.value = e.target.value.length;
-}
 
 onBeforeRouteLeave(async (to, from) => {
   return await processDirtyMessage();
