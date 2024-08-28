@@ -7,7 +7,7 @@
       >
         <div class="sm:hidden flex justify-between items-center">
           <router-link
-            to="/"
+            :to="path"
             class="text-lg sm:text-2xl pl-4 font-bold text-harvard-red"
             >nymspace
           </router-link>
@@ -180,6 +180,9 @@ const threadsMenuOpen = ref(route.params.threadId ? false : true);
 function toggleThreadsMenu() {
   threadsMenuOpen.value = !threadsMenuOpen.value;
 }
+
+const path = import.meta.env.VITE_PATH ? `${import.meta.env.VITE_PATH}/` : "/";
+
 /**
  * Watch thread id to show/hide edit/delete buttons on the side of
  * create thread button
