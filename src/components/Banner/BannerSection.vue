@@ -56,7 +56,7 @@
                 <LoginIcon class="w-4 h-4" />
                 Login</router-link
               >
-              <button
+              <!-- <button
                 v-if="getPseudonyms.length > 1"
                 @click="openModal"
                 class="flex gap-2 items-center"
@@ -66,7 +66,7 @@
                   title="Delete pseudonym"
                 />
                 Delete pseudonym
-              </button>
+              </button> -->
 
               <button
                 v-if="getGuestStatus"
@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <Modal :is-open="isModalOpen" @close-modal="closeModal">
+    <!-- <Modal :is-open="isModalOpen" @close-modal="closeModal">
       <template v-slot:title>Delete Pseudonym</template>
       <div class="text-xl">Are you sure you want to delete pseudonym?</div>
       <div class="text-lg mt-3">
@@ -132,7 +132,7 @@
           Delete
         </button>
       </template>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
@@ -163,13 +163,13 @@ const {
 
 const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
 const activeToken = ref("");
-const pseudonymToDelete = ref("");
-const isModalOpen = ref(false);
-const message = ref("");
-const isError = ref(true);
-const inactivePseudonyms = computed(() =>
-  getPseudonyms.value.filter((x) => !x.active)
-);
+// const pseudonymToDelete = ref("");
+// const isModalOpen = ref(false);
+// const message = ref("");
+// const isError = ref(true);
+// const inactivePseudonyms = computed(() =>
+//   getPseudonyms.value.filter((x) => !x.active)
+// );
 const menuOpen = ref(false);
 function toggleMenu() {
   menuOpen.value = !menuOpen.value;
@@ -184,12 +184,12 @@ async function registerOneTime() {
   await registerOnce();
 }
 
-function openModal() {
-  pseudonymToDelete.value = "";
-  message.value = "";
-  document.querySelector("body").classList.add("modal-open");
-  isModalOpen.value = true;
-}
+// function openModal() {
+//   pseudonymToDelete.value = "";
+//   message.value = "";
+//   document.querySelector("body").classList.add("modal-open");
+//   isModalOpen.value = true;
+// }
 
 async function refreshPseudonym() {
   await loadNewPseudonym();
@@ -197,10 +197,10 @@ async function refreshPseudonym() {
   adjustSelect();
 }
 
-function closeModal() {
-  document.querySelector("body").classList.remove("modal-open");
-  isModalOpen.value = false;
-}
+// function closeModal() {
+//   document.querySelector("body").classList.remove("modal-open");
+//   isModalOpen.value = false;
+// }
 
 /**
  * Delete pseudonym, validate pseudonym is
@@ -208,24 +208,24 @@ function closeModal() {
  * Call delete API and update message as well
  * as show error if any
  */
-async function processDelete() {
-  isError.value = true;
-  if (pseudonymToDelete.value.trim().length === 0) {
-    message.value = "Please select a pseudonym.";
-    return;
-  }
-  message.value = "";
-  await deletePseudonym(pseudonymToDelete.value)
-    .then(async () => {
-      await loadPseudonyms();
-      pseudonymToDelete.value = "";
-      message.value = "Pseudonym deleted.";
-      isError.value = false;
-    })
-    .catch(
-      () => (message.value = "Unable to delete pseudonym. Please try again.")
-    );
-}
+// async function processDelete() {
+//   isError.value = true;
+//   if (pseudonymToDelete.value.trim().length === 0) {
+//     message.value = "Please select a pseudonym.";
+//     return;
+//   }
+//   message.value = "";
+//   await deletePseudonym(pseudonymToDelete.value)
+//     .then(async () => {
+//       await loadPseudonyms();
+//       pseudonymToDelete.value = "";
+//       message.value = "Pseudonym deleted.";
+//       isError.value = false;
+//     })
+//     .catch(
+//       () => (message.value = "Unable to delete pseudonym. Please try again.")
+//     );
+// }
 
 async function activateToken() {
   await activatePseudonym(activeToken.value);
