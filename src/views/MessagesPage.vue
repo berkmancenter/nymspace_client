@@ -29,15 +29,6 @@
     </div>
 
     <div
-      v-if="!pseudonymForThread"
-      class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
-      style="margin-top: 1rem"
-    >
-      The pseudonym for this thread has been deleted. You can no longer post
-      from this account.
-    </div>
-
-    <div
       v-if="message.length > 999"
       class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
     >
@@ -69,11 +60,7 @@
   <div class="flex flex-col pl-4">
     <div
       class="mb-2"
-      v-if="
-        pseudonymForThread &&
-        !pseudonymMismatch &&
-        !shouldDisplayMessageBoxLocked
-      "
+      v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked"
       :class="sending ? 'animate-pulse' : ''"
     >
       <div
