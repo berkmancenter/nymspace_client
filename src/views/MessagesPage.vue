@@ -29,7 +29,7 @@
     </div>
 
     <div
-      v-if="message.length > 999"
+      v-if="message.length > 249"
       class="bg-yellow-100 text-yellow-800 z-50 w-full p-1 sm:rounded-t transition-all text-center"
     >
       You are over the character limit and cannot send this message.
@@ -87,8 +87,8 @@
         <button
           class="text-black w-full flex justify-end"
           @click="sendMessage"
-          :disabled="message.length > 999"
-          :class="message.length > 999 ? 'text-gray-400' : ''"
+          :disabled="message.length > 249"
+          :class="message.length > 249 ? 'text-gray-400' : ''"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -107,10 +107,10 @@
         </button>
       </div>
       <p class="text-xs">
-        <span :class="message.length > 999 ? 'text-harvard-red' : ''">{{
+        <span :class="message.length > 249 ? 'text-harvard-red' : ''">{{
           message.length
         }}</span
-        >/1,000 character limit
+        >/250 character limit
       </p>
     </div>
   </div>
