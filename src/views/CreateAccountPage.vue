@@ -7,23 +7,19 @@
       <div class="ring-gray-500 lg:mt-10 lg:w-3/5 lg:self-center">
         <p>Attaching an email to your account is optional.</p>
         <p>
-          Adding an email enables recovery of forgotten passwords, and gives
-          users the option to archive inactive Threads on the interface for more
-          than 90 days.
+          Adding an email enables recovery of forgotten passwords, and gives users the option to archive inactive Threads on
+          the interface for more than 90 days.
         </p>
       </div>
     </div>
-    <router-link class="inline-block underline font-bold my-10" :to="path"
-      >Return Home</router-link
-    >
+    <router-link class="inline-block underline font-bold my-10" :to="path">Return Home</router-link>
   </div>
 </template>
-<script setup>
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "/";
-</script>
+<script setup></script>
 <script>
-import CreateAccountForm from "../components/CreateAccountForm.vue";
-export default { components: { CreateAccountForm } };
+import CreateAccountForm from '../components/CreateAccountForm.vue'
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : '/'
+export default { components: { CreateAccountForm } }
 </script>
 
 <style scoped>

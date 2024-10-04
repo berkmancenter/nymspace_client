@@ -2,11 +2,11 @@
 
 ## Description
 
-This is the Frontend vue app which depends on the [berkmancenter/threads_server](https://github.com/berkmancenter/threads_client) repo to run.
+This is the Frontend vue app which depends on the [berkmancenter/nymspace_server](https://github.com/berkmancenter/nymspace_client) repo to run.
 
 ## Installation
 
-- Install and start [berkmancenter/threads_server](https://github.com/berkmancenter/threads_server).
+- Install and start [berkmancenter/nymspace_server](https://github.com/berkmancenter/nymspace_server).
 - Come back to this repo and `yarn install` to install packages.
 - Connect backend by copying `.env.example` to `.env.local`. Make sure the ports are correctly configured in threads_server repo.
 - Run `yarn dev --port 3001` and browse the app at https://localhost:3001.

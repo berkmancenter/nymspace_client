@@ -9,9 +9,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue'
 
-const searchText = ref("");
+const searchText = ref('')
 
-const emit = defineEmits(["update-search"]);
+const emit = defineEmits(['update-search'])
 </script>

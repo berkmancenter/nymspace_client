@@ -2,17 +2,8 @@
   <div
     class="pb-3 sm:py-3 sm:px-10 text-black bg-white border-t hover:text-gray-900 flex justify-between px-4 sm:flex-col sm:justify-start space-y-4 flex-wrap items-center"
   >
-    <a
-      href="https://cyber.harvard.edu/"
-      target="_blank"
-      class="flex sm:flex-col items-center -mb-4 sm:-mb-3"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        alt="Berkman Klein Center logo"
-        class="h-5 sm:h-8 mb-1"
-        viewBox="0 0 450 200"
-      >
+    <a href="https://cyber.harvard.edu/" target="_blank" class="flex sm:flex-col items-center -mb-4 sm:-mb-3">
+      <svg xmlns="http://www.w3.org/2000/svg" alt="Berkman Klein Center logo" class="h-5 sm:h-8 mb-1" viewBox="0 0 450 200">
         <title>Harvard Berkman Klein Center Logo</title>
         <rect x="125.1" width="10" height="171.1" fill="#a51c30"></rect>
         <rect x="286.93" width="10" height="171.1" fill="#a51c30"></rect>
@@ -29,9 +20,7 @@
           fill="#a51c30"
         ></polygon>
       </svg>
-      <span class="font-bold leading-3"
-        >Berkman <span class="hidden sm:inline-block"> Klein Center</span></span
-      >
+      <span class="font-bold leading-3">Berkman <span class="hidden sm:inline-block"> Klein Center</span></span>
     </a>
     <div class="flex gap-4 items-center">
       <router-link :to="path" class="">
@@ -57,8 +46,8 @@
 </template>
 
 <script setup>
-import githubLogo from "../../assets/GitHub-Mark-64px.png";
-import berkmanLogo from "../../assets/berkman-klein-center-logo.png";
-import { ExternalLinkIcon } from "@heroicons/vue/outline";
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
+import githubLogo from '../../assets/GitHub-Mark-64px.png'
+import berkmanLogo from '../../assets/berkman-klein-center-logo.png'
+import { ExternalLinkIcon } from '@heroicons/vue/outline'
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
 </script>

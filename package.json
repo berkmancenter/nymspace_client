@@ -4,7 +4,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "lint": "eslint --ext .js,.vue src/",
+    "lint:fix": "eslint --ext .js,.vue --fix src/",
+    "audit:critical": "npm run audit-ci --critical",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@heroicons/vue": "^1.0.6",
@@ -18,12 +22,20 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.3",
+    "audit-ci": "^7.1.0",
     "autoprefixer": "^10.4.0",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-n": "^17.10.3",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-promise": "^7.1.0",
     "eslint-plugin-vue": "^8.1.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "postcss": "^8.4.1",
-    "prettier": "^2.5.0",
+    "prettier": "^3.3.3",
     "tailwindcss": "^2.2.19",
     "vite": "^2.6.4"
   },

@@ -7,6 +7,7 @@ module.exports = {
     "vue/setup-compiler-macros": true,
   },
   extends: [
+    "standard",
     "eslint:recommended",
     "plugin:vue/vue3-recommended",
     "plugin:prettier/recommended",

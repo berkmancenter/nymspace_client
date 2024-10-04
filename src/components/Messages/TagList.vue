@@ -1,9 +1,5 @@
 <template>
-  <div
-    ref="tagListRef"
-    :class="!props.visible ? 'hidden' : ''"
-    class="tags shadow-lg"
-  >
+  <div ref="tagListRef" :class="!props.visible ? 'hidden' : ''" class="shadow-lg tags">
     <template v-for="item in items" :key="item">
       <TagListItem :item="item" @tag-click="tagClick" />
     </template>
@@ -14,28 +10,28 @@
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from "vue";
-import TagListItem from "./TagListItem.vue";
+import { nextTick, ref, watch } from 'vue'
+import TagListItem from './TagListItem.vue'
 
-const emit = defineEmits(["tag-click"]);
+const emit = defineEmits(['tag-click'])
 const props = defineProps({
   items: {
     type: Array,
-    required: true,
+    required: true
   },
   visible: {
     type: Boolean,
-    required: true,
+    required: true
   },
   msgTxtArea: {
     type: [Object, null],
-    required: true,
-  },
-});
+    required: true
+  }
+})
 
-const tagListRef = ref(null);
-const leftPlacement = ref(`${props.msgTxtArea?.offsetLeft + 3}px`);
-const topPlacement = ref("0");
+const tagListRef = ref(null)
+const leftPlacement = ref(`${props.msgTxtArea?.offsetLeft + 3}px`)
+const topPlacement = ref('0')
 
 /**
  * Watch items length to update the top placement value
@@ -46,16 +42,14 @@ watch(
   () => props.items.length,
   () => {
     nextTick(() => {
-      topPlacement.value = `${
-        props.msgTxtArea?.offsetTop - tagListRef.value?.offsetHeight + 5
-      }px`;
-      leftPlacement.value = `${props.msgTxtArea?.offsetLeft + 3}px`;
-    });
+      topPlacement.value = `${props.msgTxtArea?.offsetTop - tagListRef.value?.offsetHeight + 5}px`
+      leftPlacement.value = `${props.msgTxtArea?.offsetLeft + 3}px`
+    })
   }
-);
+)
 
 function tagClick(item) {
-  emit("tag-click", item);
+  emit('tag-click', item)
 }
 </script>
 
