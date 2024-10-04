@@ -1,6 +1,11 @@
 {
-  "name": "@berkmankleincenter/threads",
+  "name": "@berkmankleincenter/nymspace_client",
+  "repository": "https://github.com/berkmancenter/nymspace_server",
   "version": "3.1.1",
+  "engines": {
+    "node": "^20"
+  },
+  "packageManager": "^yarn@1.22.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
