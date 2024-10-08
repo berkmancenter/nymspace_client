@@ -9,7 +9,7 @@ const ThreadsPage = () => import('../views/ThreadsPage.vue')
 const MessagesPage = () => import('../views/MessagesPage.vue')
 const LandingPage = () => import('../views/LandingPage.vue')
 const NotFound = () => import('../views/NotFound.vue')
-// const PollPage = () => import('../views/PollPage.vue')
+const PollPage = () => import('../views/PollPage.vue')
 
 export default [
   {
@@ -36,12 +36,12 @@ export default [
                 path: 'threads/:threadId?',
                 name: 'home.threads',
                 component: MessagesPage
+              },
+              {
+                path: 'polls/:pollId?',
+                name: 'home.polls',
+                component: PollPage
               }
-              // {
-              //   path: 'polls/:pollId?',
-              //   name: 'home.polls',
-              //   component: PollPage
-              // }
             ]
           }
         ]
