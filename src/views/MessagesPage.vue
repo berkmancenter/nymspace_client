@@ -44,7 +44,7 @@
       v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
       class="z-50 w-full p-1 text-center text-white transition-all bg-harvard-red sm:rounded-t"
     >
-      Unable to send message. Please try again later.
+      {{ unableToSendSpecialMessage || 'Unable to send message. Please try again later.' }}
     </div>
     <PromptDirtyDraft :show="prompt" @response="response" />
   </div>
@@ -154,6 +154,7 @@ const goodReputation = ref(false)
 const wsInstance = reactive({})
 const shouldDisplayMessageBoxLocked = ref(false)
 const shouldDisplayUnableToSendMessage = ref(false)
+const unableToSendSpecialMessage = ref('')
 const newMessagesNotice = ref(false)
 const lastMessageScrollOffset = ref(true)
 const userId = ref('')
@@ -174,6 +175,7 @@ onBeforeRouteUpdate(async (to, from) => {
 })
 
 const processDirtyMessage = async () => {
+  // eslint-disable-next-line
   const promise = new Promise((res, rej) => {
     resolve.value = res
     reject.value = rej
@@ -269,23 +271,25 @@ const updatedMsgs = computed((x) => {
 /**
  * Send message via ws
  */
-function parseJwt(token) {
-  const base64Url = token.split('.')[1]
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-  const jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split('')
-      .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      })
-      .join('')
-  )
+// function parseJwt(token) {
+//   const base64Url = token.split('.')[1]
+//   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+//   const jsonPayload = decodeURIComponent(
+//     window
+//       .atob(base64)
+//       .split('')
+//       .map(function (c) {
+//         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+//       })
+//       .join('')
+//   )
 
-  return JSON.parse(jsonPayload)
-}
+//   return JSON.parse(jsonPayload)
+// }
 
 async function sendMessage() {
+  unableToSendSpecialMessage.value = ''
+
   if (message.value.length > 249) {
     return
   }
@@ -314,7 +318,13 @@ async function sendMessage() {
       message.value = ''
       scrollToBottom()
     } catch (error) {
-      console.log(error)
+      // console.log('ERR', error)
+
+      // 422 means user needs to try again
+      if (error.statusCode === 422) {
+        unableToSendSpecialMessage.value = error.message
+      }
+
       shouldDisplayUnableToSendMessage.value = true
     }
   }
