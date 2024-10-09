@@ -7,6 +7,8 @@ This is the Frontend vue app which depends on the [berkmancenter/nymspace_server
 ## Installation
 
 - Install and start [berkmancenter/nymspace_server](https://github.com/berkmancenter/nymspace_server).
+- Install `node.js` and set to version specified in `package.json` file (Consider using [nvm](https://github.com/nvm-sh/nvm))
+- Install [yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 - Come back to this repo and `yarn install` to install packages.
 - Connect backend by copying `.env.example` to `.env.local`. Make sure the ports are correctly configured in threads_server repo.
 - Run `yarn dev --port 3001` and browse the app at https://localhost:3001.
