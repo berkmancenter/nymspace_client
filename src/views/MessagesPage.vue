@@ -385,13 +385,13 @@ function joinUser() {
  * Handle received message
  */
 function messageHandler(data) {
-  const threadToUpdate = getThread(data.thread.id)
+  const threadToUpdate = getThread(data.thread)
 
   /**
    * Update message if current thread matches the received
    * message thread
    */
-  if (data.thread.id === route.params.threadId) {
+  if (data.thread === route.params.threadId) {
     addMessage(data)
   }
 
