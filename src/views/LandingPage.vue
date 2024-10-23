@@ -5,15 +5,17 @@
 </template>
 <script setup>
 import Channels from '../components/Channels/Channels.vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import useStore from '../composables/global/useStore'
 const { loadChannels, getChannels, getUserChannels, loadUserChannels } = useStore
-const searchText = ref('')
+// const searchText = ref('')
 
 const channelsWithFollow = computed(() => {
   return getChannels.value.map((x) => ({
     ...x,
-    isFollowed: getUserChannels.value.some((y) => y.id === x.id && y.hasOwnProperty('followed') && y.followed)
+    isFollowed: getUserChannels.value.some(
+      (y) => y.id === x.id && Object.prototype.hasOwnProperty.call(y, 'followed') && y.followed
+    )
   }))
 })
 

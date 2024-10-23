@@ -104,6 +104,7 @@ const {
   getThreads,
   getThread,
   loadThreads,
+  loadConfig,
   getChannel,
   loadChannel,
   loadUserThreads,
@@ -185,13 +186,16 @@ function compare(a, b) {
   } else return 1
 }
 
+// eslint-disable-next-line
 const sortedThreads = computed(() => threadsWithFollow.value.sort(compare))
 
 // Add isFollowed property to update if the thread is followed by user
 const threadsWithFollow = computed(() =>
   items.value.map((x) => ({
     ...x,
-    isFollowed: getUserThreads.value.some((y) => y.id === x.id && y.hasOwnProperty('followed') && y.followed)
+    isFollowed: getUserThreads.value.some(
+      (y) => y.id === x.id && Object.prototype.hasOwnProperty.call(y, 'followed') && y.followed
+    )
   }))
 )
 
@@ -256,6 +260,7 @@ const reconnectSockets = () => {
 onMounted(async () => {
   await loadUserThreads()
   await loadThreads(route.params.channelId)
+  await loadConfig()
 
   if (Object.keys(channel.value).length === 0) {
     channel.value = { ...(await loadChannel(route.params.channelId)) }

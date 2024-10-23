@@ -1,23 +1,23 @@
 <template>
   <router-link :to="threadLink" :class="getThreadClass(item)" @click="props.toggleThreadsMenu">
-    <div class="flex-1 flex gap-1 truncate">
+    <div class="flex flex-1 gap-1 truncate">
       <div class="font-semibold justify-self-end">
         <BookmarkIcon
           :class="item.isFollowed ? 'fill-current text-harvard-red' : ''"
-          class="h-4 w-4 inline-block"
+          class="inline-block w-4 h-4"
           @click.prevent="pinThread"
         />
       </div>
       <div class="font-semibold justify-self-end" data-testid="unlock-thread">
-        <LockClosedIcon v-if="item.locked" class="h-4 w-4 inline-block" @click="unlockThread" />
+        <LockClosedIcon v-if="item.locked" class="inline-block w-4 h-4" @click="unlockThread" />
       </div>
       <div class="text-base truncate">
         {{ item.name }}
       </div>
     </div>
-    <div class="font-thin text-sm justify-self-end">
+    <div class="text-sm font-thin justify-self-end">
       {{ new Intl.NumberFormat('en-US').format(item.messageCount) }}
-      <ChatAltIcon class="h-4 w-4 inline-block" />
+      <ChatAltIcon class="inline-block w-4 h-4" />
     </div>
   </router-link>
 </template>

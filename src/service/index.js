@@ -194,5 +194,9 @@ export default {
 
   deleteThread: async function (id) {
     return await axios.delete(`/threads/${id}`).then((x) => x.data)
+  },
+
+  loadConfig: async function () {
+    return await axios.get('/config').then((x) => x.data)
   }
 }

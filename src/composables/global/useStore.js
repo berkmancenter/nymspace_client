@@ -1,6 +1,6 @@
 import { reactive, computed } from 'vue'
 import { VueCookieNext } from 'vue-cookie-next'
-import ThreadService from '../../service'
+import ServerService from '../../service'
 
 // State
 const state = reactive({
@@ -22,10 +22,20 @@ const state = reactive({
   userThreads: [],
   majorError: '',
   messages: [],
-  showChatOnly: false
+  showChatOnly: false,
+  enableAgents: false,
+  availableAgents: []
 })
 
 // Mutations
+function setEnableAgents(enableAgents) {
+  state.enableAgents = enableAgents
+}
+
+function setAvailableAgents(availableAgents) {
+  state.availableAgents = availableAgents
+}
+
 function setUserThreads(userThreads) {
   state.userThreads = userThreads
 }
@@ -93,14 +103,14 @@ function setShowChatOnly(value) {
   state.showChatOnly = value
 }
 
-function addChannel(channel) {
-  const channelId = state.channels.findIndex((x) => x.id === channel.id)
-  if (channelId > -1) {
-    state.channels.splice(channelId, 1, channel)
-  } else {
-    state.channels.push(channel)
-  }
-}
+// function addChannel(channel) {
+//   const channelId = state.channels.findIndex((x) => x.id === channel.id)
+//   if (channelId > -1) {
+//     state.channels.splice(channelId, 1, channel)
+//   } else {
+//     state.channels.push(channel)
+//   }
+// }
 
 function upsertThread(thread) {
   const threadId = state.threads.findIndex((x) => x.id === thread.id)
@@ -121,36 +131,36 @@ function clearMessages() {
 }
 
 async function createChannel(payload) {
-  const channels = await ThreadService.createChannel(payload)
+  await ServerService.createChannel(payload)
   loadChannels()
 }
 
 async function followChannel(payload) {
-  await ThreadService.followChannel(payload)
+  await ServerService.followChannel(payload)
   loadUserChannels()
 }
 
 async function updateChannel(payload) {
-  await ThreadService.updateChannel(payload)
+  await ServerService.updateChannel(payload)
   loadChannels()
 }
 
 async function deleteChannel(id) {
-  await ThreadService.deleteChannel(id)
+  await ServerService.deleteChannel(id)
   removeChannel(id)
 }
 
 async function createThread(payload) {
-  const threads = await ThreadService.createThread(payload)
+  await ServerService.createThread(payload)
 }
 
 async function followThread(payload) {
-  await ThreadService.followThread(payload)
+  await ServerService.followThread(payload)
   loadUserThreads()
 }
 
 async function updateThread(payload) {
-  await ThreadService.updateThread(payload)
+  await ServerService.updateThread(payload)
   await loadThreads(getActiveChannel.value.id)
   if (getActiveThread.value) {
     setActiveThread(getThread(getActiveThread.value.id ?? getActiveThread.value._id))
@@ -158,12 +168,12 @@ async function updateThread(payload) {
 }
 
 async function deleteThread(id) {
-  await ThreadService.deleteThread(id)
+  await ServerService.deleteThread(id)
   removeThread(id)
 }
 
 async function loadUser() {
-  const user = await ThreadService.getUser(state.uid)
+  const user = await ServerService.getUser(state.uid)
   if (user.pseudonyms) {
     state.auth = [...user.pseudonyms]
   }
@@ -171,50 +181,50 @@ async function loadUser() {
 }
 
 async function updateUser(payload) {
-  return await ThreadService.updateUser({
+  return await ServerService.updateUser({
     ...payload,
     userId: state.uid
   })
 }
 
 async function loadChannel(id) {
-  return await ThreadService.getChannel(id)
+  return await ServerService.getChannel(id)
 }
 
 async function loadUserChannels() {
   if (!getLoggedInStatus.value) await registerOnce()
-  const userChannels = await ThreadService.getUserChannels()
+  const userChannels = await ServerService.getUserChannels()
   setUserChannels(userChannels)
 }
 
 async function loadChannels() {
   if (getLoggedInStatus.value) {
-    const channels = await ThreadService.getChannels()
+    const channels = await ServerService.getChannels()
     setChannels(channels)
   } else {
-    const channels = await ThreadService.getPublicChannels(getActivePseudonym.value.token)
+    const channels = await ServerService.getPublicChannels(getActivePseudonym.value.token)
     setChannels(channels)
   }
 }
 
 async function loadUserThreads() {
   if (!getLoggedInStatus.value) await registerOnce()
-  const userThreads = await ThreadService.getUserThreads()
+  const userThreads = await ServerService.getUserThreads()
   setUserThreads(userThreads)
 }
 
 async function loadThreads(channelId) {
   if (!getLoggedInStatus.value) await registerOnce()
-  const threads = await ThreadService.getThreads(channelId)
+  const threads = await ServerService.getThreads(channelId)
   setThreads(threads)
 }
 
 async function loadThread(threadId) {
-  return await ThreadService.getThread(threadId)
+  return await ServerService.getThread(threadId)
 }
 
 async function loadMessages(threadId) {
-  const messages = await ThreadService.getMessages(threadId)
+  const messages = await ServerService.getMessages(threadId)
   setMessages(messages)
 }
 
@@ -223,12 +233,12 @@ async function loadMessages(threadId) {
  * messages array with response
  */
 async function postMessage(payload) {
-  const message = await ThreadService.createMessage(payload)
+  const message = await ServerService.createMessage(payload)
   setMessage(message)
 }
 
 async function upvote(id, status) {
-  const response = await ThreadService.vote({
+  await ServerService.vote({
     messageId: id,
     direction: 'up',
     status
@@ -241,7 +251,7 @@ async function upvote(id, status) {
  */
 async function downvote(id, status) {
   if (!getGuestStatus.value) {
-    const response = await ThreadService.vote({
+    await ServerService.vote({
       messageId: id,
       direction: 'down',
       status
@@ -267,7 +277,7 @@ const getChannel = (id) => {
 }
 
 function updateUserToken(tokens) {
-  ThreadService.setAuth(tokens.access.token)
+  ServerService.setAuth(tokens.access.token)
   VueCookieNext.setCookie('access_token', tokens.access.token)
   VueCookieNext.setCookie('access_token_expiry', tokens.access.expires)
   VueCookieNext.setCookie('refresh_token', tokens.refresh.token)
@@ -284,10 +294,10 @@ function updateAuth(pseudonyms) {
 }
 
 async function loadNewPseudonym(username, password) {
-  return await ThreadService.getNewPseudonym().then(
+  return await ServerService.getNewPseudonym().then(
     (response) => setAuth({ ...response, active: true }),
     (err) => {
-      setMajorError('Cannot load pseudonym. Contact administrator.')
+      // setMajorError('Cannot load pseudonym. Contact administrator.')
       return { isError: true, ...err }
     }
   )
@@ -302,17 +312,17 @@ async function updateAuthTokens(data) {
 }
 
 async function loginUser(username, password) {
-  return await ThreadService.loginUser(username, password).then((data) => {
+  return await ServerService.loginUser(username, password).then((data) => {
     updateAuthTokens(data)
   })
 }
 
 async function forgotPassword(email) {
-  return await ThreadService.forgotPassword(email)
+  return await ServerService.forgotPassword(email)
 }
 
 async function resetPassword(password, token) {
-  return await ThreadService.resetPassword({
+  return await ServerService.resetPassword({
     password,
     token
   })
@@ -328,13 +338,13 @@ async function registerUser(username, password, email) {
   if (email.trim().length > 0) {
     payload = { ...payload, email }
   }
-  return await ThreadService.registerUser(payload).then((data) => {
+  return await ServerService.registerUser(payload).then((data) => {
     updateAuthTokens(data)
   })
 }
 
 async function registerOnce() {
-  return await ThreadService.registerOnce({
+  return await ServerService.registerOnce({
     pseudonym: getActivePseudonym.value.pseudonym,
     token: getActivePseudonym.value.token
   }).then((data) => {
@@ -346,15 +356,15 @@ async function registerOnce() {
 
 async function createNewPseudonym() {
   if (getPseudonyms.value.length < 5) {
-    return await ThreadService.getNewPseudonym().then((response) =>
-      ThreadService.registerNewPseudonym(response).then((data) => updateAuth(data))
+    return await ServerService.getNewPseudonym().then((response) =>
+      ServerService.registerNewPseudonym(response).then((data) => updateAuth(data))
     )
   }
 }
 
 async function deletePseudonym(id) {
   if (getActivePseudonym.value?._id !== id) {
-    await ThreadService.deletePseudonym(id)
+    await ServerService.deletePseudonym(id)
   }
 }
 
@@ -363,7 +373,7 @@ async function activatePseudonym(token) {
   if (token === null) {
     token = VueCookieNext.getCookie('token')
   }
-  const pseudonyms = await ThreadService.activatePseudonym({
+  const pseudonyms = await ServerService.activatePseudonym({
     token
   })
   updateAuth(pseudonyms)
@@ -375,7 +385,7 @@ async function activatePseudonym(token) {
 
 async function loadPseudonyms() {
   const isGuest = state.isGuest
-  const pseudonyms = await ThreadService.getPseudonyms()
+  const pseudonyms = await ServerService.getPseudonyms()
   updateAuth(pseudonyms)
   if (isGuest) {
     VueCookieNext.setCookie('is_guest', 'true')
@@ -388,7 +398,15 @@ async function logout() {
   await registerOnce()
 }
 
+async function loadConfig() {
+  const config = await ServerService.loadConfig()
+  setEnableAgents(config.enableAgents)
+  setAvailableAgents(config.availableAgents)
+}
+
 // Getters
+const getAvailableAgents = computed(() => state.availableAgents)
+const getEnableAgents = computed(() => state.enableAgents)
 const getUserThreads = computed(() => state.userThreads)
 const getUserChannels = computed(() => state.userChannels)
 
@@ -485,5 +503,11 @@ export default {
   resetPassword,
 
   showChatOnly,
-  setShowChatOnly
+  setShowChatOnly,
+
+  getEnableAgents,
+  setEnableAgents,
+  setAvailableAgents,
+  getAvailableAgents,
+  loadConfig
 }
