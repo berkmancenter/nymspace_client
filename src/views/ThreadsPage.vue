@@ -33,7 +33,7 @@
           <ThreadList :items="sortedThreads" :toggle-threads-menu="toggleThreadsMenu" />
         </div>
         <div class="flex flex-col gap-1 p-4">
-          <CreateThread :show="canCreate" />
+          <CreateSpace :show="canCreate" />
         </div>
       </div>
       <div class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
@@ -83,7 +83,7 @@
 
 <script setup>
 import ThreadList from '../components/Threads/ThreadList.vue'
-import CreateThread from '../components/Threads/CreateThread.vue'
+import CreateSpace from '../components/Shared/CreateSpace.vue'
 import useStore from '../composables/global/useStore'
 import DeleteThread from '../components/Threads/DeleteThread.vue'
 import EditThread from '../components/Threads/EditThread.vue'

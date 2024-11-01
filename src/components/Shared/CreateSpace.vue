@@ -8,18 +8,41 @@
   </button>
   <Modal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>New space</template>
-    <!-- Select space type -->
-    <div class="row-span-3 hover:row-span-4"></div>
-    <!-- Name -->
-    <span class="font-semibold">Thread name:</span>
-    <div>
-      <input
-        v-model="threadName"
-        class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
-        type="text"
-      />
+    <!-- Space type tabs -->
+    <ul
+      class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+    >
+      <li class="me-2">
+        <a
+          href="#"
+          aria-current="page"
+          class="inline-block px-4 py-2 text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500"
+          >Thread</a
+        >
+      </li>
+      <li class="me-2">
+        <a
+          href="#"
+          class="inline-block px-4 py-2 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+          >Poll</a
+        >
+      </li>
+    </ul>
+
+    <div v-show="tab === 1">
+      <!-- Name -->
+      <span class="font-semibold">Thread name:</span>
+      <div>
+        <input
+          v-model="threadName"
+          class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
+          type="text"
+        />
+      </div>
     </div>
+    <!-- Error message -->
     <div class="text-harvard-red">{{ message }}</div>
+    <!-- Action buttons -->
     <template #actions>
       <button
         class="rounded bg-gray-300 px-2 py-2 font-semibold shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
@@ -40,7 +63,7 @@
 <script setup>
 import { ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
-import Modal from '../Shared/Modal.vue'
+import Modal from './Modal.vue'
 import { useRoute } from 'vue-router'
 import { PlusCircleIcon } from '@heroicons/vue/outline'
 
