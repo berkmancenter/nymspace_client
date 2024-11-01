@@ -6,7 +6,7 @@
           <slot name="title">Modal Title</slot>
           <XIcon class="mt-1 float-right h-6 w-6 inline-block cursor-pointer" title="Close" @click="closeModal" />
         </div>
-        <div class="flex-grow py-3"><slot>Modal Body</slot></div>
+        <div class="flex-grow"><slot>Modal Body</slot></div>
         <div class="flex justify-end my-3 gap-4">
           <slot name="actions"><button @click="closeModal"></button></slot>
         </div>
