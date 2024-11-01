@@ -58,6 +58,10 @@ function setChannels(channels) {
   state.channels = [...channels]
 }
 
+function setMajorError(error) {
+  state.majorError = { ...error }
+}
+
 function removeChannel(id) {
   const index = state.channels.findIndex((x) => x.id === id)
   if (index > -1) {
