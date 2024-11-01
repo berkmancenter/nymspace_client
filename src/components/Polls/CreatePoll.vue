@@ -1,9 +1,12 @@
 <template>
-  <p class="text-gray-600 mb-4">A pseudonymous chat thread.</p>
-  <span class="font-semibold">Thread name:</span>
+  <p class="text-gray-600 mb-4">
+    Submit responses and vote on them anonymously. When a response gets enough votes, voters for that response reveal their
+    names to each other.
+  </p>
+  <span class="font-semibold">Poll title:</span>
   <div>
     <input
-      v-model="threadName"
+      v-model="pollTitle"
       class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
       type="text"
     />
@@ -17,8 +20,8 @@ import { ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
 import { useRoute } from 'vue-router'
 
-const { createThread } = useStore
-const threadName = ref('')
+const { createPoll } = useStore
+const pollTitle = ref('')
 const message = ref('')
 const route = useRoute()
 
@@ -37,18 +40,18 @@ const emit = defineEmits(['createSuccess'])
 
 function processCreate() {
   if (isFormValid()) {
-    createThread({
-      name: threadName.value,
-      topicId: route.params.channelId
+    createPoll({
+      title: pollTitle.value,
+      topic: route.params.channelId
     })
       .then((x) => emit('createSuccess'))
       .catch((err) => (message.value = err.response.data.message))
   } else {
-    message.value = 'Name is required'
+    message.value = 'A title is required.'
   }
 }
 
 function isFormValid() {
-  return threadName.value.trim().length > 0
+  return pollTitle.value.trim().length > 0
 }
 </script>

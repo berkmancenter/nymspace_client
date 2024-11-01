@@ -73,6 +73,7 @@ defineProps({
 const isModalOpen = ref(false)
 const tab = ref(1)
 const createThreadRef = ref(null)
+const createPollRef = ref(null)
 
 function closeModal() {
   document.querySelector('body').classList.remove('modal-open')
@@ -93,7 +94,7 @@ function onSubmit() {
   if (tab.value === 1) {
     createThreadRef.value.processCreate()
   } else if (tab.value === 2) {
-    // Create poll
+    createPollRef.value.processCreate()
   }
 }
 </script>
