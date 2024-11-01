@@ -18,7 +18,7 @@
 <script setup>
 import { XIcon } from '@heroicons/vue/outline'
 
-const props = defineProps({
+defineProps({
   isOpen: {
     type: Boolean,
     required: true
