@@ -1,6 +1,7 @@
 import { reactive, computed } from 'vue'
 import { VueCookieNext } from 'vue-cookie-next'
 import ThreadService from '../../service'
+import PollService from '../../service/poll'
 
 // State
 const state = reactive({
@@ -155,6 +156,10 @@ async function updateThread(payload) {
 async function deleteThread(id) {
   await ThreadService.deleteThread(id)
   removeThread(id)
+}
+
+async function createPoll(payload) {
+  await PollService.createPoll(payload)
 }
 
 async function loadUser() {
@@ -430,6 +435,8 @@ export default {
   setActiveThread,
   getActiveThread,
   upsertThread,
+
+  createPoll,
 
   getChannels,
   getChannel,
