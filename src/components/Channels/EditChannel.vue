@@ -3,7 +3,7 @@
     <PencilIcon class="h-4 w-4" />
     <span class="sr-only">Edit</span>
   </button>
-  <Modal :is-open="isModalOpen" @close-modal="closeModal">
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>Edit Channel</template>
     <span class="font-semibold">Channel name:</span>
     <div>
@@ -60,14 +60,14 @@
         Update
       </button>
     </template>
-  </Modal>
+  </ThemedModal>
 </template>
 
 <script setup>
 import { PencilIcon } from '@heroicons/vue/outline'
 import { computed, ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
-import Modal from '../Shared/Modal.vue'
+import ThemedModal from '../Shared/ThemedModal.vue'
 const { updateChannel, getGuestStatus } = useStore
 
 const isModalOpen = ref(false)

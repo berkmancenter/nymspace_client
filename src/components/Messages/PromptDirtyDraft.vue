@@ -1,5 +1,5 @@
 <template>
-  <Modal :is-open="isModalOpen" @close-modal="closeModal">
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>Draft will be lost.</template>
     <div class="font-semibold">
       <p>Are you sure you want to leave?</p>
@@ -19,14 +19,14 @@
         Yes
       </button>
     </template>
-  </Modal>
+  </ThemedModal>
 </template>
 
 <script setup>
 import { TrashIcon } from '@heroicons/vue/outline'
 import { ref } from '@vue/reactivity'
 import { watch } from 'vue'
-import Modal from '../Shared/Modal.vue'
+import ThemedModal from '../Shared/ThemedModal.vue'
 
 const props = defineProps({
   show: {

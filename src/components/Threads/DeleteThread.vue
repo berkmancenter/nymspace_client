@@ -3,7 +3,7 @@
     <TrashIcon class="h-4 w-4 inline-block rounded cursor-pointer" />
     <span class="sr-only">Delete</span>
   </button>
-  <Modal :is-open="isModalOpen" @close-modal="closeModal">
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>Delete Thread</template>
     <div>
       Are you sure you want to delete
@@ -25,13 +25,13 @@
         Delete
       </button>
     </template>
-  </Modal>
+  </ThemedModal>
 </template>
 
 <script setup>
 import { TrashIcon } from '@heroicons/vue/outline'
 import { ref } from '@vue/reactivity'
-import Modal from '../Shared/Modal.vue'
+import ThemedModal from '../Shared/ThemedModal.vue'
 import useStore from '../../composables/global/useStore'
 import { useRouter } from 'vue-router'
 

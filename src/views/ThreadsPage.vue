@@ -69,15 +69,15 @@
         <router-view></router-view>
       </div>
     </div>
-    <Modal :is-open="isModalOpen" @close-modal="closeModal">
+    <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
       <template #title>{{ channel.name }}</template>
       <div class="text-xl"></div>
-    </Modal>
-    <Modal :is-open="isThreadModalOpen" @close-modal="closeThreadModal">
+    </ThemedModal>
+    <ThemedModal :is-open="isThreadModalOpen" @close-modal="closeThreadModal">
       <template #title>{{ maybeThread.name }}</template>
       <div class="text-xl">in the {{ channel.name }} channel</div>
       <div class="mt-3 text-lg">{{ maybeThread.messageCount }} messages</div>
-    </Modal>
+    </ThemedModal>
   </div>
 </template>
 
@@ -94,7 +94,7 @@ import { VueCookieNext } from 'vue-cookie-next'
 import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
 import { ViewListIcon, XIcon } from '@heroicons/vue/outline'
-import Modal from '../components/Shared/Modal.vue'
+import ThemedModal from '../components/Shared/ThemedModal.vue'
 
 const route = useRoute()
 

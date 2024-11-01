@@ -6,7 +6,7 @@
   >
     <PlusCircleIcon class="w-5 h-5" /> new space
   </button>
-  <Modal :is-open="isModalOpen" @close-modal="closeModal">
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>New space</template>
     <!-- Space type tabs -->
     <ul
@@ -57,13 +57,13 @@
         Create
       </button>
     </template>
-  </Modal>
+  </ThemedModal>
 </template>
 
 <script setup>
 import { ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
-import Modal from './Modal.vue'
+import ThemedModal from './ThemedModal.vue'
 import { useRoute } from 'vue-router'
 import { PlusCircleIcon } from '@heroicons/vue/outline'
 

@@ -9,7 +9,7 @@
     <option value="public">Public</option>
     <option value="private">Private</option>
   </select>
-  <Modal :is-open="isModalOpen" @close-modal="closeModal">
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>Create {{ channelTypeName }} Channel</template>
     <span class="font-semibold">Channel name:</span>
     <div>
@@ -68,13 +68,13 @@
         Create
       </button>
     </template>
-  </Modal>
+  </ThemedModal>
 </template>
 
 <script setup>
 import { computed, ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
-import Modal from '../Shared/Modal.vue'
+import ThemedModal from '../Shared/ThemedModal.vue'
 const { getLoggedInStatus, createChannel, getGuestStatus, loadUser } = useStore
 
 const isModalOpen = ref(false)
