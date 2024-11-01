@@ -4,11 +4,7 @@
       <div class="modal-content">
         <div class="my-3 text-2xl py-1 font-semibold">
           <slot name="title">Modal Title</slot>
-          <XIcon
-            class="mt-1 float-right h-6 w-6 inline-block cursor-pointer"
-            title="Close"
-            @click="closeModal"
-          />
+          <XIcon class="mt-1 float-right h-6 w-6 inline-block cursor-pointer" title="Close" @click="closeModal" />
         </div>
         <div class="flex-grow py-3"><slot>Modal Body</slot></div>
         <div class="flex justify-end my-3 gap-4">
@@ -20,19 +16,19 @@
 </template>
 
 <script setup>
-import { XIcon } from "@heroicons/vue/outline";
+import { XIcon } from '@heroicons/vue/outline'
 
 const props = defineProps({
   isOpen: {
     type: Boolean,
-    required: true,
-  },
-});
+    required: true
+  }
+})
 
-const emit = defineEmits(["close-modal"]);
+const emit = defineEmits(['close-modal'])
 
 function closeModal() {
-  emit("close-modal");
+  emit('close-modal')
 }
 </script>
 
