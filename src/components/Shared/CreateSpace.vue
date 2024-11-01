@@ -31,18 +31,9 @@
         </button>
       </li>
     </ul>
-
+    <!-- Tab content -->
     <div v-show="tab === 1" class="py-3 mb-5">
-      <!-- Name -->
-      <p class="text-gray-600 mb-4">A pseudonymous chat thread.</p>
-      <span class="font-semibold">Thread name:</span>
-      <div>
-        <input
-          v-model="threadName"
-          class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
-          type="text"
-        />
-      </div>
+      <CreateThread ref="createThreadRef" @create-success="closeModal" />
     </div>
     <div v-show="tab === 2">
       <!-- Name -->
@@ -55,8 +46,6 @@
         />
       </div>
     </div>
-    <!-- Error message -->
-    <div class="text-harvard-red">{{ message }}</div>
     <!-- Action buttons -->
     <template #actions>
       <button
@@ -67,7 +56,7 @@
       </button>
       <button
         class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
-        @click="processCreate"
+        @click="onSubmit"
       >
         Create
       </button>
@@ -77,9 +66,8 @@
 
 <script setup>
 import { ref } from '@vue/reactivity'
-import useStore from '../../composables/global/useStore'
 import ThemedModal from './ThemedModal.vue'
-import { useRoute } from 'vue-router'
+import CreateThread from '../Threads/CreateThread.vue'
 import { PlusCircleIcon, HashtagIcon, UserGroupIcon } from '@heroicons/vue/outline'
 
 defineProps({
@@ -89,12 +77,9 @@ defineProps({
   }
 })
 
-const { createThread } = useStore
 const isModalOpen = ref(false)
 const tab = ref(1)
-const threadName = ref('')
-const message = ref('')
-const route = useRoute()
+const createThreadRef = ref(null)
 
 function closeModal() {
   document.querySelector('body').classList.remove('modal-open')
@@ -102,7 +87,6 @@ function closeModal() {
 }
 
 function openModal() {
-  threadName.value = ''
   window.scrollTo({ top: 0, left: 0 })
   isModalOpen.value = true
   document.querySelector('body').classList.add('modal-open')
@@ -112,20 +96,9 @@ function openTab(tabNumber) {
   tab.value = tabNumber
 }
 
-function processCreate() {
-  if (isFormValid()) {
-    createThread({
-      name: threadName.value,
-      topicId: route.params.channelId
-    })
-      .then((x) => closeModal())
-      .catch((err) => (message.value = err.response.data.message))
-  } else {
-    message.value = 'Name is required'
+function onSubmit() {
+  if (tab.value === 1) {
+    createThreadRef.value.processCreate()
   }
-}
-
-function isFormValid() {
-  return threadName.value.trim().length > 0
 }
 </script>
