@@ -1,9 +1,16 @@
 <template>
-  <button v-if="show" class="flex gap-2 justify-start items-center" @click="openModal">
-    <PlusCircleIcon class="w-5 h-5" /> new thread
+  <button
+    v-if="show"
+    class="flex gap-2 justify-start items-center bg-harvard-red text-white p-2 rounded-md shadow-md"
+    @click="openModal"
+  >
+    <PlusCircleIcon class="w-5 h-5" /> new space
   </button>
   <Modal :is-open="isModalOpen" @close-modal="closeModal">
-    <template #title>Create New Thread</template>
+    <template #title>New space</template>
+    <!-- Select space type -->
+    <div class="row-span-3 hover:row-span-4"></div>
+    <!-- Name -->
     <span class="font-semibold">Thread name:</span>
     <div>
       <input
