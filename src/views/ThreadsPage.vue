@@ -185,13 +185,13 @@ function compare(a, b) {
   } else return 1
 }
 
-const sortedThreads = computed(() => threadsWithFollow.value.sort(compare))
+const sortedThreads = computed(() => [...threadsWithFollow.value].sort(compare))
 
 // Add isFollowed property to update if the thread is followed by user
 const threadsWithFollow = computed(() =>
   items.value.map((x) => ({
     ...x,
-    isFollowed: getUserThreads.value.some((y) => y.id === x.id && y.hasOwnProperty('followed') && y.followed)
+    isFollowed: getUserThreads.value.some((y) => y.id === x.id && 'followed' in y && y.followed)
   }))
 )
 
