@@ -32,8 +32,9 @@
       </li>
     </ul>
 
-    <div v-show="tab === 1">
+    <div v-show="tab === 1" class="py-3 mb-5">
       <!-- Name -->
+      <p class="text-gray-600 mb-4">A pseudonymous chat thread.</p>
       <span class="font-semibold">Thread name:</span>
       <div>
         <input
