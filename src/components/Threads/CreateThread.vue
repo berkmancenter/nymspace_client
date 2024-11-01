@@ -2,11 +2,7 @@
   <p class="text-gray-600 mb-4">A pseudonymous chat thread.</p>
   <span class="font-semibold">Thread name:</span>
   <div>
-    <input
-      v-model="threadName"
-      class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
-      type="text"
-    />
+    <input v-model="threadName" class="border rounded border-gray-500 w-full h-12 px-3" type="text" />
   </div>
   <!-- Error message -->
   <div class="text-harvard-red mt-2">{{ message }}</div>

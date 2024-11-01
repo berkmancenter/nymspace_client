@@ -3,9 +3,18 @@
     Submit responses and vote on them anonymously. When a response gets enough votes, voters for that response reveal their
     names.
   </p>
-  <span class="font-semibold">Poll title:</span>
-  <div>
-    <input v-model="title" class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field" type="text" />
+  <div class="mb-4">
+    <span class="font-semibold">Poll title:</span>
+    <div>
+      <input v-model="title" class="border rounded border-gray-500 w-full h-12 px-3" type="text" />
+    </div>
+  </div>
+  <div class="mb-4">
+    <span class="font-semibold">Description:</span>
+    <div>
+      <textarea v-model="description" rows="2" class="h-full border rounded border-gray-500 w-full h-12 p-3" type="text">
+      </textarea>
+    </div>
   </div>
   <!-- Error message -->
   <div class="text-harvard-red mt-2">{{ message }}</div>
@@ -18,6 +27,7 @@ import { useRoute } from 'vue-router'
 
 const { createPoll } = useStore
 const title = ref('')
+const description = ref('')
 const message = ref('')
 const route = useRoute()
 
@@ -41,6 +51,7 @@ function processCreate() {
   }
   createPoll({
     title: title.value,
+    description: description.value,
     topic: route.params.channelId
   })
     .then((x) => emit('createSuccess'))
