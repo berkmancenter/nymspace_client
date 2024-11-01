@@ -35,16 +35,8 @@
     <div v-show="tab === 1" class="py-3 mb-5">
       <CreateThread ref="createThreadRef" @create-success="closeModal" />
     </div>
-    <div v-show="tab === 2">
-      <!-- Name -->
-      <span class="font-semibold">Poll name:</span>
-      <div>
-        <input
-          v-model="threadName"
-          class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
-          type="text"
-        />
-      </div>
+    <div v-show="tab === 2" class="py-3 mb-5">
+      <CreatePoll ref="createPollRef" />
     </div>
     <!-- Action buttons -->
     <template #actions>
@@ -68,6 +60,7 @@
 import { ref } from '@vue/reactivity'
 import ThemedModal from './ThemedModal.vue'
 import CreateThread from '../Threads/CreateThread.vue'
+import CreatePoll from '../Polls/CreatePoll.vue'
 import { PlusCircleIcon, HashtagIcon, UserGroupIcon } from '@heroicons/vue/outline'
 
 defineProps({
@@ -99,6 +92,8 @@ function openTab(tabNumber) {
 function onSubmit() {
   if (tab.value === 1) {
     createThreadRef.value.processCreate()
+  } else if (tab.value === 2) {
+    // Create poll
   }
 }
 </script>
