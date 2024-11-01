@@ -9,29 +9,43 @@
   <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>New space</template>
     <!-- Space type tabs -->
-    <ul
-      class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
-    >
-      <li class="me-2">
-        <a
-          href="#"
-          aria-current="page"
-          class="inline-block px-4 py-2 text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500"
-          >Thread</a
+    <ul class="flex flex-wrap text-center text-gray-500 border-b border-gray-200">
+      <li>
+        <button
+          class="flex gap-1 px-4 py-2 rounded-t-lg"
+          :class="tab === 1 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
+          @click="openTab(1)"
         >
+          <HashtagIcon class="w-5 h-5" />
+          Thread
+        </button>
       </li>
-      <li class="me-2">
-        <a
-          href="#"
-          class="inline-block px-4 py-2 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-          >Poll</a
+      <li>
+        <button
+          class="flex gap-1 px-4 py-2 rounded-t-lg"
+          :class="tab === 2 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
+          @click="openTab(2)"
         >
+          <ChatIcon class="w-5 h-5" />
+          Threshold Poll
+        </button>
       </li>
     </ul>
 
     <div v-show="tab === 1">
       <!-- Name -->
       <span class="font-semibold">Thread name:</span>
+      <div>
+        <input
+          v-model="threadName"
+          class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
+          type="text"
+        />
+      </div>
+    </div>
+    <div v-show="tab === 2">
+      <!-- Name -->
+      <span class="font-semibold">Poll name:</span>
       <div>
         <input
           v-model="threadName"
@@ -65,7 +79,7 @@ import { ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
 import ThemedModal from './ThemedModal.vue'
 import { useRoute } from 'vue-router'
-import { PlusCircleIcon } from '@heroicons/vue/outline'
+import { PlusCircleIcon, HashtagIcon, ChatIcon } from '@heroicons/vue/outline'
 
 defineProps({
   show: {
@@ -76,6 +90,7 @@ defineProps({
 
 const { createThread } = useStore
 const isModalOpen = ref(false)
+const tab = ref(1)
 const threadName = ref('')
 const message = ref('')
 const route = useRoute()
@@ -90,6 +105,10 @@ function openModal() {
   window.scrollTo({ top: 0, left: 0 })
   isModalOpen.value = true
   document.querySelector('body').classList.add('modal-open')
+}
+
+function openTab(tabNumber) {
+  tab.value = tabNumber
 }
 
 function processCreate() {
