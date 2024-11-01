@@ -20,7 +20,7 @@
         placeholder="Enter channel name"
       />
     </div>
-    <div class="mt-2">
+    <div class="mt-4">
       <input
         id="disableVoting"
         v-model="disableVoting"
