@@ -26,7 +26,7 @@
           :class="tab === 2 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
           @click="openTab(2)"
         >
-          <ChatIcon class="w-5 h-5" />
+          <UserGroupIcon class="w-5 h-5" />
           Threshold Poll
         </button>
       </li>
@@ -80,7 +80,7 @@ import { ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
 import ThemedModal from './ThemedModal.vue'
 import { useRoute } from 'vue-router'
-import { PlusCircleIcon, HashtagIcon, ChatIcon } from '@heroicons/vue/outline'
+import { PlusCircleIcon, HashtagIcon, UserGroupIcon } from '@heroicons/vue/outline'
 
 defineProps({
   show: {
