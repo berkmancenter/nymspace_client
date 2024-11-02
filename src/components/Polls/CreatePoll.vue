@@ -21,7 +21,7 @@
 
     <!-- Date picker -->
     <div class="flex max-w-sm border rounded border-gray-500 w-full">
-      <input class="rounded w-full p-3" type="date" :value="defaultDate" :min="today" />
+      <input v-model="expirationDate" class="rounded w-full p-3" type="date" :min="today" />
     </div>
   </div>
   <!-- Error message -->
@@ -44,6 +44,8 @@ const date = new Date()
 date.setDate(date.getDate() + 5)
 const defaultDate = date.toISOString().split('T')[0]
 
+const expirationDate = ref(defaultDate)
+
 defineExpose({
   processCreate
 })
@@ -55,10 +57,13 @@ function processCreate() {
     message.value = 'A title is required.'
     return
   }
+  const expirationDateValue = new Date(expirationDate.value)
   createPoll({
     title: title.value,
     description: description.value,
-    topic: route.params.channelId
+    expirationDate: expirationDateValue,
+    topic: route.params.channelId,
+    slug: 'TODO'
   })
     .then((x) => emit('createSuccess'))
     .catch((err) => (message.value = err.response.data.message))
