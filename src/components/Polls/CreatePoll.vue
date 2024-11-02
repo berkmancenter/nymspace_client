@@ -21,7 +21,7 @@
 
     <!-- Date picker -->
     <div class="flex max-w-sm border rounded border-gray-500 w-full">
-      <input class="rounded w-full p-3" type="date" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
+      <input class="rounded w-full p-3" type="date" :value="defaultDate" :min="today" />
     </div>
   </div>
   <!-- Error message -->
@@ -38,6 +38,11 @@ const title = ref('')
 const description = ref('')
 const message = ref('')
 const route = useRoute()
+
+const today = new Date().toISOString().split('T')[0]
+const date = new Date()
+date.setDate(date.getDate() + 5)
+const defaultDate = date.toISOString().split('T')[0]
 
 defineProps({
   closeModal: {
