@@ -18,13 +18,6 @@ const threadName = ref('')
 const message = ref('')
 const route = useRoute()
 
-defineProps({
-  closeModal: {
-    type: Function,
-    default: () => {}
-  }
-})
-
 defineExpose({
   processCreate
 })

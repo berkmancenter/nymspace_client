@@ -44,13 +44,6 @@ const date = new Date()
 date.setDate(date.getDate() + 5)
 const defaultDate = date.toISOString().split('T')[0]
 
-defineProps({
-  closeModal: {
-    type: Function,
-    default: () => {}
-  }
-})
-
 defineExpose({
   processCreate
 })
