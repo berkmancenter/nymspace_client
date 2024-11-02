@@ -12,8 +12,16 @@
   <div class="mb-4">
     <span class="font-semibold">Description:</span>
     <div>
-      <textarea v-model="description" rows="2" class="h-full border rounded border-gray-500 w-full h-12 p-3" type="text">
+      <textarea v-model="description" rows="2" class="h-full border rounded border-gray-500 w-full p-3" type="text">
       </textarea>
+    </div>
+  </div>
+  <div class="mb-4">
+    <p class="font-semibold">End date:</p>
+
+    <!-- Date picker -->
+    <div class="flex max-w-sm border rounded border-gray-500 w-full">
+      <input class="rounded w-full p-3" type="date" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
     </div>
   </div>
   <!-- Error message -->
