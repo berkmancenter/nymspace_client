@@ -308,7 +308,8 @@ async function sendMessage() {
       await wsInstance.value.sendMessage({
         message: {
           body: message.value,
-          thread: route.params.threadId
+          thread: route.params.threadId,
+          user: getActivePseudonym.value?.pseudonym
         },
         userId: getId.value,
         token: VueCookieNext.getCookie('access_token')
