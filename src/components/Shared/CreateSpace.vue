@@ -36,7 +36,7 @@
       <CreateThread ref="createThreadRef" @create-success="closeModal" />
     </div>
     <div v-show="tab === 2" class="py-3 mb-5">
-      <CreatePoll ref="createPollRef" />
+      <CreatePoll ref="createPollRef" @create-success="closeModal" />
     </div>
     <!-- Action buttons -->
     <template #actions>
