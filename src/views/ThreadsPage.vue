@@ -33,7 +33,7 @@
           <ThreadList :items="sortedThreads" :toggle-threads-menu="toggleThreadsMenu" />
         </div>
         <div class="flex flex-col gap-1 p-4">
-          <CreateThread :show="canCreate" />
+          <CreateSpace :show="canCreate" />
         </div>
       </div>
       <div class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
@@ -69,21 +69,21 @@
         <router-view></router-view>
       </div>
     </div>
-    <Modal :is-open="isModalOpen" @close-modal="closeModal">
+    <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
       <template #title>{{ channel.name }}</template>
       <div class="text-xl"></div>
-    </Modal>
-    <Modal :is-open="isThreadModalOpen" @close-modal="closeThreadModal">
+    </ThemedModal>
+    <ThemedModal :is-open="isThreadModalOpen" @close-modal="closeThreadModal">
       <template #title>{{ maybeThread.name }}</template>
       <div class="text-xl">in the {{ channel.name }} channel</div>
       <div class="mt-3 text-lg">{{ maybeThread.messageCount }} messages</div>
-    </Modal>
+    </ThemedModal>
   </div>
 </template>
 
 <script setup>
 import ThreadList from '../components/Threads/ThreadList.vue'
-import CreateThread from '../components/Threads/CreateThread.vue'
+import CreateSpace from '../components/Shared/CreateSpace.vue'
 import useStore from '../composables/global/useStore'
 import DeleteThread from '../components/Threads/DeleteThread.vue'
 import EditThread from '../components/Threads/EditThread.vue'
@@ -94,7 +94,7 @@ import { VueCookieNext } from 'vue-cookie-next'
 import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
 import { ViewListIcon, XIcon } from '@heroicons/vue/outline'
-import Modal from '../components/Shared/Modal.vue'
+import ThemedModal from '../components/Shared/ThemedModal.vue'
 
 const route = useRoute()
 
@@ -185,13 +185,13 @@ function compare(a, b) {
   } else return 1
 }
 
-const sortedThreads = computed(() => threadsWithFollow.value.sort(compare))
+const sortedThreads = computed(() => [...threadsWithFollow.value].sort(compare))
 
 // Add isFollowed property to update if the thread is followed by user
 const threadsWithFollow = computed(() =>
   items.value.map((x) => ({
     ...x,
-    isFollowed: getUserThreads.value.some((y) => y.id === x.id && y.hasOwnProperty('followed') && y.followed)
+    isFollowed: getUserThreads.value.some((y) => y.id === x.id && 'followed' in y && y.followed)
   }))
 )
 

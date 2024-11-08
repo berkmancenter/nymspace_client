@@ -1,6 +1,7 @@
 import { reactive, computed } from 'vue'
 import { VueCookieNext } from 'vue-cookie-next'
 import ThreadService from '../../service'
+import PollService from '../../service/poll'
 
 // State
 const state = reactive({
@@ -58,6 +59,10 @@ function setChannels(channels) {
   state.channels = [...channels]
 }
 
+function setMajorError(error) {
+  state.majorError = { ...error }
+}
+
 function removeChannel(id) {
   const index = state.channels.findIndex((x) => x.id === id)
   if (index > -1) {
@@ -93,15 +98,6 @@ function setShowChatOnly(value) {
   state.showChatOnly = value
 }
 
-function addChannel(channel) {
-  const channelId = state.channels.findIndex((x) => x.id === channel.id)
-  if (channelId > -1) {
-    state.channels.splice(channelId, 1, channel)
-  } else {
-    state.channels.push(channel)
-  }
-}
-
 function upsertThread(thread) {
   const threadId = state.threads.findIndex((x) => x.id === thread.id)
   if (threadId > -1) {
@@ -121,7 +117,7 @@ function clearMessages() {
 }
 
 async function createChannel(payload) {
-  const channels = await ThreadService.createChannel(payload)
+  await ThreadService.createChannel(payload)
   loadChannels()
 }
 
@@ -141,7 +137,7 @@ async function deleteChannel(id) {
 }
 
 async function createThread(payload) {
-  const threads = await ThreadService.createThread(payload)
+  await ThreadService.createThread(payload)
 }
 
 async function followThread(payload) {
@@ -160,6 +156,10 @@ async function updateThread(payload) {
 async function deleteThread(id) {
   await ThreadService.deleteThread(id)
   removeThread(id)
+}
+
+async function createPoll(payload) {
+  await PollService.createPoll(payload)
 }
 
 async function loadUser() {
@@ -228,7 +228,7 @@ async function postMessage(payload) {
 }
 
 async function upvote(id, status) {
-  const response = await ThreadService.vote({
+  await ThreadService.vote({
     messageId: id,
     direction: 'up',
     status
@@ -241,7 +241,7 @@ async function upvote(id, status) {
  */
 async function downvote(id, status) {
   if (!getGuestStatus.value) {
-    const response = await ThreadService.vote({
+    await ThreadService.vote({
       messageId: id,
       direction: 'down',
       status
@@ -435,6 +435,8 @@ export default {
   setActiveThread,
   getActiveThread,
   upsertThread,
+
+  createPoll,
 
   getChannels,
   getChannel,

@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <!-- <Modal :is-open="isModalOpen" @close-modal="closeModal">
+    <!-- <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
       <template v-slot:title>Delete Pseudonym</template>
       <div class="text-xl">Are you sure you want to delete pseudonym?</div>
       <div class="mt-3 text-lg">
@@ -114,7 +114,7 @@
           Delete
         </button>
       </template>
-    </Modal> -->
+    </ThemedModal> -->
   </div>
 </template>
 
@@ -123,7 +123,7 @@ import { onMounted, watch, ref, computed, nextTick } from 'vue'
 import useStore from '../../composables/global/useStore'
 import { defineAsyncComponent } from '@vue/runtime-core'
 import { TrashIcon, RefreshIcon, LoginIcon, DotsVerticalIcon } from '@heroicons/vue/outline'
-import Modal from '../Shared/Modal.vue'
+import ThemedModal from '../Shared/ThemedModal.vue'
 import { useRoute } from 'vue-router'
 
 const {
