@@ -62,8 +62,7 @@ function processCreate() {
     title: title.value,
     description: description.value,
     expirationDate: expirationDateValue,
-    topic: route.params.channelId,
-    slug: 'TODO'
+    topicId: route.params.channelId
   })
     .then((x) => emit('createSuccess'))
     .catch((err) => (message.value = err.response.data.message))
