@@ -288,6 +288,7 @@ const updatedMsgs = computed((x) => {
 // }
 
 async function sendMessage() {
+  shouldDisplayUnableToSendMessage.value = false
   unableToSendSpecialMessage.value = ''
 
   if (message.value.length > 249) {
