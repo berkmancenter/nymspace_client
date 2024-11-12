@@ -1,5 +1,5 @@
 <template>
-  <p class="text-gray-600 mb-4">A pseudonymous chat thread.</p>
+  <p class="text-gray-600 text-sm mb-4">A chat thread where everyone participates using a pseudonym.</p>
   <span class="font-semibold">Thread name:</span>
   <div>
     <input v-model="threadName" class="border rounded border-gray-500 w-full h-12 px-3" type="text" />

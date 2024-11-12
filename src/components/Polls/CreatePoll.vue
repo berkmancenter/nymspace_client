@@ -1,7 +1,7 @@
 <template>
   <p class="text-gray-600 text-sm mb-8">
-    Submit responses and vote on them anonymously. When a response gets enough votes, voters for that response reveal their
-    names.
+    People submit ideas and vote on them, all anonymously. When a response gets enough votes, voters for the response reveal
+    their names to each other, while staying anoynmous to everyone else.
   </p>
   <div class="mb-4">
     <span class="font-semibold">Poll title:</span>
@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="mb-4">
-    <span class="font-semibold">Description:</span>
+    <span class="font-semibold">Description </span><span class="">(optional):</span>
     <div>
       <textarea v-model="description" rows="2" class="h-full border rounded border-gray-500 w-full p-3" type="text">
       </textarea>
@@ -43,7 +43,7 @@
         <VueDatePicker v-model="selectedTime" time-picker :text-input="timeInputOptions" :is24="false" />
       </div>
       <p class="text-gray-600 mt-2 text-sm">
-        Time is in your local timezone. The poll will end at this time for everyone regardless of their time zone.
+        Time is in your local timezone. The poll will end at the same time for everyone regardless of their time zone.
       </p>
     </div>
   </div>
