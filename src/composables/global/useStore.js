@@ -18,9 +18,11 @@ const state = reactive({
   channels: [],
   activeChannel: null,
   activeThread: null,
+  activePoll: null,
   userChannels: [],
   threads: [],
   userThreads: [],
+  polls: [],
   majorError: '',
   messages: [],
   showChatOnly: false
@@ -41,6 +43,14 @@ function setThreads(threads) {
 
 function setThread(thread) {
   state.threads = [...state.threads, thread]
+}
+
+function setPolls(polls) {
+  state.polls = [...polls]
+}
+
+function setPoll(poll) {
+  state.polls = [...state.polls, poll]
 }
 
 function setAuth(response) {
@@ -218,6 +228,16 @@ async function loadMessages(threadId) {
   setMessages(messages)
 }
 
+async function loadPolls(channelId) {
+  if (!getLoggedInStatus.value) await registerOnce()
+  const polls = await PollService.getPolls(channelId)
+  setPolls(polls)
+}
+
+async function loadPoll(pollId) {
+  return await PollService.getPoll(pollId)
+}
+
 /**
  * Create message using API and update
  * messages array with response
@@ -259,6 +279,11 @@ async function addMessage(message) {
 const getThread = (id) => {
   const threadId = state.threads.findIndex((x) => x.id === id)
   return threadId > -1 ? state.threads[threadId] : {}
+}
+
+const getPoll = (id) => {
+  const pollId = state.polls.findIndex((x) => x.id === id)
+  return pollId > -1 ? state.polls[pollId] : {}
 }
 
 const getChannel = (id) => {
@@ -393,6 +418,7 @@ const getUserThreads = computed(() => state.userThreads)
 const getUserChannels = computed(() => state.userChannels)
 
 const getThreads = computed(() => state.threads)
+const getPolls = computed(() => state.polls)
 
 const getUserToken = computed(() => VueCookieNext.getCookie('access_token'))
 
@@ -436,7 +462,12 @@ export default {
   getActiveThread,
   upsertThread,
 
+  getPoll,
+  setPoll,
+  loadPolls,
+  loadPoll,
   createPoll,
+  getPolls,
 
   getChannels,
   getChannel,
