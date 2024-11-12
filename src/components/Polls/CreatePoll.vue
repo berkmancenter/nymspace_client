@@ -39,7 +39,7 @@
     </div>
   </div>
   <!-- Error message -->
-  <div class="text-harvard-red mt-2">{{ message }}</div>
+  <div class="text-harvard-red mt-4">{{ errorMessage }}</div>
 </template>
 
 <script setup>
@@ -52,7 +52,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 const { createPoll } = useStore
 const title = ref('')
 const description = ref('')
-const message = ref('')
+const errorMessage = ref('')
 const route = useRoute()
 
 const timeInputOptions = {
@@ -73,7 +73,7 @@ const emit = defineEmits(['createSuccess'])
 
 function processCreate() {
   if (!hasTitle()) {
-    message.value = 'A title is required.'
+    errorMessage.value = 'A title is required.'
     return
   }
 
@@ -88,7 +88,7 @@ function processCreate() {
     topicId: route.params.channelId
   })
     .then((x) => emit('createSuccess'))
-    .catch((err) => (message.value = err.response.data.message))
+    .catch((err) => (errorMessage.value = err.response.data.message))
 }
 
 function hasTitle() {
