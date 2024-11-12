@@ -16,6 +16,15 @@
       </textarea>
     </div>
   </div>
+  <div class="mb-4">
+    <span class="font-semibold">Threshold:</span>
+    <p class="text-gray-600 text-sm mb-2">
+      How many votes are needed to reveal names to each other? Set this to 0 to always show names.
+    </p>
+    <div>
+      <input v-model="threshold" class="border rounded border-gray-500 w-full h-12 px-3" type="number" min="0" />
+    </div>
+  </div>
   <div class="flex">
     <div class="w-1/2">
       <p class="font-semibold">End date:</p>
@@ -52,6 +61,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 const { createPoll } = useStore
 const title = ref('')
 const description = ref('')
+const threshold = ref(5)
 const errorMessage = ref('')
 const route = useRoute()
 
@@ -76,6 +86,10 @@ function processCreate() {
     errorMessage.value = 'A title is required.'
     return
   }
+  if (threshold.value < 0) {
+    errorMessage.value = 'Threshold must be at least 0.'
+    return
+  }
 
   const expirationDate = new Date(selectedDate.value)
   expirationDate.setHours(selectedTime.value.hours)
@@ -84,6 +98,7 @@ function processCreate() {
   createPoll({
     title: title.value,
     description: description.value,
+    threshold: threshold.value,
     expirationDate,
     topicId: route.params.channelId
   })
