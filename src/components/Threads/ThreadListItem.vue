@@ -42,7 +42,8 @@ const props = defineProps({
   },
   toggleThreadsMenu: {
     type: Function,
-    required: false
+    required: false,
+    default: () => {}
   }
 })
 function getThreadClass(item) {
