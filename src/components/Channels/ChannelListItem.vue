@@ -19,7 +19,7 @@
             </p>
 
             <div class="flex items-center gap-x-2 text-xs leading-5 text-gray-500">
-              <p>
+              <p v-if="item.latestMessageCreatedAt != null">
                 Last updated
                 <time :datetime="item.latestMessageCreatedAt">{{
                   new Date(item.latestMessageCreatedAt).toLocaleDateString('en-US', {
@@ -28,6 +28,7 @@
                   })
                 }}</time>
               </p>
+              <p v-else>New channel</p>
             </div>
           </div>
         </div>
