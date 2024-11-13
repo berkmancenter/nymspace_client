@@ -209,12 +209,23 @@ function compareRecent(a, b) {
   return 0
 }
 
-const sortedItems = computed(() => [...threadsWithFollow.value, ...polls.value].sort(compareRecent).sort(compareFollowed))
+const sortedItems = computed(() =>
+  [...threadsWithFollow.value, ...pollsWithType.value].sort(compareRecent).sort(compareFollowed)
+)
 // Add isFollowed property to update if the thread is followed by user
+// Add type property to distinguish space types in ThreadList.
 const threadsWithFollow = computed(() =>
   threads.value.map((x) => ({
     ...x,
-    isFollowed: getUserThreads.value.some((y) => y.id === x.id && 'followed' in y && y.followed)
+    isFollowed: getUserThreads.value.some((y) => y.id === x.id && 'followed' in y && y.followed),
+    type: 'thread'
+  }))
+)
+
+const pollsWithType = computed(() =>
+  polls.value.map((x) => ({
+    ...x,
+    type: 'poll'
   }))
 )
 
