@@ -28,27 +28,11 @@
         </div>
       </div>
     </div>
-
-    <dl class="flex flex-none justify-between gap-x-8 sm:w-auto">
-      <div class="">
-        <h3 class="font-thin flex text-sm">{{ item.threadCount }} Threads</h3>
-
-        <div class="flex gap-x-1">
-          <dt>
-            <span class="sr-only">Total messages</span>
-            <ChatAltIcon class="h-4 w-4 inline-block" />
-          </dt>
-          <dd class="text-sm leading-6">
-            {{ new Intl.NumberFormat('en-US').format(item.messageCount) }}
-          </dd>
-        </div>
-      </div>
-    </dl>
   </li>
 </template>
 
 <script setup>
-import { ChatAltIcon, LockClosedIcon, BookmarkIcon } from '@heroicons/vue/outline'
+import { LockClosedIcon, BookmarkIcon } from '@heroicons/vue/outline'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import useStore from '../../composables/global/useStore'
