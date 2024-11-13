@@ -160,8 +160,8 @@ const userId = ref('')
 /**
  * Dialog feature
  */
-const resolve = ref({})
-const reject = ref({})
+const resolveRef = ref({})
+const rejectRef = ref({})
 const prompt = ref(false)
 const sending = ref(false)
 
@@ -174,14 +174,14 @@ onBeforeRouteUpdate(async (to, from) => {
 })
 
 const processDirtyMessage = async () => {
-  const promise = new Promise((res, rej) => {
-    resolve.value = res
-    reject.value = rej
+  const promise = new Promise((resolve, reject) => {
+    resolveRef.value = resolve
+    rejectRef.value = reject
   })
   if (message.value.trim().length > 0) {
     prompt.value = true
   } else {
-    resolve.value(true)
+    resolveRef.value(true)
   }
   const val = await promise
   if (val) {
@@ -194,7 +194,7 @@ const processDirtyMessage = async () => {
  * Dialog prompt response call
  */
 const response = (value) => {
-  resolve.value(value)
+  resolveRef.value(value)
   prompt.value = false
 }
 
