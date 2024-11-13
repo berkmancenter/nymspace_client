@@ -194,7 +194,6 @@ const threadsWithFollow = computed(() =>
     isFollowed: getUserThreads.value.some((y) => y.id === x.id && 'followed' in y && y.followed)
   }))
 )
-
 /**
  * Join topic if topic exist and
  * user is logged in (either guest or user)
