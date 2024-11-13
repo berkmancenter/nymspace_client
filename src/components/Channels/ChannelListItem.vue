@@ -1,34 +1,37 @@
 <template>
-  <li :class="getChannelClass(item)" class="flex items-center justify-between gap-x-6 gap-y-4 py-5 sm:flex-nowrap px-2">
-    <div class="flex gap-1 items-start">
-      <BookmarkIcon
-        :class="item.isFollowed ? 'fill-current' : ''"
-        class="h-4 4 inline-block cursor-pointer hover:text-black hover:stroke-current"
-        @click.prevent="pinChannel"
-      />
-      <div>
-        <router-link
-          :to="channelLink"
-          class="text-sm font-semibold leading-3 text-gray-900 hover:underline flex gap-2 items-center"
-        >
-          {{ item.name }}
-          <LockClosedIcon v-if="isPrivate(item)" class="h-4 w-4"
-        /></router-link>
-
-        <div class="flex items-center gap-x-2 text-xs leading-5 text-gray-500">
-          <p>
-            Last updated
-            <time :datetime="item.latestMessageCreatedAt">{{
-              new Date(item.latestMessageCreatedAt).toLocaleDateString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })
-            }}</time>
+  <router-link v-slot="{ navigate }" custom :to="channelLink">
+    <li
+      :class="getChannelClass(item)"
+      class="flex items-center justify-between gap-x-6 gap-y-4 py-5 sm:flex-nowrap px-2"
+      @click="navigate"
+    >
+      <div class="flex gap-1 items-start">
+        <BookmarkIcon
+          :class="item.isFollowed ? 'fill-current' : ''"
+          class="h-4 4 inline-block cursor-pointer hover:text-black hover:stroke-current"
+          @click.prevent="pinChannel"
+        />
+        <div>
+          <p class="text-sm font-semibold leading-3 text-gray-900 flex gap-2 items-center">
+            {{ item.name }}
+            <LockClosedIcon v-if="isPrivate(item)" class="h-4 w-4" />
           </p>
+
+          <div class="flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+            <p>
+              Last updated
+              <time :datetime="item.latestMessageCreatedAt">{{
+                new Date(item.latestMessageCreatedAt).toLocaleDateString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              }}</time>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </li>
+    </li>
+  </router-link>
 </template>
 
 <script setup>
