@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="flex-1 overflow-y-auto">
-          <ThreadList :items="sortedItems" :toggle-threads-menu="toggleThreadsMenu" />
+          <SpaceList :items="sortedItems" :toggle-threads-menu="toggleThreadsMenu" />
         </div>
         <div class="flex flex-col gap-1 p-4">
           <CreateSpace :show="canCreate" />
@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import ThreadList from '../components/Threads/ThreadList.vue'
+import SpaceList from '../components/Shared/SpaceList.vue'
 import CreateSpace from '../components/Shared/CreateSpace.vue'
 import useStore from '../composables/global/useStore'
 import DeleteThread from '../components/Threads/DeleteThread.vue'
@@ -213,7 +213,7 @@ const sortedItems = computed(() =>
   [...threadsWithFollow.value, ...pollsWithType.value].sort(compareRecent).sort(compareFollowed)
 )
 // Add isFollowed property to update if the thread is followed by user
-// Add type property to distinguish space types in ThreadList.
+// Add type property to distinguish space types in SpaceList.
 const threadsWithFollow = computed(() =>
   threads.value.map((x) => ({
     ...x,
