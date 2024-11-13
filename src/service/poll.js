@@ -13,5 +13,15 @@ export default {
         ...payload
       })
       .then((x) => x.data)
+  },
+
+  getPolls: async function (channelId) {
+    return await axios
+      .get(`/polls`, {
+        params: {
+          topic: channelId
+        }
+      })
+      .then((x) => x.data)
   }
 }

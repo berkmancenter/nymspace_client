@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="flex-1 overflow-y-auto">
-          <ThreadList :items="sortedThreads" :toggle-threads-menu="toggleThreadsMenu" />
+          <ThreadList :items="sortedItems" :toggle-threads-menu="toggleThreadsMenu" />
         </div>
         <div class="flex flex-col gap-1 p-4">
           <CreateSpace :show="canCreate" />
@@ -54,14 +54,14 @@
           </div>
         </div>
         <div
-          v-if="!isThreadActive && sortedThreads.length"
+          v-if="!isThreadActive && sortedItems.length"
           class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500"
         >
           Select a thread
         </div>
 
         <div
-          v-if="!isThreadActive && !sortedThreads.length"
+          v-if="!isThreadActive && !sortedItems.length"
           class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500"
         >
           Create a thread
@@ -116,6 +116,12 @@ const {
   setThread,
   upsertThread,
 
+  // Polls
+  getPolls,
+  // getPoll,
+  loadPolls,
+  // setPoll,
+
   // Users and settings
   setShowChatOnly,
   getGuestStatus,
@@ -124,11 +130,13 @@ const {
 } = useStore
 
 const router = useRouter()
-const items = getThreads
+const threads = getThreads
+const polls = getPolls
 const wsInstance = reactive({})
 const channel = ref(getChannel(route.params.channelId))
 const maybeThread = ref(getThread(route.params.threadId))
 const isThreadActive = ref(false)
+// const isPollActive = ref(false)
 const isChannelOwner = computed(() => getId.value === channel.value?.owner)
 const isChannelThreadCreationAllowed = computed(() => channel.value?.threadCreationAllowed)
 const isModalOpen = ref(false)
@@ -190,15 +198,15 @@ function compare(a, b) {
   } else return 1
 }
 
-const sortedThreads = computed(() => [...threadsWithFollow.value].sort(compare))
-
+const sortedItems = computed(() => [...threadsWithFollow.value, ...polls.value].sort(compare))
 // Add isFollowed property to update if the thread is followed by user
 const threadsWithFollow = computed(() =>
-  items.value.map((x) => ({
+  threads.value.map((x) => ({
     ...x,
     isFollowed: getUserThreads.value.some((y) => y.id === x.id && 'followed' in y && y.followed)
   }))
 )
+
 /**
  * Join topic if topic exist and
  * user is logged in (either guest or user)
@@ -260,6 +268,7 @@ const reconnectSockets = () => {
 onMounted(async () => {
   await loadUserThreads()
   await loadThreads(route.params.channelId)
+  await loadPolls(route.params.channelId)
 
   if (Object.keys(channel.value).length === 0) {
     channel.value = { ...(await loadChannel(route.params.channelId)) }
