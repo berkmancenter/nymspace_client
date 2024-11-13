@@ -198,20 +198,7 @@ function compareFollowed(a, b) {
   } else return 1
 }
 
-// Compare method for placing most recent threads at the top.
-function compareRecent(a, b) {
-  if (a.createdAt > b.createdAt) {
-    return -1
-  }
-  if (a.createdAt < b.createdAt) {
-    return 1
-  }
-  return 0
-}
-
-const sortedItems = computed(() =>
-  [...threadsWithFollow.value, ...pollsWithType.value].sort(compareRecent).sort(compareFollowed)
-)
+const sortedItems = computed(() => [...threadsWithFollow.value, ...pollsWithType.value].sort(compareFollowed))
 // Add isFollowed property to update if the thread is followed by user
 // Add type property to distinguish space types in SpaceList.
 const threadsWithFollow = computed(() =>
