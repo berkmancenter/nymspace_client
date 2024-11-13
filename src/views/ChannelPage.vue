@@ -188,8 +188,8 @@ watch(
   }
 )
 
-// compare method to Sort the threads to put followed threads at top
-function compare(a, b) {
+// Compare method to sort the threads to put followed threads at top
+function compareFollowed(a, b) {
   if (a.isFollowed && b.isFollowed) {
     return 0
   }
@@ -198,7 +198,18 @@ function compare(a, b) {
   } else return 1
 }
 
-const sortedItems = computed(() => [...threadsWithFollow.value, ...polls.value].sort(compare))
+// Compare method for placing most recent threads at the top.
+function compareRecent(a, b) {
+  if (a.createdAt > b.createdAt) {
+    return -1
+  }
+  if (a.createdAt < b.createdAt) {
+    return 1
+  }
+  return 0
+}
+
+const sortedItems = computed(() => [...threadsWithFollow.value, ...polls.value].sort(compareRecent).sort(compareFollowed))
 // Add isFollowed property to update if the thread is followed by user
 const threadsWithFollow = computed(() =>
   threads.value.map((x) => ({
