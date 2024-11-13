@@ -101,21 +101,26 @@ const route = useRoute()
 onBeforeUnmount(() => setShowChatOnly(false))
 
 const {
+  // Channels
+  getChannel,
+  loadChannel,
+  setActiveChannel,
+  deleteChannel,
+
+  // Threads
   getThreads,
   getThread,
   loadThreads,
-  getChannel,
-  loadChannel,
   loadUserThreads,
   getUserThreads,
-  setActiveChannel,
-  setShowChatOnly,
-  getLoggedInStatus,
   setThread,
   upsertThread,
+
+  // Users and settings
+  setShowChatOnly,
   getGuestStatus,
-  getId,
-  deleteChannel
+  getLoggedInStatus,
+  getId
 } = useStore
 
 const router = useRouter()
