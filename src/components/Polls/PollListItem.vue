@@ -22,7 +22,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
-const pollLink = computed(() => `${path}/channels/${route.params.channelId}/polls/${props.item.slug}`)
+const pollLink = computed(() => `${path}/channels/${route.params.channelId}/polls/${props.item._id}`)
 
 const props = defineProps({
   item: {
@@ -37,7 +37,7 @@ const props = defineProps({
 })
 function getPollClass(item) {
   let className = 'px-2 flex items-center gap-2 justify-between py-1 text-gray-700 hover:bg-gray-300 cursor-pointer'
-  if (props.item.slug === route.params.pollId) className += ' bg-gray-300'
+  if (props.item._id === route.params.pollId) className += ' bg-gray-300'
   return className
 }
 </script>
