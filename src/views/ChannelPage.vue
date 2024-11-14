@@ -3,9 +3,13 @@
     <div class="flex flex-col-reverse flex-1 gap-2 sm:gap-0 sm:flex-row">
       <div
         class="absolute top-0 z-10 flex flex-col flex-1 w-full h-full pl-20 transition-all duration-500 ease-in-out bg-gray-100 border-r border-gray-300 shadow sm:transition-none sm:w-52 sm:bg-gray-100 sm:flex-initial sm:rounded-l sm:relative sm:z-0 sm:left-0 sm:pl-0"
+        :class="threadsMenuOpen ? '-left-20 sm:left-0' : '-left-full sm:left-0'"
       >
         <div class="flex items-center justify-between sm:hidden">
           <router-link :to="path" class="pl-4 text-lg font-bold sm:text-2xl text-harvard-red">nymspace </router-link>
+          <button class="flex justify-end w-full p-4" @click="toggleThreadsMenu">
+            <XIcon class="w-6 h-6" />
+          </button>
         </div>
         <div
           class="flex items-center justify-between gap-6 px-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"
@@ -26,18 +30,34 @@
           </div>
         </div>
         <div class="flex-1 overflow-y-auto">
-          <SpaceList :items="sortedItems" />
+          <SpaceList :items="sortedItems" :toggle-threads-menu="toggleThreadsMenu" />
         </div>
         <div class="flex flex-col gap-1 p-4">
           <CreateSpace :show="canCreate" />
         </div>
       </div>
       <ThreadHeader
+        v-if="isThreadActive"
         :thread="maybeThread"
         :channel="channel"
         :is-thread-active="isThreadActive"
+        :toggle-threads-menu="toggleThreadsMenu"
         :can-edit-delete-thread="canEditDeleteThread"
       />
+      <div v-else class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
+        <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
+          <div class="flex gap-2 truncate">
+            <button class="sm:hidden" @click="toggleThreadsMenu">
+              <ViewListIcon class="w-6 text-black h-7" />
+            </button>
+            <div></div>
+          </div>
+          <div class="flex items-center gap-2"></div>
+        </div>
+        <div class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500">
+          <p>Select or create a new space to get started.</p>
+        </div>
+      </div>
     </div>
     <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
       <template #title>{{ channel.name }}</template>
@@ -58,6 +78,7 @@ import { VueCookieNext } from 'vue-cookie-next'
 import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
 import ThemedModal from '../components/Shared/ThemedModal.vue'
+import { XIcon, ViewListIcon } from '@heroicons/vue/solid'
 
 const route = useRoute()
 
@@ -112,6 +133,11 @@ function openModal() {
 function closeModal() {
   document.querySelector('body').classList.remove('modal-open')
   isModalOpen.value = false
+}
+
+const threadsMenuOpen = ref(!route.params.threadId)
+function toggleThreadsMenu() {
+  threadsMenuOpen.value = !threadsMenuOpen.value
 }
 
 const path = import.meta.env.VITE_PATH ? `${import.meta.env.VITE_PATH}/` : '/'

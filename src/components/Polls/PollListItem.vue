@@ -28,6 +28,11 @@ const props = defineProps({
   item: {
     type: Object,
     required: true
+  },
+  toggleThreadsMenu: {
+    type: Function,
+    required: false,
+    default: () => {}
   }
 })
 function getPollClass(item) {
