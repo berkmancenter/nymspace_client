@@ -3,13 +3,9 @@
     <div class="flex flex-col-reverse flex-1 gap-2 sm:gap-0 sm:flex-row">
       <div
         class="absolute top-0 z-10 flex flex-col flex-1 w-full h-full pl-20 transition-all duration-500 ease-in-out bg-gray-100 border-r border-gray-300 shadow sm:transition-none sm:w-52 sm:bg-gray-100 sm:flex-initial sm:rounded-l sm:relative sm:z-0 sm:left-0 sm:pl-0"
-        :class="threadsMenuOpen ? '-left-20 sm:left-0' : '-left-full sm:left-0'"
       >
         <div class="flex items-center justify-between sm:hidden">
           <router-link :to="path" class="pl-4 text-lg font-bold sm:text-2xl text-harvard-red">nymspace </router-link>
-          <button class="flex justify-end w-full p-4" @click="toggleThreadsMenu">
-            <XIcon class="w-6 h-6" />
-          </button>
         </div>
         <div
           class="flex items-center justify-between gap-6 px-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"
@@ -30,7 +26,7 @@
           </div>
         </div>
         <div class="flex-1 overflow-y-auto">
-          <SpaceList :items="sortedItems" :toggle-threads-menu="toggleThreadsMenu" />
+          <SpaceList :items="sortedItems" />
         </div>
         <div class="flex flex-col gap-1 p-4">
           <CreateSpace :show="canCreate" />
