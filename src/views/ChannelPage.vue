@@ -44,6 +44,7 @@
         :toggle-threads-menu="toggleThreadsMenu"
         :can-edit-delete-thread="canEditDeleteThread"
       />
+      <PollHeader v-else-if="isPollActive" :poll="maybePoll" :toggle-threads-menu="toggleThreadsMenu" />
       <div v-else class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
         <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
           <div class="flex gap-2 truncate">
@@ -71,6 +72,7 @@ import SpaceList from '../components/Shared/SpaceList.vue'
 import CreateSpace from '../components/Shared/CreateSpace.vue'
 import useStore from '../composables/global/useStore'
 import ThreadHeader from '../components/Threads/ThreadHeader.vue'
+import PollHeader from '../components/Polls/PollHeader.vue'
 import { onMounted, computed, ref, onBeforeUnmount, onUnmounted, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SocketioService from '../service/socket.service'
@@ -78,7 +80,7 @@ import { VueCookieNext } from 'vue-cookie-next'
 import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
 import ThemedModal from '../components/Shared/ThemedModal.vue'
-import { XIcon, ViewListIcon } from '@heroicons/vue/solid'
+import { XIcon, ViewListIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
 
@@ -102,7 +104,7 @@ const {
 
   // Polls
   getPolls,
-  // getPoll,
+  getPoll,
   loadPolls,
   // setPoll,
 
@@ -119,8 +121,9 @@ const polls = getPolls
 const wsInstance = reactive({})
 const channel = ref(getChannel(route.params.channelId))
 const maybeThread = ref(getThread(route.params.threadId))
+const maybePoll = ref(getPoll(route.params.pollId))
 const isThreadActive = ref(false)
-// const isPollActive = ref(false)
+const isPollActive = ref(false)
 const isChannelOwner = computed(() => getId.value === channel.value?.owner)
 const isChannelThreadCreationAllowed = computed(() => channel.value?.threadCreationAllowed)
 const isModalOpen = ref(false)
@@ -154,6 +157,21 @@ watch(
       maybeThread.value = getThread(newId)
     } else {
       isThreadActive.value = false
+    }
+  },
+  {
+    immediate: true
+  }
+)
+
+watch(
+  () => route.params.pollId,
+  async (newId) => {
+    if (newId) {
+      isPollActive.value = true
+      maybePoll.value = getPoll(newId)
+    } else {
+      isPollActive.value = false
     }
   },
   {
