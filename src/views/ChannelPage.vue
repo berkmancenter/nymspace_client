@@ -36,47 +36,16 @@
           <CreateSpace :show="canCreate" />
         </div>
       </div>
-      <div class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
-        <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
-          <div class="flex gap-2 truncate">
-            <button class="sm:hidden" @click="toggleThreadsMenu">
-              <ViewListIcon class="w-6 text-black h-7" />
-            </button>
-            <h2 class="text-lg font-thin truncate threads-title">
-              <button class="w-full truncate" @click="openThreadModal">
-                {{ maybeThread.name }}
-              </button>
-            </h2>
-          </div>
-          <div class="flex items-center gap-2">
-            <DeleteThread :show="canEditDeleteThread" :item="maybeThread" />
-            <EditThread :show="canEditDeleteThread" :item="maybeThread" />
-          </div>
-        </div>
-        <div
-          v-if="!isThreadActive && sortedItems.length"
-          class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500"
-        >
-          Select a thread
-        </div>
-
-        <div
-          v-if="!isThreadActive && !sortedItems.length"
-          class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500"
-        >
-          Create a thread
-        </div>
-        <router-view></router-view>
-      </div>
+      <ThreadHeader
+        :thread="maybeThread"
+        :channel="channel"
+        :is-thread-active="isThreadActive"
+        :can-edit-delete-thread="canEditDeleteThread"
+      />
     </div>
     <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
       <template #title>{{ channel.name }}</template>
       <div class="text-xl"></div>
-    </ThemedModal>
-    <ThemedModal :is-open="isThreadModalOpen" @close-modal="closeThreadModal">
-      <template #title>{{ maybeThread.name }}</template>
-      <div class="text-xl">in the {{ channel.name }} channel</div>
-      <div class="mt-3 text-lg">{{ maybeThread.messageCount }} messages</div>
     </ThemedModal>
   </div>
 </template>
@@ -85,15 +54,13 @@
 import SpaceList from '../components/Shared/SpaceList.vue'
 import CreateSpace from '../components/Shared/CreateSpace.vue'
 import useStore from '../composables/global/useStore'
-import DeleteThread from '../components/Threads/DeleteThread.vue'
-import EditThread from '../components/Threads/EditThread.vue'
+import ThreadHeader from '../components/Threads/ThreadHeader.vue'
 import { onMounted, computed, ref, onBeforeUnmount, onUnmounted, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SocketioService from '../service/socket.service'
 import { VueCookieNext } from 'vue-cookie-next'
 import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
-import { ViewListIcon, XIcon } from '@heroicons/vue/outline'
 import ThemedModal from '../components/Shared/ThemedModal.vue'
 
 const route = useRoute()
@@ -140,7 +107,6 @@ const isThreadActive = ref(false)
 const isChannelOwner = computed(() => getId.value === channel.value?.owner)
 const isChannelThreadCreationAllowed = computed(() => channel.value?.threadCreationAllowed)
 const isModalOpen = ref(false)
-const isThreadModalOpen = ref(false)
 
 function openModal() {
   document.querySelector('body').classList.add('modal-open')
@@ -150,21 +116,6 @@ function openModal() {
 function closeModal() {
   document.querySelector('body').classList.remove('modal-open')
   isModalOpen.value = false
-}
-
-function openThreadModal() {
-  document.querySelector('body').classList.add('modal-open')
-  isThreadModalOpen.value = true
-}
-
-function closeThreadModal() {
-  document.querySelector('body').classList.remove('modal-open')
-  isThreadModalOpen.value = false
-}
-
-const threadsMenuOpen = ref(!route.params.threadId)
-function toggleThreadsMenu() {
-  threadsMenuOpen.value = !threadsMenuOpen.value
 }
 
 const path = import.meta.env.VITE_PATH ? `${import.meta.env.VITE_PATH}/` : '/'
