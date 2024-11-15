@@ -41,6 +41,10 @@ defineProps({
     type: Object,
     required: true
   },
+  isThreadActive: {
+    type: Boolean,
+    required: true
+  },
   toggleSideMenu: {
     type: Function,
     required: true

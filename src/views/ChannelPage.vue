@@ -44,10 +44,15 @@
         :thread="maybeThread"
         :channel="channel"
         :is-thread-active="isThreadActive"
-        :toggle-threads-menu="toggleSideMenu"
+        :toggle-side-menu="toggleSideMenu"
         :can-edit-delete-thread="canEditDeleteThread"
       />
-      <PollHeader v-else-if="isPollActive" :poll="maybePoll" :toggle-side-menu="toggleSideMenu" />
+      <PollHeader
+        v-else-if="isPollActive"
+        :poll="maybePoll"
+        :toggle-side-menu="toggleSideMenu"
+        :is-admin="canEditDeleteThread"
+      />
 
       <!-- Component shown if no space is selected -->
       <div v-else class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
