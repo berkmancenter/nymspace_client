@@ -1,13 +1,14 @@
 <template>
   <div class="flex flex-col flex-1 sm:mt-2 sm:p-4 bg-gray-50">
     <div class="flex flex-col-reverse flex-1 gap-2 sm:gap-0 sm:flex-row">
+      <!-- Side menu shown on small screens -->
       <div
         class="absolute top-0 z-10 flex flex-col flex-1 w-full h-full pl-20 transition-all duration-500 ease-in-out bg-gray-100 border-r border-gray-300 shadow sm:transition-none sm:w-52 sm:bg-gray-100 sm:flex-initial sm:rounded-l sm:relative sm:z-0 sm:left-0 sm:pl-0"
         :class="threadsMenuOpen ? '-left-20 sm:left-0' : '-left-full sm:left-0'"
       >
         <div class="flex items-center justify-between sm:hidden">
           <router-link :to="path" class="pl-4 text-lg font-bold sm:text-2xl text-harvard-red">nymspace </router-link>
-          <button class="flex justify-end w-full p-4" @click="toggleThreadsMenu">
+          <button class="flex justify-end w-full p-4" @click="toggleSideMenu">
             <XIcon class="w-6 h-6" />
           </button>
         </div>
@@ -30,25 +31,29 @@
           </div>
         </div>
         <div class="flex-1 overflow-y-auto">
-          <SpaceList :items="sortedItems" :toggle-threads-menu="toggleThreadsMenu" />
+          <SpaceList :items="sortedItems" :toggle-side-menu="toggleSideMenu" />
         </div>
         <div class="flex flex-col gap-1 p-4">
           <CreateSpace :show="canCreate" />
         </div>
       </div>
+
+      <!-- Content header area -->
       <ThreadHeader
         v-if="isThreadActive"
         :thread="maybeThread"
         :channel="channel"
         :is-thread-active="isThreadActive"
-        :toggle-threads-menu="toggleThreadsMenu"
+        :toggle-threads-menu="toggleSideMenu"
         :can-edit-delete-thread="canEditDeleteThread"
       />
-      <PollHeader v-else-if="isPollActive" :poll="maybePoll" :toggle-threads-menu="toggleThreadsMenu" />
+      <PollHeader v-else-if="isPollActive" :poll="maybePoll" :toggle-side-menu="toggleSideMenu" />
+
+      <!-- Component shown if no space is selected -->
       <div v-else class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
         <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
           <div class="flex gap-2 truncate">
-            <button class="sm:hidden" @click="toggleThreadsMenu">
+            <button class="sm:hidden" @click="toggleSideMenu">
               <ViewListIcon class="w-6 text-black h-7" />
             </button>
             <div></div>
@@ -139,7 +144,7 @@ function closeModal() {
 }
 
 const threadsMenuOpen = ref(!route.params.threadId)
-function toggleThreadsMenu() {
+function toggleSideMenu() {
   threadsMenuOpen.value = !threadsMenuOpen.value
 }
 

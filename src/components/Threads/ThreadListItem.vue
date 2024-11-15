@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="threadLink" :class="getThreadClass(item)" @click="props.toggleThreadsMenu">
+  <router-link :to="threadLink" :class="getThreadClass(item)" @click="props.toggleSideMenu">
     <div class="flex-1 flex gap-1 truncate">
       <div class="font-semibold justify-self-end">
         <HashtagIcon :class="item.isFollowed ? 'fill-current text-harvard-red' : ''" class="h-4 w-4 inline-block" />
@@ -36,10 +36,9 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  toggleThreadsMenu: {
+  toggleSideMenu: {
     type: Function,
-    required: false,
-    default: () => {}
+    required: true
   }
 })
 function getThreadClass(item) {

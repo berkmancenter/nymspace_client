@@ -2,7 +2,7 @@
   <div class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
     <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
       <div class="flex gap-2 truncate">
-        <button class="sm:hidden" @click="toggleThreadsMenu">
+        <button class="sm:hidden" @click="toggleSideMenu">
           <ViewListIcon class="w-6 text-black h-7" />
         </button>
         <h2 class="text-lg font-thin truncate threads-title">
@@ -41,10 +41,9 @@ defineProps({
     type: Object,
     required: true
   },
-  toggleThreadsMenu: {
+  toggleSideMenu: {
     type: Function,
-    required: false,
-    default: () => {}
+    required: true
   },
   canEditDeleteThread: {
     type: Boolean,

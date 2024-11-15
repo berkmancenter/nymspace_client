@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="pollLink" :class="getPollClass(item)" @click="props.toggleThreadsMenu">
+  <router-link :to="pollLink" :class="getPollClass(item)" @click="props.toggleSideMenu">
     <div class="flex-1 flex gap-1 truncate">
       <div class="font-semibold justify-self-end">
         <UserGroupIcon class="h-4 w-4 inline-block" />
@@ -29,10 +29,9 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  toggleThreadsMenu: {
+  toggleSideMenu: {
     type: Function,
-    required: false,
-    default: () => {}
+    required: true
   }
 })
 function getPollClass(item) {
