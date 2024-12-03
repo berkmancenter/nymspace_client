@@ -94,7 +94,7 @@
       </div>
       <p class="text-xs">
         <span :class="message.length > 4999 ? 'text-harvard-red' : ''">{{ message.length }}</span
-        >/10000 character limit
+        >/5000 character limit
       </p>
     </div>
   </div>
