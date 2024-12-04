@@ -40,7 +40,14 @@ export default [
               {
                 path: 'polls/:pollId?',
                 name: 'home.polls',
-                component: PollPage
+                component: PollPage,
+                children: [
+                  {
+                    path: 'results/:choiceId',
+                    name: 'home.polls.results',
+                    component: PollPage
+                  }
+                ]
               }
             ]
           }
