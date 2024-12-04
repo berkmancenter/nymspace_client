@@ -1,9 +1,15 @@
 <template>
+  <!-- Threshold reached item -->
   <div
-    class="cursor-pointer p-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+    v-if="item.votes >= thresholdValue"
+    class="cursor-pointer p-2 align-items-center bg-green-50 border-green-500 border-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
     @click="onChoiceClicked"
   >
-    <h3 class="text-md font-bold mb-1">{{ item.text }}</h3>
+    <p class="text-sm">{{ item.text }}</p>
+  </div>
+  <!-- Locked item -->
+  <div v-else class="p-2 align-items-center bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+    <p class="text-sm">{{ item.text }}</p>
   </div>
 </template>
 
