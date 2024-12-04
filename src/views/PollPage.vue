@@ -1,17 +1,29 @@
 <template>
   <!-- Poll result view -->
-  <div v-if="choice && choice.votes >= thresholdValue">
-    <h2 class="text-lg font-bold mb-4">Poll Result for Choice: {{ choice.title }}</h2>
-    <p class="text-gray-600 mb-4">Votes: {{ choice.votes }}</p>
-    <ul class="list-disc pl-5 mb-4">
-      <li v-for="voter in choice.voters" :key="voter">{{ voter }}</li>
-    </ul>
-    <button
-      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
-      @click="goBack"
-    >
-      Back to All Responses
-    </button>
+  <div v-if="choice && choice.votes >= thresholdValue" class="px-4">
+    <div class="flex content-center mb-2 py-4">
+      <button class="mr-4" @click="navigateBack">
+        <ChevronLeftIcon class="w-6 h-6" />
+      </button>
+      <div>
+        <h2 class="text-lg font-bold">{{ choice.title }}</h2>
+        <p class="text-sm">
+          This option reached the threshold of {{ thresholdValue }}. The people who chose this option are shown below.
+        </p>
+        <div class="flex mt-1">
+          <div class="bg-green-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
+            Votes: {{ choice.votes }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-center">
+      <div class="flex">
+        <div v-for="voter in choice.voters" :key="voter" class="bg-white rounded-lg shadow-md px-6 py-2 m-4">
+          {{ voter }}
+        </div>
+      </div>
+    </div>
   </div>
   <!-- Grid of choices -->
   <div v-else class="flex flex-col justify-between flex-1 p-4">
@@ -29,6 +41,7 @@ import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ChoiceInput from '../components/Polls/ChoiceInput.vue'
 import ChoiceItem from '../components/Polls/ChoiceItem.vue'
+import { ChevronLeftIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
 const router = useRouter()
@@ -46,7 +59,7 @@ const items = ref([
   { id: 5, title: 'Go shopping', votes: 5, voters: ['Liam', 'Mia', 'Noah'] }
 ])
 
-function goBack() {
+function navigateBack() {
   router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
 }
 </script>
