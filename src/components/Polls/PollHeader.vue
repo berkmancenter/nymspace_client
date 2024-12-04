@@ -1,13 +1,33 @@
 <template>
   <div class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
-    <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
-      <div class="flex gap-2 truncate">
+    <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm sm:pl-5">
+      <div class="flex">
+        <!-- Small screen menu toggler -->
         <button class="sm:hidden" @click="toggleSideMenu">
           <ViewListIcon class="w-6 text-black h-7" />
         </button>
-        <h2 class="text-lg font-thin truncate threads-title">
-          <button class="w-full truncate" @click="openThreadModal">poll name</button>
-        </h2>
+
+        <!-- Poll details -->
+        <div class="flex flex-col pl-4 sm:p-0">
+          <h2 class="text-lg text-left font-thin truncate">
+            <button class="w-full text-left truncate" @click="openThreadModal">What should we do this afternoon?</button>
+          </h2>
+          <p class="text-xs text-left">
+            It's our last afternoon in New York! How should we spend it? I really love rambling, so I'll keep this
+            description long. Really, really long. I mean, it's just a poll, but I want to make sure it's clear what I'm
+            asking.
+          </p>
+          <div class="flex gap-2 mt-2">
+            <div class="bg-red-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
+              Threshold: 5
+              <!-- {{ threshold }} -->
+            </div>
+            <div class="bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
+              Poll ends: Friday, November 22, 12:00 PM (ET)
+              <!-- {{ expirationDate }} -->
+            </div>
+          </div>
+        </div>
       </div>
       <div class="flex items-center gap-2">
         <DeleteThread :show="isAdmin" :item="poll" />
@@ -38,5 +58,3 @@ defineProps({
   }
 })
 </script>
-
-<style></style>
