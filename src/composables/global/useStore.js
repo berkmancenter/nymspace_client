@@ -153,7 +153,7 @@ async function updateThread(payload) {
   await ThreadService.updateThread(payload)
   await loadThreads(getActiveChannel.value.id)
   if (getActiveThread.value) {
-    setActiveThread(getThread(getActiveThread.value.id ?? getActiveThread.value._id))
+    setActiveThread(getThread(getActiveThread.value.id))
   }
 }
 
@@ -503,6 +503,7 @@ export default {
   loadPoll,
   loadPollResponses,
   loadPollResponseCounts,
+  setActivePoll,
   getPolls,
   getPollResponses,
 

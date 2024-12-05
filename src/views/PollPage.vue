@@ -41,33 +41,69 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import useStore from '../composables/global/useStore'
 import ResponseInput from '../components/Polls/ResponseInput.vue'
-import ResponseItem from '../components/Polls/ResponseItem.vue'
-import { ChevronLeftIcon } from '@heroicons/vue/outline'
+// import ResponseItem from '../components/Polls/ResponseItem.vue'
+// import { ChevronLeftIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
-const router = useRouter()
+// const router = useRouter()
+const { getPoll, setActivePoll, loadPoll, loadUser } = useStore
 
-const thresholdValue = 5
+const poll = ref(getPoll(route.params.pollId))
+const userId = ref('')
 
-const responseId = computed(() => route.params.responseId)
-const response = computed(() => items.value.find((item) => item.id === parseInt(responseId.value)))
+/**
+ * Load poll from store if exists
+ * else load from API if does not exist
+ */
+onMounted(async () => {
+  const user = await loadUser()
+  userId.value = user.id
+  // await fetchMessages(route.params.threadId)
+  await fetchPollDetails(route.params.pollId)
+  // messageTextArea.value?.focus()
+})
 
-const isExpired = ref(true)
-
-const items = ref([
-  { id: 1, title: 'See Wicked on Broadway', votes: 3, voters: ['Alice', 'Bob', 'Charlie'] },
-  { id: 2, title: 'Visit the Natural History Museum', votes: 7, voters: ['Dave', 'Eve', 'Frank'] },
-  { id: 3, title: 'Chill at home', votes: 3, voters: ['Grace', 'Heidi', 'Ivan'] },
-  { id: 4, title: 'Go to the Met', votes: 2, voters: ['Judy', 'Karl'] },
-  { id: 5, title: 'Go shopping', votes: 5, voters: ['Liam', 'Mia', 'Noah'] }
-])
-
-function navigateBack() {
-  router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
+async function fetchPollDetails(pollId) {
+  try {
+    if (!poll.value || Object.keys(poll.value).length === 0) {
+      poll.value = await loadPoll(pollId)
+    } else {
+      poll.value = getPoll(pollId)
+    }
+    setActivePoll(poll.value)
+  } catch (error) {
+    console.error('Error fetching poll details:', error)
+  }
 }
+/**
+ * Watch pollId on router params to
+ * clear and fetch responses for new poll
+ */
+watch(
+  () => route.params.pollId,
+  async (pollId, prevPollId) => {
+    if (pollId !== undefined && pollId !== prevPollId) {
+      try {
+        // await loadPollResponses(pollId)
+        await fetchPollDetails(pollId)
+      } catch (error) {
+        console.error('Error in watcher callback:', error)
+      }
+    }
+  }
+)
+// const responseId = computed(() => route.params.responseId)
+// const response = computed(() => responses.value.find((item) => item.id === responseId.value))
+
+const isExpired = computed(() => new Date(poll.value.expirationDate) < new Date())
+
+// function navigateBack() {
+//   router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
+// }
 </script>
 
 <style scoped>
