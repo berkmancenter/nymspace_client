@@ -73,7 +73,7 @@ const timeInputOptions = {
 // Default date is 5 days in the future.
 const defaultDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
 const selectedDate = ref(defaultDate)
-const selectedTime = ref({ hours: 23, minutes: 59 })
+const selectedTime = ref({ hours: 23, minutes: 59, seconds: 59 })
 
 defineExpose({
   processCreate
@@ -100,7 +100,12 @@ function processCreate() {
     description: description.value,
     threshold: threshold.value,
     expirationDate,
-    topicId: route.params.channelId
+    topicId: route.params.channelId,
+    // Default below to true for MVP
+    allowNewChoices: true,
+    choicesVisible: true,
+    onlyOwnChoicesVisible: false,
+    multiSelect: true
   })
     .then((x) => emit('createSuccess'))
     .catch((err) => (errorMessage.value = err.response.data.message))
