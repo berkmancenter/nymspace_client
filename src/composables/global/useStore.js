@@ -443,6 +443,10 @@ function setPoll(poll) {
   state.polls = [...state.polls, poll]
 }
 
+function setPollResponses(responses) {
+  state.pollResponses = [...responses]
+}
+
 function setActivePoll(poll) {
   state.activePoll = { ...poll }
 }
@@ -453,11 +457,11 @@ async function createPoll(payload) {
   await PollService.createPoll(payload)
 }
 
-async function respondPoll(payload) {
-  await PollService.respondPoll(payload)
-  await loadPoll(getActivePoll.value.id)
+async function respondPoll({ pollId, choiceText }) {
+  await PollService.respondPoll(pollId, choiceText)
+  await loadPoll(getActivePoll.value._id)
   if (getActivePoll.value) {
-    setActivePoll(getPoll(getActivePoll.value.id ?? getActivePoll.value._id))
+    setActivePoll(getPoll(getActivePoll.value._id))
   }
 }
 
@@ -472,7 +476,8 @@ async function loadPoll(pollId) {
 }
 
 async function loadPollResponses(pollId) {
-  return await PollService.getPollResponses(pollId)
+  const responses = await PollService.getPollResponses(pollId)
+  setPollResponses(responses)
 }
 
 async function loadPollResponseCounts(pollId) {
@@ -503,6 +508,7 @@ export default {
   loadPoll,
   loadPollResponses,
   loadPollResponseCounts,
+  getActivePoll,
   setActivePoll,
   getPolls,
   getPollResponses,

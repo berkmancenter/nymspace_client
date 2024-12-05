@@ -31,10 +31,12 @@ export default {
   getPollResponses: async function (pollId) {
     return await axios.get(`/polls/${pollId}/responses`).then((x) => x.data)
   },
-  respondPoll: async function (payload) {
+  respondPoll: async function (pollId, choiceText) {
     return await axios
-      .post(`/polls/${payload.pollId}/respond`, {
-        ...payload
+      .post(`/polls/${pollId}/respond`, {
+        choice: {
+          text: choiceText
+        }
       })
       .then((x) => x.data)
   },

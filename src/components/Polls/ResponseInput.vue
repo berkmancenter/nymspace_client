@@ -37,11 +37,25 @@
 
 <script setup>
 import { ref } from 'vue'
+import useStore from '../../composables/global/useStore'
+
+const { respondPoll, getActivePoll } = useStore
 
 const responseText = ref('')
 
-function sendResponse() {
-  console.log('TODO: Send response with text value: ', responseText.value)
+async function sendResponse() {
+  if (responseText.value.length > 0 && responseText.value.length <= 250) {
+    try {
+      console.log(responseText.value)
+      await respondPoll({
+        pollId: getActivePoll.value._id,
+        choiceText: responseText.value
+      })
+      responseText.value = ''
+    } catch (error) {
+      console.error('Error sending response:', error)
+    }
+  }
 }
 </script>
 
