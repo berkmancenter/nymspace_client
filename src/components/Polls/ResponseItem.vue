@@ -3,7 +3,7 @@
   <div
     v-if="item.votes >= thresholdValue"
     class="p-2 align-items-center bg-green-50 border-green-500 border-2 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300"
-    @click="onChoiceClicked(item)"
+    @click="onResponseClicked(item)"
   >
     <p class="text-sm">{{ item.title }}</p>
   </div>
@@ -37,13 +37,13 @@ const props = defineProps({
 
 const router = useRouter()
 
-function onChoiceClicked(item) {
+function onResponseClicked(item) {
   const thresholdReached = item.votes >= props.thresholdValue
   if (props.isExpired && !thresholdReached) {
     return
   }
   if (thresholdReached) {
-    router.push({ name: 'home.polls.results', params: { choiceId: item.id } })
+    router.push({ name: 'home.polls.results', params: { responseId: item.id } })
   }
 }
 </script>
