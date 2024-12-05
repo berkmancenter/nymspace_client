@@ -430,7 +430,7 @@ const getPollResponses = computed(() => state.pollResponses)
 const getActivePoll = computed(() => state.activePoll)
 
 const getPoll = (id) => {
-  const pollId = state.polls.findIndex((x) => x.id === id)
+  const pollId = state.polls.findIndex((x) => x._id === id)
   return pollId > -1 ? state.polls[pollId] : {}
 }
 

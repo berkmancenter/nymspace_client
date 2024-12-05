@@ -286,6 +286,7 @@ onMounted(async () => {
     channel.value = getChannel(route.params.channelId)
   }
   maybeThread.value = getThread(route.params.threadId)
+  maybePoll.value = getPoll(route.params.pollId)
 
   wsInstance.value = new SocketioService()
   wsInstance.value.addDisconnectHandler(reconnectSockets)

@@ -10,20 +10,17 @@
         <!-- Poll details -->
         <div class="flex flex-col pl-4 sm:p-0">
           <h2 class="text-lg text-left font-thin truncate">
-            <button class="w-full text-left truncate" @click="openThreadModal">What should we do this afternoon?</button>
+            <button class="w-full text-left truncate" @click="openThreadModal">{{ poll.title }}</button>
           </h2>
-          <p class="text-xs text-left">
-            It's our last afternoon in New York! How should we spend it? I really love rambling, so I'll keep this
-            description long. Really, really long. I mean, it's just a poll, but I want to make sure it's clear what I'm
-            asking.
+          <p class="text-sm text-left">
+            {{ poll.description }}
           </p>
           <div class="flex gap-2 mt-2">
             <div class="bg-red-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
-              Threshold: 5
-              <!-- {{ threshold }} -->
+              Threshold: {{ poll.threshold }}
             </div>
-            <div v-if="false" class="bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
-              Poll ends: Friday, November 22, 12:00 PM (ET)
+            <div v-if="!isExpired" class="bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
+              Poll ends: {{ new Date(poll.expirationDate).toLocaleString() }}
               <!-- {{ expirationDate }} -->
             </div>
             <div v-else class="bg-gray-600 text-white rounded-full px-3 py-1 text-xs font-semibold">
@@ -43,9 +40,10 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { ViewListIcon } from '@heroicons/vue/outline/'
 
-defineProps({
+const props = defineProps({
   poll: {
     type: Object,
     required: true
@@ -59,4 +57,6 @@ defineProps({
     required: true
   }
 })
+
+const isExpired = computed(() => new Date(props.poll.expirationDate) < new Date())
 </script>
