@@ -6,7 +6,9 @@
         :class="threadsMenuOpen ? '-left-20 sm:left-0' : '-left-full sm:left-0'"
       >
         <div class="flex items-center justify-between sm:hidden">
-          <router-link :to="path" class="pl-4 text-lg font-bold sm:text-2xl text-harvard-red">nymspace </router-link>
+          <router-link :to="path">
+            <img :src="nymspaceLogo" alt="nymspace" class="h-4" />
+          </router-link>
           <button class="flex justify-end w-full p-4" @click="toggleThreadsMenu">
             <XIcon class="w-6 h-6" />
           </button>
@@ -95,6 +97,7 @@ import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
 import { ViewListIcon, XIcon } from '@heroicons/vue/outline'
 import Modal from '../components/Shared/Modal.vue'
+import nymspaceLogo from '../assets/nymspace-logo.png'
 
 const route = useRoute()
 
@@ -185,13 +188,15 @@ function compare(a, b) {
   } else return 1
 }
 
-const sortedThreads = computed(() => threadsWithFollow.value.sort(compare))
+const sortedThreads = computed(() => threadsWithFollow.value.slice().sort(compare))
 
 // Add isFollowed property to update if the thread is followed by user
 const threadsWithFollow = computed(() =>
   items.value.map((x) => ({
     ...x,
-    isFollowed: getUserThreads.value.some((y) => y.id === x.id && y.hasOwnProperty('followed') && y.followed)
+    isFollowed: getUserThreads.value.some(
+      (y) => y.id === x.id && Object.prototype.hasOwnProperty.call(y, 'followed') && y.followed
+    )
   }))
 )
 

@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center justify-between gap-2 px-2 py-1 font-bold text-gray-500 bg-gray-50 hover:text-gray-900">
     <div class="flex items-center">
-      <router-link :to="path" class="text-lg sm:text-2xl">
-        <img :src="nymspaceLogo" alt="nymspace" class="h-12" />
+      <router-link :to="path">
+        <img :src="nymspaceLogo" alt="nymspace" class="h-4" />
       </router-link>
       <a v-if="showVersion" class="ml-4 text-sm" href="https://github.com/berkmancenter/threads_client">{{ version }}</a>
     </div>
