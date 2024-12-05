@@ -33,6 +33,10 @@
       </template>
     </div>
     <ChoiceInput v-if="!isExpired" />
+    <p v-else class="text-gray-700 text-sm text-center">
+      This poll has ended and no new votes can be cast. <br />
+      Start a new one at any time!
+    </p>
   </div>
 </template>
 

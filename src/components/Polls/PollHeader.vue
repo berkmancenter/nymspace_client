@@ -22,8 +22,12 @@
               Threshold: 5
               <!-- {{ threshold }} -->
             </div>
-            <div class="bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
+            <div v-if="false" class="bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
               Poll ends: Friday, November 22, 12:00 PM (ET)
+              <!-- {{ expirationDate }} -->
+            </div>
+            <div v-else class="bg-gray-600 text-white rounded-full px-3 py-1 text-xs font-semibold">
+              Poll ended
               <!-- {{ expirationDate }} -->
             </div>
           </div>
