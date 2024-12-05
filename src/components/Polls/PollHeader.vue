@@ -34,10 +34,10 @@
           </div>
         </div>
       </div>
-      <div class="flex items-center gap-2">
+      <!-- <div class="flex items-center gap-2">
         <DeleteThread :show="isAdmin" :item="poll" />
         <EditThread :show="isAdmin" :item="poll" />
-      </div>
+      </div> -->
     </div>
     <router-view></router-view>
   </div>
@@ -45,8 +45,6 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import DeleteThread from '../Threads/DeleteThread.vue'
-import EditThread from '../Threads/EditThread.vue'
 import { ViewListIcon } from '@heroicons/vue/outline/'
 
 defineProps({
