@@ -2,15 +2,15 @@
   <div class="mt-4 flex flex-col">
     <div class="relative">
       <textarea
-        v-model="choiceText"
+        v-model="responseText"
         placeholder="Add a response..."
         class="w-full p-2 border rounded-lg text-sm h-24"
       ></textarea>
       <button
         class="absolute bottom-2 right-2 p-2 text-black"
-        :disabled="choiceText.length > 249"
-        :class="choiceText.length > 249 ? 'text-gray-400' : ''"
-        @click="sendChoice"
+        :disabled="responseText.length > 249"
+        :class="responseText.length > 249 ? 'text-gray-400' : ''"
+        @click="sendResponse"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,7 @@
       </button>
     </div>
     <p class="text-xs mt-2">
-      <span :class="choiceText.length > 249 ? 'text-harvard-red' : ''">{{ choiceText.length }}</span
+      <span :class="responseText.length > 249 ? 'text-harvard-red' : ''">{{ responseText.length }}</span
       >/250 character limit
     </p>
   </div>
@@ -38,10 +38,10 @@
 <script setup>
 import { ref } from 'vue'
 
-const choiceText = ref('')
+const responseText = ref('')
 
-function sendChoice() {
-  console.log('TODO: Send choice with text value: ', choiceText.value)
+function sendResponse() {
+  console.log('TODO: Send response with text value: ', responseText.value)
 }
 </script>
 
