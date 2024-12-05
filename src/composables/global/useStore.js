@@ -168,10 +168,6 @@ async function deleteThread(id) {
   removeThread(id)
 }
 
-async function createPoll(payload) {
-  await PollService.createPoll(payload)
-}
-
 async function loadUser() {
   const user = await ThreadService.getUser(state.uid)
   if (user.pseudonyms) {
@@ -228,16 +224,6 @@ async function loadMessages(threadId) {
   setMessages(messages)
 }
 
-async function loadPolls(channelId) {
-  if (!getLoggedInStatus.value) await registerOnce()
-  const polls = await PollService.getPolls(channelId)
-  setPolls(polls)
-}
-
-async function loadPoll(pollId) {
-  return await PollService.getPoll(pollId)
-}
-
 /**
  * Create message using API and update
  * messages array with response
@@ -279,11 +265,6 @@ async function addMessage(message) {
 const getThread = (id) => {
   const threadId = state.threads.findIndex((x) => x.id === id)
   return threadId > -1 ? state.threads[threadId] : {}
-}
-
-const getPoll = (id) => {
-  const pollId = state.polls.findIndex((x) => x.id === id)
-  return pollId > -1 ? state.polls[pollId] : {}
 }
 
 const getChannel = (id) => {
@@ -418,7 +399,6 @@ const getUserThreads = computed(() => state.userThreads)
 const getUserChannels = computed(() => state.userChannels)
 
 const getThreads = computed(() => state.threads)
-const getPolls = computed(() => state.polls)
 
 const getUserToken = computed(() => VueCookieNext.getCookie('access_token'))
 
@@ -445,6 +425,34 @@ const getActiveChannel = computed(() => state.activeChannel)
 const getActiveThread = computed(() => state.activeThread)
 
 const showChatOnly = computed(() => state.showChatOnly)
+
+/**
+ * Threshold Poll services
+ */
+
+// Getters
+const getPolls = computed(() => state.polls)
+
+const getPoll = (id) => {
+  const pollId = state.polls.findIndex((x) => x.id === id)
+  return pollId > -1 ? state.polls[pollId] : {}
+}
+
+// Actions
+
+async function createPoll(payload) {
+  await PollService.createPoll(payload)
+}
+
+async function loadPolls(channelId) {
+  if (!getLoggedInStatus.value) await registerOnce()
+  const polls = await PollService.getPolls(channelId)
+  setPolls(polls)
+}
+
+async function loadPoll(pollId) {
+  return await PollService.getPoll(pollId)
+}
 
 export default {
   getThread,
