@@ -1,7 +1,11 @@
 <template>
   <div class="mt-4 flex flex-col">
     <div class="relative">
-      <textarea v-model="choiceText" placeholder="Add a response..." class="w-full p-2 border rounded-lg h-24"></textarea>
+      <textarea
+        v-model="choiceText"
+        placeholder="Add a response..."
+        class="w-full p-2 border rounded-lg text-sm h-24"
+      ></textarea>
       <button
         class="absolute bottom-2 right-2 p-2 text-black"
         :disabled="choiceText.length > 249"

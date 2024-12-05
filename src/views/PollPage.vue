@@ -10,7 +10,7 @@
         <p class="text-sm">
           This option reached the threshold of {{ thresholdValue }}. The people who chose this option are shown below.
         </p>
-        <div class="flex mt-1">
+        <div class="flex mt-2">
           <div class="bg-green-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
             Votes: {{ choice.votes }}
           </div>
@@ -29,10 +29,10 @@
   <div v-else class="flex flex-col justify-between flex-1 p-4">
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows">
       <template v-for="item in items" :key="item.id">
-        <ChoiceItem :item="item" :threshold-value="thresholdValue" />
+        <ChoiceItem :item="item" :threshold-value="thresholdValue" :is-expired="isExpired" />
       </template>
     </div>
-    <ChoiceInput />
+    <ChoiceInput v-if="!isExpired" />
   </div>
 </template>
 
@@ -50,6 +50,8 @@ const thresholdValue = 5
 
 const choiceId = computed(() => route.params.choiceId)
 const choice = computed(() => items.value.find((item) => item.id === parseInt(choiceId.value)))
+
+const isExpired = ref(true)
 
 const items = ref([
   { id: 1, title: 'See Wicked on Broadway', votes: 3, voters: ['Alice', 'Bob', 'Charlie'] },
