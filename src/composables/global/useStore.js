@@ -23,6 +23,8 @@ const state = reactive({
   threads: [],
   userThreads: [],
   polls: [],
+  // This can include counts or not depending on poll settings.
+  pollResponses: [],
   majorError: '',
   messages: [],
   showChatOnly: false
@@ -43,14 +45,6 @@ function setThreads(threads) {
 
 function setThread(thread) {
   state.threads = [...state.threads, thread]
-}
-
-function setPolls(polls) {
-  state.polls = [...polls]
-}
-
-function setPoll(poll) {
-  state.polls = [...state.polls, poll]
 }
 
 function setAuth(response) {
@@ -432,16 +426,39 @@ const showChatOnly = computed(() => state.showChatOnly)
 
 // Getters
 const getPolls = computed(() => state.polls)
+const getPollResponses = computed(() => state.pollResponses)
+const getActivePoll = computed(() => state.activePoll)
 
 const getPoll = (id) => {
   const pollId = state.polls.findIndex((x) => x.id === id)
   return pollId > -1 ? state.polls[pollId] : {}
 }
 
+// Mutations
+function setPolls(polls) {
+  state.polls = [...polls]
+}
+
+function setPoll(poll) {
+  state.polls = [...state.polls, poll]
+}
+
+function setActivePoll(poll) {
+  state.activePoll = { ...poll }
+}
+
 // Actions
 
 async function createPoll(payload) {
   await PollService.createPoll(payload)
+}
+
+async function respondPoll(payload) {
+  await PollService.respondPoll(payload)
+  await loadPoll(getActivePoll.value.id)
+  if (getActivePoll.value) {
+    setActivePoll(getPoll(getActivePoll.value.id ?? getActivePoll.value._id))
+  }
 }
 
 async function loadPolls(channelId) {
@@ -452,6 +469,14 @@ async function loadPolls(channelId) {
 
 async function loadPoll(pollId) {
   return await PollService.getPoll(pollId)
+}
+
+async function loadPollResponses(pollId) {
+  return await PollService.getPollResponses(pollId)
+}
+
+async function loadPollResponseCounts(pollId) {
+  return await PollService.getPollResponseCounts(pollId)
 }
 
 export default {
@@ -472,10 +497,14 @@ export default {
 
   getPoll,
   setPoll,
+  createPoll,
+  respondPoll,
   loadPolls,
   loadPoll,
-  createPoll,
+  loadPollResponses,
+  loadPollResponseCounts,
   getPolls,
+  getPollResponses,
 
   getChannels,
   getChannel,
