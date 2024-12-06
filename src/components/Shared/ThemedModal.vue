@@ -11,6 +11,8 @@
           <slot name="title">Modal Title</slot>
           <XIcon class="h-6 w-6 inline-block cursor-pointer" title="Close" @click="closeModal" />
         </div>
+        <!-- Dynamic fixed content (non scrolling)-->
+        <div><slot name="fixed-content"></slot></div>
         <!-- Dynamic content -->
         <div class="px-4 py-2 overflow-y-auto flex-grow"><slot>Modal Body</slot></div>
         <!-- Action buttons -->

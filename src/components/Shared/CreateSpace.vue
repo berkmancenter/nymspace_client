@@ -9,28 +9,30 @@
   <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>New space</template>
     <!-- Space type tabs -->
-    <ul class="flex flex-wrap text-center text-gray-500 border-b border-gray-200">
-      <li>
-        <button
-          class="flex gap-1 px-4 py-2 rounded-t-lg"
-          :class="tab === 1 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
-          @click="openTab(1)"
-        >
-          <HashtagIcon class="w-5 h-5" />
-          Thread
-        </button>
-      </li>
-      <li>
-        <button
-          class="flex gap-1 px-4 py-2 rounded-t-lg"
-          :class="tab === 2 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
-          @click="openTab(2)"
-        >
-          <UserGroupIcon class="w-5 h-5" />
-          Threshold Poll
-        </button>
-      </li>
-    </ul>
+    <template #fixed-content>
+      <ul class="px-4 flex flex-wrap text-center text-gray-500 border-b border-gray-200">
+        <li>
+          <button
+            class="flex gap-1 px-4 py-2 rounded-t-lg"
+            :class="tab === 1 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
+            @click="openTab(1)"
+          >
+            <HashtagIcon class="w-5 h-5" />
+            Thread
+          </button>
+        </li>
+        <li>
+          <button
+            class="flex gap-1 px-4 py-2 rounded-t-lg"
+            :class="tab === 2 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
+            @click="openTab(2)"
+          >
+            <UserGroupIcon class="w-5 h-5" />
+            Threshold Poll
+          </button>
+        </li>
+      </ul>
+    </template>
     <!-- Tab content -->
     <div v-show="tab === 1" class="py-3 mb-5">
       <CreateThread ref="createThreadRef" @create-success="closeModal" />
