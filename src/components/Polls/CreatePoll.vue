@@ -1,7 +1,7 @@
 <template>
-  <p class="text-gray-600 text-sm mb-8">
-    People submit ideas and vote on them, all anonymously. When a response gets enough votes, voters for the response reveal
-    their names to each other, while staying anoynmous to everyone else.
+  <p class="text-gray-600 text-sm mb-6">
+    People submit ideas and vote on them anonymously. When a response gets enough votes, the voters reveal names to each
+    other, while staying anoynmous to everyone else.
   </p>
   <div class="mb-4">
     <span class="font-semibold">Poll title:</span>
@@ -32,10 +32,10 @@
   <!-- Expiration input -->
   <div class="flex items-center">
     <div class="w-1/2">
-      <div class="inline-block bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">Expiration</div>
+      <div class="inline-block bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">End time</div>
       <p class="text-gray-600 text-sm mt-2">
-        When should this poll end? Time is in your local timezone. The poll will end at the same time for everyone regardless
-        of their time zone.
+        When should this poll stop taking responses? Time is in your local timezone. The poll will end at the same time for
+        everyone regardless of their time zone.
       </p>
     </div>
     <div class="w-4"></div>
