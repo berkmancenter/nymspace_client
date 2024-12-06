@@ -1,13 +1,13 @@
 <template>
   <teleport to="body">
-    <div v-if="isOpen" class="modal">
-      <div class="modal-content">
-        <div class="my-3 text-2xl py-1 font-semibold">
+    <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white rounded-lg shadow-lg max-h-screen w-full sm:w-11/12 md:w-3/4 lg:w-1/2 overflow-hidden">
+        <div class="my-3 text-2xl py-1 font-semibold flex justify-between items-center px-4">
           <slot name="title">Modal Title</slot>
-          <XIcon class="mt-1 float-right h-6 w-6 inline-block cursor-pointer" title="Close" @click="closeModal" />
+          <XIcon class="h-6 w-6 inline-block cursor-pointer" title="Close" @click="closeModal" />
         </div>
-        <div class="flex-grow"><slot>Modal Body</slot></div>
-        <div class="flex justify-end my-3 gap-4">
+        <div class="px-4 py-2 overflow-y-auto flex-grow"><slot>Modal Body</slot></div>
+        <div class="flex justify-end my-3 gap-4 px-4">
           <slot name="actions"><button @click="closeModal"></button></slot>
         </div>
       </div>
@@ -31,24 +31,3 @@ function closeModal() {
   emit('close-modal')
 }
 </script>
-
-<style>
-.modal {
-  @apply z-50 absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50;
-}
-
-.modal-content {
-  @apply px-6 py-2 bg-white overflow-y-auto w-full md:w-3/5 flex flex-col justify-evenly;
-}
-.btn {
-  @apply w-20 my-2 bg-white border-2 border-gray-500 text-lg h-10 leading-3 hover:text-white cursor-pointer;
-}
-
-.btn.success {
-  @apply hover:bg-green-500;
-}
-
-.btn.error {
-  @apply hover:bg-harvard-red;
-}
-</style>
