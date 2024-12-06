@@ -1,6 +1,6 @@
 <template>
   <!-- Poll result view -->
-  <div v-if="response && response.votes >= thresholdValue" class="px-4">
+  <!-- <div v-if="response && response.votes >= thresholdValue" class="px-4">
     <div class="flex content-center mb-2 py-4">
       <button class="mr-4" @click="navigateBack">
         <ChevronLeftIcon class="w-6 h-6" />
@@ -24,12 +24,12 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- Grid of responses -->
-  <div v-else class="flex flex-col justify-between flex-1 p-4">
+  <div class="flex flex-col justify-between flex-1 p-4">
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows">
-      <template v-for="item in items" :key="item.id">
-        <ResponseItem :item="item" :threshold-value="thresholdValue" :is-expired="isExpired" />
+      <template v-for="choice in choices" :key="choice._id">
+        <ChoiceItem :choice="choice" :threshold="poll.threshold" :is-expired="isExpired" />
       </template>
     </div>
     <ResponseInput v-if="!isExpired" />
@@ -45,7 +45,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import useStore from '../composables/global/useStore'
 import ResponseInput from '../components/Polls/ResponseInput.vue'
-// import ResponseItem from '../components/Polls/ResponseItem.vue'
+import ChoiceItem from '../components/Polls/ChoiceItem.vue'
 // import { ChevronLeftIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
@@ -54,6 +54,7 @@ const { inspectPoll, setActivePoll, loadUser } = useStore
 
 const poll = ref(inspectPoll(route.params.pollId))
 const userId = ref('')
+const choices = computed(() => poll.value.choices)
 
 /**
  * Load poll and responses from store if exists

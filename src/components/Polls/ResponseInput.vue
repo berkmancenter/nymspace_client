@@ -46,7 +46,6 @@ const responseText = ref('')
 async function sendResponse() {
   if (responseText.value.length > 0 && responseText.value.length <= 250) {
     try {
-      console.log(responseText.value)
       await respondPoll({
         pollId: getActivePoll.value._id,
         choiceText: responseText.value
