@@ -101,9 +101,8 @@ function processCreate() {
   expirationDate.setHours(selectedTime.value.hours)
   expirationDate.setMinutes(selectedTime.value.minutes)
 
-  createPoll({
+  const pollData = {
     title: title.value,
-    description: description.value,
     threshold: threshold.value,
     expirationDate,
     topicId: route.params.channelId,
@@ -112,7 +111,13 @@ function processCreate() {
     choicesVisible: true,
     onlyOwnChoicesVisible: false,
     multiSelect: true
-  })
+  }
+
+  if (description.value.trim().length > 0) {
+    pollData.description = description.value
+  }
+
+  createPoll(pollData)
     .then((x) => emit('createSuccess'))
     .catch((err) => (errorMessage.value = err.response.data.message))
 }
