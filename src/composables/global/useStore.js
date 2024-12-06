@@ -23,7 +23,7 @@ const state = reactive({
   threads: [],
   userThreads: [],
   polls: [],
-  // This can include counts or not depending on poll settings.
+  pollChoices: [],
   pollResponses: [],
   majorError: '',
   messages: [],
@@ -438,6 +438,14 @@ function setPolls(polls) {
   state.polls = [...polls]
 }
 
+function setPollChoices(choices) {
+  state.pollChoices = [...choices]
+}
+
+function addPollChoice(choice) {
+  state.pollChoices = [...state.pollChoices, choice]
+}
+
 function addPoll(poll) {
   state.polls = [...state.polls, poll]
 }
@@ -466,6 +474,7 @@ async function loadPolls(channelId) {
 async function inspectPoll(pollId) {
   const pollDetails = await PollService.inspectPoll(pollId)
   setActivePoll(pollDetails)
+  setPollChoices(pollDetails.choices)
   return pollDetails
 }
 
@@ -510,6 +519,8 @@ export default {
   loadPollResponseCounts,
   getActivePoll,
   setActivePoll,
+  setPollChoices,
+  addPollChoice,
   getPolls,
   getPollResponses,
   getPollFromList,

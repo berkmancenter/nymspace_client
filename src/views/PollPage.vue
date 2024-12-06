@@ -32,7 +32,7 @@
         <ChoiceItem :choice="choice" :threshold="poll.threshold" :is-expired="isExpired" />
       </template>
     </div>
-    <ResponseInput v-if="!isExpired" />
+    <ResponseInput v-if="!isExpired" @response-sent="handleResponseSent" />
     <p v-else class="text-gray-700 text-sm text-center">
       This poll has ended and no new votes can be cast. <br />
       Start a new one at any time!
@@ -41,20 +41,22 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import useStore from '../composables/global/useStore'
 import ResponseInput from '../components/Polls/ResponseInput.vue'
 import ChoiceItem from '../components/Polls/ChoiceItem.vue'
+import SocketioService from '../service/socket.service'
 // import { ChevronLeftIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
 // const router = useRouter()
 const { inspectPoll, loadUser } = useStore
 
-const poll = ref(inspectPoll(route.params.pollId))
+const wsInstance = reactive({})
+const poll = ref({})
 const userId = ref('')
-const choices = computed(() => poll.value.choices)
+const choices = computed(() => poll.value.choices || [])
 
 /**
  * Load poll and responses from store if exists
@@ -64,6 +66,12 @@ onMounted(async () => {
   const user = await loadUser()
   userId.value = user.id
   await fetchPollDetails(route.params.pollId)
+
+  // Set up WebSocket handler for poll choices
+  wsInstance.value = new SocketioService()
+  wsInstance.value.addChoiceHandler(async () => {
+    await fetchPollDetails(route.params.pollId)
+  }, user)
 })
 
 async function fetchPollDetails(pollId) {
@@ -72,6 +80,10 @@ async function fetchPollDetails(pollId) {
   } catch (error) {
     console.error('Error fetching poll details:', error)
   }
+}
+
+async function handleResponseSent() {
+  fetchPollDetails(route.params.pollId)
 }
 
 /**

@@ -39,7 +39,9 @@
 import { ref } from 'vue'
 import useStore from '../../composables/global/useStore'
 
-const { respondPoll, getActivePoll } = useStore
+const { respondPoll, addPollChoice, getActivePoll } = useStore
+
+const emit = defineEmits(['response-sent'])
 
 const responseText = ref('')
 
@@ -50,7 +52,11 @@ async function sendResponse() {
         pollId: getActivePoll.value._id,
         choiceText: responseText.value
       })
+      await addPollChoice({
+        text: responseText.value
+      })
       responseText.value = ''
+      emit('response-sent')
     } catch (error) {
       console.error('Error sending response:', error)
     }
