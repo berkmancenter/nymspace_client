@@ -428,8 +428,7 @@ const showChatOnly = computed(() => state.showChatOnly)
 const getPolls = computed(() => state.polls)
 const getPollResponses = computed(() => state.pollResponses)
 const getActivePoll = computed(() => state.activePoll)
-
-const getPoll = (id) => {
+const getPollFromList = (id) => {
   const pollId = state.polls.findIndex((x) => x._id === id)
   return pollId > -1 ? state.polls[pollId] : {}
 }
@@ -439,7 +438,7 @@ function setPolls(polls) {
   state.polls = [...polls]
 }
 
-function setPoll(poll) {
+function addPoll(poll) {
   state.polls = [...state.polls, poll]
 }
 
@@ -454,15 +453,8 @@ function setActivePoll(poll) {
 // Actions
 
 async function createPoll(payload) {
-  await PollService.createPoll(payload)
-}
-
-async function respondPoll({ pollId, choiceText }) {
-  await PollService.respondPoll(pollId, choiceText)
-  await loadPoll(getActivePoll.value._id)
-  if (getActivePoll.value) {
-    setActivePoll(getPoll(getActivePoll.value._id))
-  }
+  const newPoll = await PollService.createPoll(payload)
+  addPoll(newPoll)
 }
 
 async function loadPolls(channelId) {
@@ -471,17 +463,26 @@ async function loadPolls(channelId) {
   setPolls(polls)
 }
 
-async function loadPoll(pollId) {
-  return await PollService.getPoll(pollId)
+async function inspectPoll(pollId) {
+  return await PollService.inspectPoll(pollId)
+}
+
+async function respondPoll({ pollId, choiceText }) {
+  await PollService.respondPoll(pollId, choiceText)
+  // Refresh poll responses
+  await inspectPoll(pollId)
 }
 
 async function loadPollResponses(pollId) {
   const responses = await PollService.getPollResponses(pollId)
   setPollResponses(responses)
+  return responses
 }
 
 async function loadPollResponseCounts(pollId) {
-  return await PollService.getPollResponseCounts(pollId)
+  const responses = await PollService.getPollResponseCounts(pollId)
+  setPollResponses(responses)
+  return responses
 }
 
 export default {
@@ -500,18 +501,18 @@ export default {
   getActiveThread,
   upsertThread,
 
-  getPoll,
-  setPoll,
   createPoll,
+  addPoll,
+  inspectPoll,
   respondPoll,
   loadPolls,
-  loadPoll,
   loadPollResponses,
   loadPollResponseCounts,
   getActivePoll,
   setActivePoll,
   getPolls,
   getPollResponses,
+  getPollFromList,
 
   getChannels,
   getChannel,

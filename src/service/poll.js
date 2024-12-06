@@ -25,7 +25,7 @@ export default {
       .then((x) => x.data)
   },
   // Corresponds to inspectPoll
-  getPoll: async function (pollId) {
+  inspectPoll: async function (pollId) {
     return await axios.get(`/polls/${pollId}`).then((x) => x.data)
   },
   getPollResponses: async function (pollId) {

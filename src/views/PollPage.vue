@@ -50,35 +50,30 @@ import ResponseInput from '../components/Polls/ResponseInput.vue'
 
 const route = useRoute()
 // const router = useRouter()
-const { getPoll, setActivePoll, loadPoll, loadUser } = useStore
+const { inspectPoll, setActivePoll, loadUser } = useStore
 
-const poll = ref(getPoll(route.params.pollId))
+const poll = ref(inspectPoll(route.params.pollId))
 const userId = ref('')
 
 /**
- * Load poll from store if exists
+ * Load poll and responses from store if exists
  * else load from API if does not exist
  */
 onMounted(async () => {
   const user = await loadUser()
   userId.value = user.id
-  // await fetchMessages(route.params.threadId)
   await fetchPollDetails(route.params.pollId)
-  // messageTextArea.value?.focus()
 })
 
 async function fetchPollDetails(pollId) {
   try {
-    if (!poll.value || Object.keys(poll.value).length === 0) {
-      poll.value = await loadPoll(pollId)
-    } else {
-      poll.value = getPoll(pollId)
-    }
+    poll.value = await inspectPoll(pollId)
     setActivePoll(poll.value)
   } catch (error) {
     console.error('Error fetching poll details:', error)
   }
 }
+
 /**
  * Watch pollId on router params to
  * clear and fetch responses for new poll
@@ -88,7 +83,6 @@ watch(
   async (pollId, prevPollId) => {
     if (pollId !== undefined && pollId !== prevPollId) {
       try {
-        // await loadPollResponses(pollId)
         await fetchPollDetails(pollId)
       } catch (error) {
         console.error('Error in watcher callback:', error)

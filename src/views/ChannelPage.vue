@@ -114,9 +114,8 @@ const {
 
   // Polls
   getPolls,
-  getPoll,
   loadPolls,
-  // setPoll,
+  getPollFromList,
 
   // Users and settings
   setShowChatOnly,
@@ -131,7 +130,7 @@ const polls = getPolls
 const wsInstance = reactive({})
 const channel = ref(getChannel(route.params.channelId))
 const maybeThread = ref(getThread(route.params.threadId))
-const maybePoll = ref(getPoll(route.params.pollId))
+const maybePoll = ref(getPollFromList(route.params.pollId))
 const isThreadActive = ref(false)
 const isPollActive = ref(false)
 const isChannelOwner = computed(() => getId.value === channel.value?.owner)
@@ -179,7 +178,7 @@ watch(
   async (newId) => {
     if (newId) {
       isPollActive.value = true
-      maybePoll.value = getPoll(newId)
+      maybePoll.value = getPollFromList(newId)
     } else {
       isPollActive.value = false
     }
@@ -286,7 +285,7 @@ onMounted(async () => {
     channel.value = getChannel(route.params.channelId)
   }
   maybeThread.value = getThread(route.params.threadId)
-  maybePoll.value = getPoll(route.params.pollId)
+  maybePoll.value = getPollFromList(route.params.pollId)
 
   wsInstance.value = new SocketioService()
   wsInstance.value.addDisconnectHandler(reconnectSockets)
