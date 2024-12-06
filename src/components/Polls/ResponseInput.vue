@@ -5,6 +5,7 @@
         v-model="responseText"
         placeholder="Add a response..."
         class="w-full p-2 border rounded-lg text-sm h-24"
+        @keydown.enter.prevent="sendResponse"
       ></textarea>
       <button
         class="absolute bottom-2 right-2 p-2 text-black"
