@@ -72,14 +72,16 @@ const errorMessage = ref('')
 const route = useRoute()
 
 const timeInputOptions = {
-  openMenu: false,
-  selectOnFocus: true
+  openMenu: true,
+  selectOnFocus: true,
+  enterSubmit: true,
+  tabSubmit: true
 }
 
 // Default date is 5 days in the future.
 const defaultDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
 const selectedDate = ref(defaultDate)
-const selectedTime = ref({ hours: 23, minutes: 59, seconds: 59 })
+const selectedTime = ref({ hours: 23, minutes: 59 })
 
 defineExpose({
   processCreate
@@ -100,6 +102,7 @@ function processCreate() {
   const expirationDate = new Date(selectedDate.value)
   expirationDate.setHours(selectedTime.value.hours)
   expirationDate.setMinutes(selectedTime.value.minutes)
+  expirationDate.setSeconds(59)
 
   const pollData = {
     title: title.value,
