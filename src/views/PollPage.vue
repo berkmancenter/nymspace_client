@@ -50,7 +50,7 @@ import ChoiceItem from '../components/Polls/ChoiceItem.vue'
 
 const route = useRoute()
 // const router = useRouter()
-const { inspectPoll, setActivePoll, loadUser } = useStore
+const { inspectPoll, loadUser } = useStore
 
 const poll = ref(inspectPoll(route.params.pollId))
 const userId = ref('')
@@ -69,7 +69,6 @@ onMounted(async () => {
 async function fetchPollDetails(pollId) {
   try {
     poll.value = await inspectPoll(pollId)
-    setActivePoll(poll.value)
   } catch (error) {
     console.error('Error fetching poll details:', error)
   }

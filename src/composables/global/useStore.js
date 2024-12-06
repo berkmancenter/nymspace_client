@@ -464,13 +464,13 @@ async function loadPolls(channelId) {
 }
 
 async function inspectPoll(pollId) {
-  return await PollService.inspectPoll(pollId)
+  const pollDetails = await PollService.inspectPoll(pollId)
+  setActivePoll(pollDetails)
+  return pollDetails
 }
 
 async function respondPoll({ pollId, choiceText }) {
   await PollService.respondPoll(pollId, choiceText)
-  // Refresh poll responses
-  await inspectPoll(pollId)
 }
 
 async function loadPollResponses(pollId) {
