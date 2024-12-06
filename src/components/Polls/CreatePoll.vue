@@ -16,6 +16,15 @@
       </textarea>
     </div>
   </div>
+  <!-- When results visible  -->
+  <div class="mb-8">
+    <span class="font-semibold">Reveal names:</span>
+    <!-- Dropdown for selecting -->
+    <select v-model="whenResultsVisible" class="border rounded border-gray-500 bg-gray-100 w-full h-12 px-3">
+      <option value="thresholdOnly">When threshold is reached</option>
+      <option value="thresholdAndExpiration">When threshold is reached AND poll has ended</option>
+    </select>
+  </div>
   <!-- Threshold input -->
   <div class="mb-4 flex items-center">
     <div class="w-1/2">
@@ -25,12 +34,12 @@
       </p>
     </div>
     <div class="w-4"></div>
-    <div>
+    <div class="w-1/2">
       <input v-model="threshold" class="border rounded border-gray-500 w-full h-12 px-3" type="number" min="0" />
     </div>
   </div>
   <!-- Expiration input -->
-  <div class="flex items-center">
+  <div v-if="whenResultsVisible === 'thresholdAndExpiration'" class="flex items-center">
     <div class="w-1/2">
       <div class="inline-block bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">End time</div>
       <p class="text-gray-600 text-sm mt-2">
@@ -68,6 +77,7 @@ const { createPoll } = useStore
 const title = ref('')
 const description = ref('')
 const threshold = ref(5)
+const whenResultsVisible = ref('thresholdOnly')
 const errorMessage = ref('')
 const route = useRoute()
 
@@ -109,10 +119,10 @@ function processCreate() {
     threshold: threshold.value,
     expirationDate,
     topicId: route.params.channelId,
+    whenResultsVisible: whenResultsVisible.value,
     // Default below to true for MVP
     allowNewChoices: true,
     choicesVisible: true,
-    onlyOwnChoicesVisible: false,
     multiSelect: true
   }
 
