@@ -19,13 +19,15 @@
             <div class="bg-red-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
               Threshold: {{ poll.threshold }}
             </div>
-            <div v-if="!isExpired" class="bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
-              Poll ends: {{ new Date(poll.expirationDate).toLocaleString() }}
-              <!-- {{ expirationDate }} -->
-            </div>
-            <div v-else class="bg-gray-600 text-white rounded-full px-3 py-1 text-xs font-semibold">
-              Poll ended
-              <!-- {{ expirationDate }} -->
+            <div v-if="poll.whenResultsVisible === 'thresholdAndExpiration'">
+              <div v-if="!isExpired" class="bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
+                Poll ends: {{ new Date(poll.expirationDate).toLocaleString() }}
+                <!-- {{ expirationDate }} -->
+              </div>
+              <div v-else class="bg-gray-600 text-white rounded-full px-3 py-1 text-xs font-semibold">
+                Poll ended
+                <!-- {{ expirationDate }} -->
+              </div>
             </div>
           </div>
         </div>
