@@ -27,7 +27,7 @@
   </div> -->
   <!-- Grid of responses -->
   <div class="flex flex-col justify-between flex-1 p-4">
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows">
+    <div class="overflow-y-auto max-h-96 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
       <template v-for="choice in choices" :key="choice._id">
         <ChoiceItem :choice="choice" :threshold="poll.threshold" :is-expired="isExpired" />
       </template>
