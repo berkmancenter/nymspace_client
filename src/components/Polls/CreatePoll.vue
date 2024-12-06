@@ -16,35 +16,41 @@
       </textarea>
     </div>
   </div>
-  <div class="mb-4">
-    <span class="font-semibold">Threshold:</span>
-    <p class="text-gray-600 text-sm mb-2">
-      How many votes are needed to reveal names to each other? Set this to 0 to always show names.
-    </p>
+  <!-- Threshold input -->
+  <div class="mb-4 flex items-center">
+    <div class="w-1/2">
+      <div class="inline-block bg-red-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">Threshold</div>
+      <p class="text-gray-600 text-sm mt-2">
+        How many votes are needed to reveal names to each other? Set this to 0 to always show names.
+      </p>
+    </div>
+    <div class="w-4"></div>
     <div>
       <input v-model="threshold" class="border rounded border-gray-500 w-full h-12 px-3" type="number" min="0" />
     </div>
   </div>
-  <div class="flex">
+  <!-- Expiration input -->
+  <div class="flex items-center">
     <div class="w-1/2">
-      <p class="font-semibold">End date:</p>
-
-      <!-- Date picker -->
-      <div class="flex max-w-sm border rounded border-gray-500 w-full">
-        <VueDatePicker v-model="selectedDate" :enable-time-picker="false" />
-      </div>
+      <div class="inline-block bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">Expiration</div>
+      <p class="text-gray-600 text-sm mt-2">
+        When should this poll end? Time is in your local timezone. The poll will end at the same time for everyone regardless
+        of their time zone.
+      </p>
     </div>
     <div class="w-4"></div>
     <div class="w-1/2">
-      <p class="font-semibold">End time:</p>
-
+      <!-- Date picker -->
+      <p class="font-semibold">End date:</p>
+      <div class="flex max-w-sm border rounded border-gray-500 w-full">
+        <VueDatePicker v-model="selectedDate" :enable-time-picker="false" />
+      </div>
+      <div class="h-4"></div>
       <!-- Time picker -->
+      <p class="font-semibold">End time:</p>
       <div class="flex max-w-sm border rounded border-gray-500">
         <VueDatePicker v-model="selectedTime" time-picker :text-input="timeInputOptions" :is24="false" />
       </div>
-      <p class="text-gray-600 mt-2 text-sm">
-        Time is in your local timezone. The poll will end at the same time for everyone regardless of their time zone.
-      </p>
     </div>
   </div>
   <!-- Error message -->
