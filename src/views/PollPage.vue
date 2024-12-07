@@ -58,17 +58,6 @@ const poll = ref({})
 const userId = ref('')
 const choices = computed(() => poll.value.choices || [])
 const responses = ref([])
-const choiceToResponseMap = computed(() => {
-  const map = {}
-  responses.value.forEach((response) => {
-    console.log(response)
-    if (!map[response.choice]) {
-      map[response.choice] = []
-    }
-    map[response.choice].push(response)
-  })
-  return map
-})
 
 /**
  * Load poll and responses
@@ -97,8 +86,17 @@ async function fetchPollResponses(pollId) {
   // Add fetchPollResponses function
   try {
     responses.value = await loadPollResponses(pollId)
-    console.log(responses.value)
-    console.log(choiceToResponseMap.value)
+    // Enrich choice objects with response data when available
+    responses.value.forEach((response) => {
+      const choice = choices.value.find((choice) => choice.text === response.choice)
+      if (choice) {
+        if (!choice.votes) {
+          choice.votes = [response]
+        } else {
+          choice.votes.push(response)
+        }
+      }
+    })
   } catch (error) {
     console.error('Error fetching poll responses:', error)
   }
