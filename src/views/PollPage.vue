@@ -1,6 +1,6 @@
 <template>
   <!-- Poll result view -->
-  <div v-if="choice && choice.votes.length >= poll.threshold" class="px-4">
+  <div v-if="choice && (choice.votes ?? []).length >= poll.threshold" class="px-4">
     <div class="flex content-center mb-2 py-4">
       <button class="mr-4" @click="navigateBack">
         <ChevronLeftIcon class="w-6 h-6" />
@@ -12,15 +12,15 @@
         </p>
         <div class="flex mt-2">
           <div class="bg-green-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
-            Votes: {{ choice.votes }}
+            Votes: {{ choice.votes.length }}
           </div>
         </div>
       </div>
     </div>
     <div class="flex justify-center">
       <div class="flex">
-        <div v-for="voter in choice.voters" :key="voter" class="bg-white rounded-lg shadow-md px-6 py-2 m-4">
-          {{ voter }}
+        <div v-for="vote in choice.votes" :key="vote._id" class="bg-white rounded-lg shadow-md px-6 py-2 m-4">
+          {{ vote.owner }}
         </div>
       </div>
     </div>
