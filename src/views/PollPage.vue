@@ -29,15 +29,10 @@
   <div class="flex flex-col justify-between flex-1 p-4">
     <div class="overflow-y-auto max-h-96 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
       <template v-for="choice in choices" :key="choice._id">
-        <ChoiceItem
-          :choice="choice"
-          :threshold="poll.threshold"
-          :is-expired="isExpired"
-          @choice-clicked="handleResponseSent"
-        />
+        <ChoiceItem :choice="choice" :threshold="poll.threshold" :is-expired="isExpired" @choice-clicked="refreshPollData" />
       </template>
     </div>
-    <ResponseInput v-if="!isExpired" @response-sent="handleResponseSent" />
+    <ResponseInput v-if="!isExpired" @response-sent="refreshPollData" />
     <p v-else class="text-gray-700 text-sm text-center">
       This poll has ended and no new votes can be cast. <br />
       Start a new one at any time!
@@ -56,26 +51,37 @@ import SocketioService from '../service/socket.service'
 
 const route = useRoute()
 // const router = useRouter()
-const { inspectPoll, loadUser } = useStore
+const { inspectPoll, loadUser, loadPollResponses } = useStore
 
 const wsInstance = reactive({})
 const poll = ref({})
 const userId = ref('')
 const choices = computed(() => poll.value.choices || [])
+const responses = ref([])
+const choiceToResponseMap = computed(() => {
+  const map = {}
+  responses.value.forEach((response) => {
+    console.log(response)
+    if (!map[response.choice]) {
+      map[response.choice] = []
+    }
+    map[response.choice].push(response)
+  })
+  return map
+})
 
 /**
- * Load poll and responses from store if exists
- * else load from API if does not exist
+ * Load poll and responses
  */
 onMounted(async () => {
   const user = await loadUser()
   userId.value = user.id
-  await fetchPollDetails(route.params.pollId)
+  await refreshPollData()
 
   // Set up WebSocket handler for poll choices
   wsInstance.value = new SocketioService()
   wsInstance.value.addChoiceHandler(async () => {
-    await fetchPollDetails(route.params.pollId)
+    await refreshPollData()
   }, user)
 })
 
@@ -87,8 +93,20 @@ async function fetchPollDetails(pollId) {
   }
 }
 
-async function handleResponseSent() {
+async function fetchPollResponses(pollId) {
+  // Add fetchPollResponses function
+  try {
+    responses.value = await loadPollResponses(pollId)
+    console.log(responses.value)
+    console.log(choiceToResponseMap.value)
+  } catch (error) {
+    console.error('Error fetching poll responses:', error)
+  }
+}
+
+async function refreshPollData() {
   fetchPollDetails(route.params.pollId)
+  fetchPollResponses(route.params.pollId)
 }
 
 /**
@@ -116,9 +134,3 @@ const isExpired = computed(() => new Date(poll.value.expirationDate) < new Date(
 //   router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
 // }
 </script>
-
-<style scoped>
-.auto-rows {
-  grid-auto-rows: minmax(40px, auto);
-}
-</style>
