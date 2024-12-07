@@ -6,6 +6,7 @@
     @click="onResponseClicked(choice)"
   >
     <p class="text-sm">{{ choice.text }}</p>
+    <CheckIcon v-if="choice.isSelected" class="w-6 h-6 text-blue-500" />
   </div>
   <!-- Locked choice -->
   <div
@@ -15,12 +16,14 @@
     @click="onResponseClicked(choice)"
   >
     <p class="text-sm">{{ choice.text }}</p>
+    <CheckIcon v-if="choice.isSelected" class="w-6 h-6 text-blue-500" />
   </div>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router'
 import useStore from '../../composables/global/useStore'
+import { CheckIcon } from '@heroicons/vue/outline'
 
 const { respondPoll, getActivePoll } = useStore
 
@@ -44,6 +47,7 @@ const router = useRouter()
 const emit = defineEmits(['choice-clicked'])
 
 async function onResponseClicked(choice) {
+  console.log(choice.isSelected)
   const thresholdReached = choice.votes >= props.threshold
   if (props.isExpired) {
     return

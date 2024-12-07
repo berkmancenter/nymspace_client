@@ -1,6 +1,6 @@
 <template>
   <p class="text-gray-600 text-sm mb-6">
-    People submit ideas and vote on them anonymously. When a response gets enough votes, the voters reveal names to each
+    People submit ideas and vote on them anonymously. When a response gets enough votes, the voters reveal usernames to each
     other, while staying anoynmous to everyone else.
   </p>
   <div class="mb-4">
