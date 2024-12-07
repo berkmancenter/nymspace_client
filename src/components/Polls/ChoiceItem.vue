@@ -12,7 +12,7 @@
   <div
     v-else
     class="p-2 align-choices-center rounded-lg border border-gray-200 shadow-md"
-    :class="props.isExpired ? 'bg-gray-100' : 'bg-white hover:shadow-lg cursor-pointer'"
+    :class="props.isExpired || !props.isAuthed ? 'bg-gray-100' : 'bg-white hover:shadow-lg cursor-pointer'"
     @click="onResponseClicked(choice)"
   >
     <p class="text-sm">{{ choice.text }}</p>
@@ -40,6 +40,10 @@ const props = defineProps({
   isExpired: {
     type: Boolean,
     required: true
+  },
+  isAuthed: {
+    type: Boolean,
+    required: true
   }
 })
 
@@ -51,7 +55,7 @@ const maybeVotes = computed(() => props.choice.votes || [])
 const thresholdReached = computed(() => maybeVotes.value.length >= props.threshold)
 
 async function onResponseClicked(choice) {
-  if (props.isExpired) {
+  if (props.isExpired || !props.isAuthed) {
     return
   }
   if (!thresholdReached.value) {

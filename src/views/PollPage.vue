@@ -1,6 +1,6 @@
 <template>
   <!-- Poll result view -->
-  <div v-if="choice && (choice.votes ?? []).length >= poll.threshold" class="px-4">
+  <div v-if="choice && username && (choice.votes ?? []).length >= poll.threshold" class="px-4">
     <div class="flex content-center mb-2 py-4">
       <button class="mr-4" @click="navigateBack">
         <ChevronLeftIcon class="w-6 h-6" />
@@ -27,12 +27,19 @@
   </div>
   <!-- Grid of responses -->
   <div v-else class="flex flex-col justify-between flex-1 p-4">
-    <div class="overflow-y-auto max-h-96 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
       <template v-for="item in choices" :key="item._id">
-        <ChoiceItem :choice="item" :threshold="poll.threshold" :is-expired="isExpired" @choice-clicked="refreshPollData" />
+        <ChoiceItem
+          :choice="item"
+          :threshold="poll.threshold"
+          :is-expired="isExpired"
+          :is-authed="username != null"
+          @choice-clicked="refreshPollData"
+        />
       </template>
     </div>
-    <ResponseInput v-if="!isExpired" @response-sent="refreshPollData" />
+    <ResponseInput v-if="!isExpired && username != null" @response-sent="refreshPollData" />
+    <p v-else-if="!username" class="text-gray-700 text-sm text-center">Log in to an account to participate in this poll!</p>
     <p v-else class="text-gray-700 text-sm text-center">
       This poll has ended and no new votes can be cast. <br />
       Start a new one at any time!
@@ -55,7 +62,7 @@ const { inspectPoll, loadUser, loadPollResponses } = useStore
 
 const wsInstance = reactive({})
 const poll = ref({})
-const userId = ref('')
+const username = ref('')
 const choices = computed(() => poll.value.choices || [])
 const responses = ref([])
 
@@ -64,7 +71,7 @@ const responses = ref([])
  */
 onMounted(async () => {
   const user = await loadUser()
-  userId.value = user.id
+  username.value = user.username
   await refreshPollData()
 
   // Set up WebSocket handler for poll choices
