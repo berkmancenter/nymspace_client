@@ -116,7 +116,7 @@ watch(
   async (pollId, prevPollId) => {
     if (pollId !== undefined && pollId !== prevPollId) {
       try {
-        await fetchPollDetails(pollId)
+        await refreshPollData()
       } catch (error) {
         console.error('Error in watcher callback:', error)
       }
