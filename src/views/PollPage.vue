@@ -42,15 +42,15 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, reactive } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import useStore from '../composables/global/useStore'
 import ResponseInput from '../components/Polls/ResponseInput.vue'
 import ChoiceItem from '../components/Polls/ChoiceItem.vue'
 import SocketioService from '../service/socket.service'
-// import { ChevronLeftIcon } from '@heroicons/vue/outline'
+import { ChevronLeftIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
-// const router = useRouter()
+const router = useRouter()
 const { inspectPoll, loadUser, loadPollResponses } = useStore
 
 const wsInstance = reactive({})
@@ -123,12 +123,12 @@ watch(
     }
   }
 )
-// const responseId = computed(() => route.params.responseId)
-// const response = computed(() => responses.value.find((item) => item.id === responseId.value))
+const choiceId = computed(() => route.params.choiceId)
+const choice = computed(() => choices.value.find((item) => item._id === choiceId.value))
 
 const isExpired = computed(() => new Date(poll.value.expirationDate) < new Date())
 
-// function navigateBack() {
-//   router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
-// }
+function navigateBack() {
+  router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
+}
 </script>
