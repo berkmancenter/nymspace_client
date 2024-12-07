@@ -30,12 +30,12 @@
     <div class="w-1/2">
       <div class="inline-block bg-red-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">Threshold</div>
       <p class="text-gray-600 text-sm mt-2">
-        How many votes are needed to reveal names to each other? Set this to 0 to always show names.
+        How many votes are needed to reveal names to each other? Set this to 1 to always show names.
       </p>
     </div>
     <div class="w-4"></div>
     <div class="w-1/2">
-      <input v-model="threshold" class="border rounded border-gray-500 w-full h-12 px-3" type="number" min="0" />
+      <input v-model="threshold" class="border rounded border-gray-500 w-full h-12 px-3" type="number" min="1" />
     </div>
   </div>
   <!-- Expiration input -->
