@@ -43,7 +43,7 @@ export default [
                 component: PollPage,
                 children: [
                   {
-                    path: 'results/:responseId',
+                    path: 'results/:choiceId',
                     name: 'home.polls.results',
                     component: PollPage
                   }

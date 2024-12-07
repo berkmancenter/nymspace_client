@@ -60,7 +60,7 @@ async function onResponseClicked(choice) {
     emit('choice-clicked')
   }
   if (thresholdReached.value) {
-    router.push({ name: 'home.polls.results', params: { responseId: choice.id } })
+    router.push({ name: 'home.polls.results', params: { choiceId: choice._id } })
   }
 }
 
