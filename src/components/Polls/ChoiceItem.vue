@@ -6,7 +6,7 @@
     @click="onResponseClicked(choice)"
   >
     <p class="text-sm">{{ choice.text }}</p>
-    <CheckIcon v-if="choice.isSelected" class="w-6 h-6 text-blue-500" />
+    <CheckIcon v-if="choice.isSelected" class="w-4 h-4 text-blue-500" />
   </div>
   <!-- Locked choice -->
   <div
@@ -16,7 +16,7 @@
     @click="onResponseClicked(choice)"
   >
     <p class="text-sm">{{ choice.text }}</p>
-    <CheckIcon v-if="choice.isSelected" class="w-6 h-6 text-blue-500" />
+    <CheckIcon v-if="choice.isSelected" class="w-4 h-4 text-blue-500" />
   </div>
 </template>
 
