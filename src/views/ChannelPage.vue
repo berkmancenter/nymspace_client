@@ -114,8 +114,8 @@ const {
 
   // Polls
   getPolls,
-  setActivePoll,
   loadPolls,
+  addPoll,
   getPollFromList,
 
   // Users and settings
@@ -253,7 +253,10 @@ function threadHandler(data) {
 
 function pollHandler(data) {
   if (route.params.channelId === data.topic.id) {
-    setActivePoll({ data })
+    addPoll({
+      ...data,
+      _id: data.id
+    })
   }
 }
 

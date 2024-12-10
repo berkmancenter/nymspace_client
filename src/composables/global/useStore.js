@@ -461,8 +461,7 @@ function setActivePoll(poll) {
 // Actions
 
 async function createPoll(payload) {
-  const newPoll = await PollService.createPoll(payload)
-  addPoll(newPoll)
+  await PollService.createPoll(payload)
 }
 
 async function loadPolls(channelId) {
