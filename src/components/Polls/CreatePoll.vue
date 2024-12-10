@@ -42,10 +42,7 @@
   <div v-if="whenResultsVisible === 'thresholdAndExpiration'" class="flex items-center">
     <div class="w-1/2">
       <div class="inline-block bg-blue-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">End time</div>
-      <p class="text-gray-600 text-sm mt-2">
-        When should this poll stop taking responses? Time is in your local timezone. The poll will end at the same time for
-        everyone regardless of their time zone.
-      </p>
+      <p class="text-gray-600 text-sm mt-2">When should this poll stop taking responses?</p>
     </div>
     <div class="w-4"></div>
     <div class="w-1/2">
