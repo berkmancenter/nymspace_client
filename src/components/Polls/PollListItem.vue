@@ -35,7 +35,6 @@ const props = defineProps({
 })
 
 const pollLink = computed(() => `${path}/channels/${route.params.channelId}/polls/${props.item._id}`)
-console.log(props.item)
 
 function getPollClass(item) {
   let className = 'px-2 flex items-center gap-2 justify-between py-1 text-gray-700 hover:bg-gray-300 cursor-pointer'
