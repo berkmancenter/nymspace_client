@@ -19,7 +19,8 @@ export default {
     return await axios
       .get(`/polls`, {
         params: {
-          topic: channelId
+          topic: channelId,
+          _sort: 'updatedAt'
         }
       })
       .then((x) => x.data)
