@@ -114,6 +114,7 @@ const {
 
   // Polls
   getPolls,
+  setActivePoll,
   loadPolls,
   getPollFromList,
 
@@ -247,6 +248,16 @@ function threadHandler(data) {
 }
 
 /**
+ * Handle poll creation
+ */
+
+function pollHandler(data) {
+  if (route.params.channelId === data.topic.id) {
+    setActivePoll({ data })
+  }
+}
+
+/**
  * Handle thread update
  */
 function updateThreadHandler(data) {
@@ -270,6 +281,7 @@ const canEditDeleteThread = computed(() => maybeThread.value.owner === getId.val
  */
 const reconnectSockets = () => {
   wsInstance.value.addThreadHandler(threadHandler)
+  wsInstance.value.addPollHandler(pollHandler)
   wsInstance.value.addThreadUpdateHandler(updateThreadHandler)
   joinTopic(route.params.channelId)
 }
