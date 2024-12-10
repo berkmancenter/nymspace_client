@@ -84,6 +84,12 @@ class SocketioService {
     this._socketInstance.on('vote:new', onVoteHandler)
   }
 
+  addPollHandler(onPollHandler) {
+    // New Poll bind
+    this._socketInstance.off('poll:new')
+    this._socketInstance.on('poll:new', onPollHandler)
+  }
+
   async sendMessage(payload) {
     const cacheWithMatchingPayload = Object.values(this._requestCache).find((x) => x.payload.message === payload.message)
 
@@ -165,6 +171,11 @@ class SocketioService {
 
   disconnectThread() {
     this._socketInstance.emit('thread:disconnect')
+    this.disconnect()
+  }
+
+  disconnectPoll() {
+    this._socketInstance.emit('poll:disconnect')
     this.disconnect()
   }
 
