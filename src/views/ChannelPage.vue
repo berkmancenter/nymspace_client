@@ -298,9 +298,3 @@ onUnmounted(() => {
   wsInstance.value.disconnectTopic()
 })
 </script>
-<style scoped>
-.threads-title {
-  @apply overflow-hidden;
-  text-overflow: ellipsis;
-}
-</style>
