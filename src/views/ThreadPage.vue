@@ -518,9 +518,4 @@ onUnmounted(() => {
 textarea {
   resize: none;
 }
-
-.messages-title {
-  @apply overflow-hidden;
-  text-overflow: ellipsis;
-}
 </style>
