@@ -58,7 +58,6 @@ const { inspectPoll, loadUser, loadPollResponses, getLoggedInStatus, getId } = u
 const wsInstance = reactive({})
 const poll = ref({})
 const username = ref('')
-const responses = ref([])
 
 const choices = computed(() => poll.value.choices || [])
 const isExpired = computed(() => new Date(poll.value.expirationDate) < new Date())
@@ -120,9 +119,9 @@ async function fetchPollDetails(pollId) {
 async function fetchPollResponses(pollId) {
   // Add fetchPollResponses function
   try {
-    responses.value = await loadPollResponses(pollId)
+    const responseData = await loadPollResponses(pollId)
     // Enrich choice objects with response data when available
-    responses.value.forEach((response) => {
+    responseData.forEach((response) => {
       const choice = choices.value.find((choice) => choice.text === response.choice)
       if (choice) {
         if (!choice.votes) {
