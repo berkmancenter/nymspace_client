@@ -63,8 +63,13 @@ const { inspectPoll, loadUser, loadPollResponses } = useStore
 const wsInstance = reactive({})
 const poll = ref({})
 const username = ref('')
-const choices = computed(() => poll.value.choices || [])
 const responses = ref([])
+
+const choices = computed(() => poll.value.choices || [])
+const isExpired = computed(() => new Date(poll.value.expirationDate) < new Date())
+// For viewing a choice's details
+const choiceId = computed(() => route.params.choiceId)
+const choice = computed(() => choices.value.find((item) => item._id === choiceId.value))
 
 /**
  * Load poll and responses
@@ -130,10 +135,6 @@ watch(
     }
   }
 )
-const choiceId = computed(() => route.params.choiceId)
-const choice = computed(() => choices.value.find((item) => item._id === choiceId.value))
-
-const isExpired = computed(() => new Date(poll.value.expirationDate) < new Date())
 
 function navigateBack() {
   router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
