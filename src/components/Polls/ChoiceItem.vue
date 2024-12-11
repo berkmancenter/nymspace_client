@@ -1,14 +1,12 @@
 <template>
   <!-- Threshold reached choice -->
   <div
-    class="p-2 flex flex-col justify-between border-2 rounded-lg shadow-lg"
-    :class="
-      thresholdReached ? 'bg-green-50 border-green-500 border-2' : !canDoAction ? 'bg-gray-100' : 'bg-white border-gray-100 '
-    "
+    class="p-2 flex flex-col justify-between border rounded-lg shadow-md"
+    :class="thresholdReached ? 'bg-lime-50 border-lime-500' : !canDoAction ? 'bg-gray-100' : 'bg-white border-gray-300 '"
   >
     <p class="text-sm">{{ choice.text }}</p>
     <div class="flex flex-row items-end justify-between mt-2">
-      <CheckIcon v-if="canDoAction && choice.isSelected" class="w-6 h-6 text-blue-500" />
+      <CheckIcon v-if="canDoAction && choice.isSelected" class="w-6 h-6 text-indigo-500" />
       <span v-else></span>
 
       <div class="flex flex-row">
@@ -17,8 +15,8 @@
           class="flex gap-2 justify-start items-center text-white p-1 rounded-md shadow-sm"
           :class="
             choice.isSelected
-              ? 'bg-gray-500 cursor-not-allowed '
-              : 'bg-blue-500 hover:shadow-lg transition-shadow duration-300'
+              ? 'bg-gray-400 cursor-not-allowed '
+              : 'bg-indigo-500 hover:shadow-lg transition-shadow duration-300'
           "
           @click="voteForChoice"
         >
@@ -27,7 +25,7 @@
         </button>
         <button
           v-if="thresholdReached"
-          class="ml-4 flex gap-2 justify-start items-center text-white p-1 rounded-md shadow-sm bg-green-500 hover:shadow-lg transition-shadow duration-300"
+          class="ml-3 flex gap-2 justify-start items-center text-white p-1 rounded-md shadow-sm bg-green-600 hover:shadow-lg transition-shadow duration-300"
           @click="revealResponses"
         >
           <PlusIcon class="w-3 h-3" />
@@ -103,7 +101,7 @@ async function sendResponse(choice) {
         emit('show-modal', {
           title: 'Threshold reached',
           message:
-            'The threshold for this item was reached! To protect the anonymity of the current voters, you can no longer join. However, the group of voters may choose to reveal themselves IRL!'
+            'The threshold for this item was reached! To protect the anonymity of the current voters, you can no longer join. However, the group of voters may choose to reveal themselves IRL.'
         })
       } else if (error.message.includes('Expiration date has been reached.')) {
         emit('show-modal', {
