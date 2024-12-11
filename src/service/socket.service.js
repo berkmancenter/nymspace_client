@@ -11,6 +11,8 @@ class SocketioService {
   _socketInstance = null
 
   constructor() {
+    this._requestCache = {}
+    this._socketInstance = null
     if (!this._socketInstance) {
       /**
        * initialize socket connection and connect
@@ -85,6 +87,18 @@ class SocketioService {
     this._socketInstance.on('vote:new', onVoteHandler)
   }
 
+  addPollHandler(onPollHandler) {
+    // New Poll bind
+    this._socketInstance.off('poll:new')
+    this._socketInstance.on('poll:new', onPollHandler)
+  }
+
+  addChoiceHandler(onChoiceHandler) {
+    // New choice bind
+    this._socketInstance.off('choice:new')
+    this._socketInstance.on('choice:new', onChoiceHandler)
+  }
+
   async sendMessage(payload) {
     const cacheWithMatchingPayload = Object.values(this._requestCache).find((x) => x.payload.message === payload.message)
 
@@ -133,6 +147,11 @@ class SocketioService {
 
   disconnectThread() {
     this._socketInstance.emit('thread:disconnect')
+    this.disconnect()
+  }
+
+  disconnectPoll() {
+    this._socketInstance.emit('poll:disconnect')
     this.disconnect()
   }
 

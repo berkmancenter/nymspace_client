@@ -1,15 +1,15 @@
 <template>
   <button v-if="show" class="flex items-center gap-x-0.5 rounded-md py-1 hover:text-gray-900" @click.prevent="openModal">
-    <PencilIcon class="h-4 w-4" />
+    <PencilIcon class="w-4 h-4" />
     <span class="sr-only">Edit</span>
   </button>
-  <Modal :is-open="isModalOpen" @close-modal="closeModal">
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>Edit Channel</template>
     <span class="font-semibold">Channel name:</span>
     <div>
       <input
         v-model="channelName"
-        class="border rounded border-gray-500 w-full h-12 px-3 text-lg mt-4 login-form-field"
+        class="w-full h-12 px-3 mt-4 text-lg border border-gray-500 rounded login-form-field"
         type="text"
       />
     </div>
@@ -18,16 +18,16 @@
         id="disableVoting"
         v-model="disableVoting"
         type="checkbox"
-        class="cursor-pointer w-4 h-4 mr-2 align-middle"
-      /><label class="cursor-pointer font-semibold" for="disableVoting">Disable voting</label>
+        class="w-4 h-4 mr-2 align-middle cursor-pointer"
+      /><label class="font-semibold cursor-pointer" for="disableVoting">Disable voting</label>
       <input
         id="disableThreadCreation"
         v-model="disableThreadCreation"
         type="checkbox"
-        class="cursor-pointer w-4 h-4 ml-8 mr-2 align-middle"
-      /><label class="cursor-pointer font-semibold" for="disableThreadCreation">Disable thread creation</label>
+        class="w-4 h-4 ml-8 mr-2 align-middle cursor-pointer"
+      /><label class="font-semibold cursor-pointer" for="disableThreadCreation">Disable thread creation</label>
     </div>
-    <div class="mt-8 rounded-md bg-yellow-50 p-4 text-yellow-700">
+    <div class="p-4 mt-8 text-yellow-700 rounded-md bg-yellow-50">
       <div class="font-semibold text-yellow-800">Reminder:</div>
       <div class="mb-4">
         Channels remain on the Threads interface for 90 days after their last use. At that time, channel owners can be
@@ -41,34 +41,34 @@
           v-model="email"
           type="text"
           placeholder="Optional"
-          class="border rounded border-gray-500 w-full h-12 px-3 text-lg login-form-field"
+          class="w-full h-12 px-3 text-lg border border-gray-500 rounded login-form-field"
         />
       </div>
     </div>
     <div class="text-harvard-red">{{ message }}</div>
-    <div v-show="!isEmailValid" class="text-harvard-red mt-5 w-full">* Please enter a valid email address</div>
+    <div v-show="!isEmailValid" class="w-full mt-5 text-harvard-red">* Please enter a valid email address</div>
     <template #actions>
       <button
-        class="rounded bg-gray-300 px-2 py-2 font-semibold shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        class="px-2 py-2 font-semibold bg-gray-300 rounded shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
         @click="closeModal"
       >
         Cancel</button
       ><button
-        class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        class="px-2 py-2 font-semibold text-white bg-gray-600 rounded shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
         @click="processUpdate"
       >
         Update
       </button>
     </template>
-  </Modal>
+  </ThemedModal>
 </template>
 
 <script setup>
 import { PencilIcon } from '@heroicons/vue/outline'
 import { computed, ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
-import Modal from '../Shared/Modal.vue'
-const { updateChannel, getGuestStatus } = useStore
+import ThemedModal from '../Shared/ThemedModal.vue'
+const { updateChannel } = useStore
 
 const isModalOpen = ref(false)
 const channelName = ref('')

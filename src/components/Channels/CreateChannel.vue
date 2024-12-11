@@ -9,7 +9,7 @@
     <option value="public">Public</option>
     <option value="private">Private</option>
   </select>
-  <Modal :is-open="isModalOpen" @close-modal="closeModal">
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>Create {{ channelTypeName }} Channel</template>
     <span class="font-semibold">Channel name:</span>
     <div>
@@ -20,7 +20,7 @@
         placeholder="Enter channel name"
       />
     </div>
-    <div class="mt-2">
+    <div class="mt-4">
       <input
         id="disableVoting"
         v-model="disableVoting"
@@ -68,13 +68,13 @@
         Create
       </button>
     </template>
-  </Modal>
+  </ThemedModal>
 </template>
 
 <script setup>
 import { computed, ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
-import Modal from '../Shared/Modal.vue'
+import ThemedModal from '../Shared/ThemedModal.vue'
 const { getLoggedInStatus, createChannel, getGuestStatus, loadUser } = useStore
 
 const isModalOpen = ref(false)
@@ -89,7 +89,7 @@ const channelTypeName = computed(() => channelType.value[0].toUpperCase() + chan
 
 const isEmailValid = computed(() => {
   if (!email.value || email.value.trim().length === 0) return true
-  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value)
+  return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email.value)
 })
 
 function closeModal() {
