@@ -69,17 +69,23 @@ const router = useRouter()
 
 const maybeVotes = computed(() => props.choice.votes || [])
 const thresholdReached = computed(() => maybeVotes.value.length >= props.threshold)
+const canDoAction = !props.isExpired && props.isAuthed
 
-async function onResponseClicked(choice) {
-  if (props.isExpired || !props.isAuthed) {
+async function revealResponses() {
+  if (!canDoAction) {
+    return
+  }
+  if (thresholdReached.value) {
+    router.push({ name: 'home.polls.results', params: { choiceId: props.choice._id } })
+  }
+}
+
+async function voteForChoice() {
+  if (!canDoAction) {
     return
   }
   if (!thresholdReached.value) {
-    // Emit event to parent which will trigger the same action as sending a new choice does
-    await sendResponse(choice)
-  }
-  if (thresholdReached.value) {
-    router.push({ name: 'home.polls.results', params: { choiceId: choice._id } })
+    await sendResponse()
   }
 }
 
@@ -88,7 +94,7 @@ async function sendResponse(choice) {
     await respondPoll({
       topicId: getActivePoll.value.topic,
       pollId: getActivePoll.value._id,
-      choiceText: choice.text
+      choiceText: props.choice.text
     })
   } catch (error) {
     console.error('Error selecting choice:', error)
