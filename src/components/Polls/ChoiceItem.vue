@@ -83,7 +83,7 @@ async function revealResponses() {
 }
 
 async function voteForChoice() {
-  if (!canDoAction) {
+  if (!canDoAction || props.choice.isSelected) {
     return
   }
   if (!thresholdReached.value) {
