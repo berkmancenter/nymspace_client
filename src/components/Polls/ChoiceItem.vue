@@ -98,12 +98,22 @@ async function sendResponse(choice) {
     choiceText: props.choice.text
   }).catch((err) => {
     const error = err.response.data
-    if (error.code === 403 && error.message.includes('Threshold has been reached.')) {
-      emit('show-modal', {
-        title: 'Threshold reached',
-        message:
-          'The threshold for this item was reached! To protect the anonymity of the current voters, you can no longer join. However, the group of voters may choose to reveal themselves IRL!'
-      })
+    if (error.code === 403) {
+      if (error.message.includes('Threshold has been reached.')) {
+        emit('show-modal', {
+          title: 'Threshold reached',
+          message:
+            'The threshold for this item was reached! To protect the anonymity of the current voters, you can no longer join. However, the group of voters may choose to reveal themselves IRL!'
+        })
+      } else if (error.message.includes('Expiration date has been reached.')) {
+        emit('show-modal', {
+          title: 'Poll ended',
+          message:
+            'This poll has ended, so you can no longer cast a vote. Refresh this page to see the results, or start a new poll!'
+        })
+      } else {
+        console.error('Error selecting choice:', error.message)
+      }
     } else {
       console.error('Error selecting choice:', error.message)
     }
