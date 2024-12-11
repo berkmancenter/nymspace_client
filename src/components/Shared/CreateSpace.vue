@@ -1,7 +1,7 @@
 <template>
   <button
     v-if="show"
-    class="flex gap-2 justify-start items-center bg-harvard-red text-white p-2 rounded-md shadow-md"
+    class="flex gap-2 justify-start items-center bg-black text-white p-2 rounded-md shadow-md"
     @click="openModal"
   >
     <PlusCircleIcon class="w-5 h-5" /> new space
@@ -14,7 +14,7 @@
         <li>
           <button
             class="flex gap-1 px-4 py-2 rounded-t-lg"
-            :class="tab === 1 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
+            :class="tab === 1 ? 'text-black bg-gray-200 font-bold' : ''"
             @click="openTab(1)"
           >
             <HashtagIcon class="w-5 h-5" />
@@ -24,7 +24,7 @@
         <li>
           <button
             class="flex gap-1 px-4 py-2 rounded-t-lg"
-            :class="tab === 2 ? 'text-harvard-red bg-gray-100 font-bold' : ''"
+            :class="tab === 2 ? 'text-black bg-gray-200 font-bold' : ''"
             @click="openTab(2)"
           >
             <UserGroupIcon class="w-5 h-5" />

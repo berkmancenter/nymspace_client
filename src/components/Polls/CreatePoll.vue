@@ -28,7 +28,7 @@
   <!-- Threshold input -->
   <div class="mb-4 flex items-center">
     <div class="w-1/2">
-      <div class="inline-block bg-red-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">Threshold</div>
+      <div class="inline-block bg-lime-200 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">Threshold</div>
       <p class="text-gray-600 text-sm mt-2">
         How many votes are needed to reveal names to each other? Set this to 1 to always show names.
       </p>

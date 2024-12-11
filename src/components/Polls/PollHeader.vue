@@ -16,7 +16,7 @@
             {{ poll.description }}
           </p>
           <div class="flex gap-2 mt-2">
-            <div class="bg-red-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
+            <div class="bg-lime-200 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
               Threshold: {{ poll.threshold }}
             </div>
             <div v-if="poll.whenResultsVisible === 'thresholdAndExpiration'">
