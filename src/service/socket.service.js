@@ -90,12 +90,17 @@ class SocketioService {
     this._socketInstance.on('poll:new', onPollHandler)
   }
 
+  addChoiceHandler(onChoiceHandler) {
+    // New choice bind
+    this._socketInstance.off('choice:new')
+    this._socketInstance.on('choice:new', onChoiceHandler)
+  }
+
   async sendMessage(payload) {
     const cacheWithMatchingPayload = Object.values(this._requestCache).find((x) => x.payload.message === payload.message)
 
     if (cacheWithMatchingPayload) {
       console.debug(cacheWithMatchingPayload)
-
       return
     }
 
@@ -105,38 +110,6 @@ class SocketioService {
       this._requestCache[request] = { resolve, reject, payload }
       this._socketInstance.emit('message:create', { ...payload, request })
     })
-  }
-
-  async sendPollChoice(payload) {
-    const request = uuidv4()
-
-    return new Promise((resolve, reject) => {
-      this._requestCache[request] = { resolve, reject, payload }
-      this._socketInstance.emit('choice:create', { ...payload, request })
-    })
-  }
-
-  addChoiceHandler(finalOnChoiceHandler, user) {
-    const onChoiceHandler = (data) => {
-      if (data.request && data.request in this._requestCache) {
-        const { resolve } = this._requestCache[data.request]
-        resolve(finalOnChoiceHandler(data))
-        delete this._requestCache[data.request]
-      } else if (data?.owner && user?.id && data.owner === user.id && data.request in this._requestCache) {
-        const matchingKey = Object.keys(this._requestCache).find(
-          (key) => this._requestCache[key].payload.choice.text === data.text
-        )
-        const { resolve } = this._requestCache[matchingKey]
-        resolve(finalOnChoiceHandler(data))
-        delete this._requestCache[matchingKey]
-      } else {
-        finalOnChoiceHandler(data)
-      }
-    }
-
-    // New choice bind
-    this._socketInstance.off('choice:new')
-    this._socketInstance.on('choice:new', onChoiceHandler)
   }
 
   addErrorHandler() {
