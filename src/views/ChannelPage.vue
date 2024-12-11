@@ -34,7 +34,7 @@
           <SpaceList :items="sortedItems" :toggle-side-menu="toggleSideMenu" />
         </div>
         <div class="flex flex-col gap-1 p-4">
-          <CreateSpace :show="canCreate" :is-logged-in="getLoggedInStatus.value" />
+          <CreateSpace :show="canCreate" :is-logged-in="isLoggedIn" />
         </div>
       </div>
 
@@ -137,6 +137,7 @@ const isPollActive = ref(false)
 const isChannelOwner = computed(() => getId.value === channel.value?.owner)
 const isChannelThreadCreationAllowed = computed(() => channel.value?.threadCreationAllowed)
 const isModalOpen = ref(false)
+const isLoggedIn = computed(() => getLoggedInStatus.value)
 
 function openModal() {
   document.querySelector('body').classList.add('modal-open')
