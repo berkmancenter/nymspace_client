@@ -18,9 +18,13 @@ const state = reactive({
   channels: [],
   activeChannel: null,
   activeThread: null,
+  activePoll: null,
   userChannels: [],
   threads: [],
   userThreads: [],
+  polls: [],
+  pollChoices: [],
+  pollResponses: [],
   majorError: '',
   messages: [],
   showChatOnly: false
@@ -149,17 +153,13 @@ async function updateThread(payload) {
   await ThreadService.updateThread(payload)
   await loadThreads(getActiveChannel.value.id)
   if (getActiveThread.value) {
-    setActiveThread(getThread(getActiveThread.value.id ?? getActiveThread.value._id))
+    setActiveThread(getThread(getActiveThread.value.id))
   }
 }
 
 async function deleteThread(id) {
   await ThreadService.deleteThread(id)
   removeThread(id)
-}
-
-async function createPoll(payload) {
-  await PollService.createPoll(payload)
 }
 
 async function loadUser() {
@@ -420,6 +420,79 @@ const getActiveThread = computed(() => state.activeThread)
 
 const showChatOnly = computed(() => state.showChatOnly)
 
+/**
+ * Threshold Poll services
+ */
+
+// Getters
+const getPolls = computed(() => state.polls)
+const getPollResponses = computed(() => state.pollResponses)
+const getActivePoll = computed(() => state.activePoll)
+const getPollFromList = (id) => {
+  const pollId = state.polls.findIndex((x) => x._id === id)
+  return pollId > -1 ? state.polls[pollId] : {}
+}
+
+// Mutations
+function setPolls(polls) {
+  state.polls = [...polls]
+}
+
+function setPollChoices(choices) {
+  state.pollChoices = [...choices]
+}
+
+function addPollChoice(choice) {
+  state.pollChoices = [...state.pollChoices, choice]
+}
+
+function addPoll(poll) {
+  state.polls = [...state.polls, poll]
+}
+
+function setPollResponses(responses) {
+  state.pollResponses = [...responses]
+}
+
+function setActivePoll(poll) {
+  state.activePoll = { ...poll }
+}
+
+// Actions
+
+async function createPoll(payload) {
+  return await PollService.createPoll(payload)
+}
+
+async function loadPolls(channelId) {
+  if (!getLoggedInStatus.value) await registerOnce()
+  const polls = await PollService.getPolls(channelId)
+  setPolls(polls)
+}
+
+async function inspectPoll(pollId) {
+  const pollDetails = await PollService.inspectPoll(pollId)
+  setActivePoll(pollDetails)
+  setPollChoices(pollDetails.choices)
+  return pollDetails
+}
+
+async function respondPoll({ topicId, pollId, choiceText }) {
+  return await PollService.respondPoll(topicId, pollId, choiceText)
+}
+
+async function loadPollResponses(pollId) {
+  const responses = await PollService.getPollResponses(pollId)
+  setPollResponses(responses)
+  return responses
+}
+
+async function loadPollResponseCounts(pollId) {
+  const responses = await PollService.getPollResponseCounts(pollId)
+  setPollResponses(responses)
+  return responses
+}
+
 export default {
   getThread,
   setThread,
@@ -437,6 +510,19 @@ export default {
   upsertThread,
 
   createPoll,
+  addPoll,
+  inspectPoll,
+  respondPoll,
+  loadPolls,
+  loadPollResponses,
+  loadPollResponseCounts,
+  getActivePoll,
+  setActivePoll,
+  setPollChoices,
+  addPollChoice,
+  getPolls,
+  getPollResponses,
+  getPollFromList,
 
   getChannels,
   getChannel,

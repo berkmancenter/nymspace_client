@@ -5,8 +5,8 @@ const ResetPassword = () => import('../views/ResetPassword.vue')
 const ForgotPassword = () => import('../views/ForgotPassword.vue')
 const CreateAccountPage = () => import('../views/CreateAccountPage.vue')
 const LandingPageLayout = () => import('../layout/LandingPageLayout.vue')
-const ThreadsPage = () => import('../views/ThreadsPage.vue')
-const MessagesPage = () => import('../views/MessagesPage.vue')
+const ChannelPage = () => import('../views/ChannelPage.vue')
+const ThreadPage = () => import('../views/ThreadPage.vue')
 const LandingPage = () => import('../views/LandingPage.vue')
 const NotFound = () => import('../views/NotFound.vue')
 const PollPage = () => import('../views/PollPage.vue')
@@ -30,17 +30,24 @@ export default [
           {
             path: 'channels/:channelId?',
             name: 'home.channels',
-            component: ThreadsPage,
+            component: ChannelPage,
             children: [
               {
                 path: 'threads/:threadId?',
                 name: 'home.threads',
-                component: MessagesPage
+                component: ThreadPage
               },
               {
                 path: 'polls/:pollId?',
                 name: 'home.polls',
-                component: PollPage
+                component: PollPage,
+                children: [
+                  {
+                    path: 'results/:choiceId',
+                    name: 'home.polls.results',
+                    component: PollPage
+                  }
+                ]
               }
             ]
           }

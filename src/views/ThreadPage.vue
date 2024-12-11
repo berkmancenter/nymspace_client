@@ -160,8 +160,8 @@ const userId = ref('')
 /**
  * Dialog feature
  */
-const resolve = ref({})
-const reject = ref({})
+const resolveRef = ref({})
+const rejectRef = ref({})
 const prompt = ref(false)
 const sending = ref(false)
 
@@ -174,14 +174,14 @@ onBeforeRouteUpdate(async (to, from) => {
 })
 
 const processDirtyMessage = async () => {
-  const promise = new Promise((res, rej) => {
-    resolve.value = res
-    reject.value = rej
+  const promise = new Promise((resolve, reject) => {
+    resolveRef.value = resolve
+    rejectRef.value = reject
   })
   if (message.value.trim().length > 0) {
     prompt.value = true
   } else {
-    resolve.value(true)
+    resolveRef.value(true)
   }
   const val = await promise
   if (val) {
@@ -194,7 +194,7 @@ const processDirtyMessage = async () => {
  * Dialog prompt response call
  */
 const response = (value) => {
-  resolve.value(value)
+  resolveRef.value(value)
   prompt.value = false
 }
 
@@ -265,25 +265,6 @@ const updatedMsgs = computed((x) => {
     hasDownvoted: x.downVotes.findIndex((y) => y.owner === getId.value) > -1
   }))
 })
-
-/**
- * Send message via ws
- */
-function parseJwt(token) {
-  const base64Url = token.split('.')[1]
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-  const jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split('')
-      .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      })
-      .join('')
-  )
-
-  return JSON.parse(jsonPayload)
-}
 
 async function sendMessage() {
   if (message.value.length > 249) {
@@ -536,10 +517,5 @@ onUnmounted(() => {
 <style scoped>
 textarea {
   resize: none;
-}
-
-.messages-title {
-  @apply overflow-hidden;
-  text-overflow: ellipsis;
 }
 </style>
