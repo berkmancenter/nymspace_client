@@ -38,7 +38,13 @@
       <CreateThread ref="createThreadRef" @create-success="closeModal" />
     </div>
     <div v-show="tab === 2" class="py-3 mb-5">
-      <CreatePoll ref="createPollRef" @create-success="closeModal" />
+      <CreatePoll v-if="isLoggedIn" ref="createPollRef" @create-success="closeModal" />
+      <div v-else>
+        <p>
+          Please log in to an account to create a poll! You can log in or create an account by clicking on the menu in the
+          top right corner.
+        </p>
+      </div>
     </div>
     <!-- Action buttons -->
     <template #actions>
@@ -65,10 +71,15 @@ import CreateThread from '../Threads/CreateThread.vue'
 import CreatePoll from '../Polls/CreatePoll.vue'
 import { PlusCircleIcon, HashtagIcon, UserGroupIcon } from '@heroicons/vue/outline'
 
-defineProps({
+const props = defineProps({
   show: {
     type: Boolean,
     required: true
+  },
+  isLoggedIn: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 
@@ -95,7 +106,7 @@ function openTab(tabNumber) {
 function onSubmit() {
   if (tab.value === 1) {
     createThreadRef.value.processCreate()
-  } else if (tab.value === 2) {
+  } else if (tab.value === 2 && props.isLoggedIn) {
     createPollRef.value.processCreate()
   }
 }

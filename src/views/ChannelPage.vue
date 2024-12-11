@@ -34,7 +34,7 @@
           <SpaceList :items="sortedItems" :toggle-side-menu="toggleSideMenu" />
         </div>
         <div class="flex flex-col gap-1 p-4">
-          <CreateSpace :show="canCreate" />
+          <CreateSpace :show="canCreate" :is-logged-in="getLoggedInStatus.value" />
         </div>
       </div>
 
