@@ -1,7 +1,7 @@
 {
   "name": "@berkmankleincenter/nymspace_client",
   "repository": "https://github.com/berkmancenter/nymspace_server",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "engines": {
     "node": "^20",
     "npm": "please-use-yarn",
