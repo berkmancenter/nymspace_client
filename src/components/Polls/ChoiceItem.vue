@@ -1,22 +1,40 @@
 <template>
   <!-- Threshold reached choice -->
   <div
-    v-if="thresholdReached"
-    class="p-2 align-choices-center bg-green-50 border-green-500 border-2 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300"
-    @click="onResponseClicked(choice)"
+    class="p-2 align-choices-center border-2 rounded-lg shadow-lg"
+    :class="
+      thresholdReached ? 'bg-green-50 border-green-500 border-2' : !canDoAction ? 'bg-gray-100' : 'bg-white border-gray-100 '
+    "
   >
     <p class="text-sm">{{ choice.text }}</p>
-    <CheckIcon v-if="choice.isSelected" class="w-4 h-4 text-blue-500" />
-  </div>
-  <!-- Locked choice -->
-  <div
-    v-else
-    class="p-2 align-choices-center rounded-lg border border-gray-200 shadow-md"
-    :class="props.isExpired || !props.isAuthed ? 'bg-gray-100' : 'bg-white hover:shadow-lg cursor-pointer'"
-    @click="onResponseClicked(choice)"
-  >
-    <p class="text-sm">{{ choice.text }}</p>
-    <CheckIcon v-if="choice.isSelected" class="w-4 h-4 text-blue-500" />
+    <div class="flex flex-row items-end justify-between">
+      <CheckIcon v-if="canDoAction && choice.isSelected" class="w-6 h-6 text-blue-500" />
+      <span v-else></span>
+
+      <div class="flex flex-row">
+        <button
+          v-if="canDoAction"
+          class="flex gap-2 justify-start items-center text-white p-1 rounded-md shadow-sm"
+          :class="
+            choice.isSelected
+              ? 'bg-gray-500 cursor-not-allowed '
+              : 'bg-blue-500 hover:shadow-lg transition-shadow duration-300'
+          "
+          @click="voteForChoice"
+        >
+          <PlusIcon class="w-3 h-3" />
+          <p class="text-sm">vote</p>
+        </button>
+        <button
+          v-if="thresholdReached"
+          class="ml-4 flex gap-2 justify-start items-center text-white p-1 rounded-md shadow-sm bg-green-500 hover:shadow-lg transition-shadow duration-300"
+          @click="revealResponses"
+        >
+          <PlusIcon class="w-3 h-3" />
+          <p class="text-sm">reveal</p>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,7 +42,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import useStore from '../../composables/global/useStore'
-import { CheckIcon } from '@heroicons/vue/outline'
+import { CheckIcon, PlusIcon } from '@heroicons/vue/outline'
 
 const { respondPoll, getActivePoll } = useStore
 
