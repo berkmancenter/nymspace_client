@@ -29,7 +29,13 @@
   <div v-else class="flex flex-col justify-between flex-1 p-4">
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
       <template v-for="item in choices" :key="item._id">
-        <ChoiceItem :choice="item" :threshold="poll.threshold" :is-expired="isExpired" :is-authed="username != null" />
+        <ChoiceItem
+          :choice="item"
+          :threshold="poll.threshold"
+          :is-expired="isExpired"
+          :is-authed="username != null"
+          @show-modal="showModal"
+        />
       </template>
     </div>
     <ResponseInput v-if="!isExpired && username != null" @response-sent="refreshPollData" />
@@ -39,9 +45,13 @@
       Start a new one at any time!
     </p>
   </div>
-  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal" @show-modal="showModal">
-    <template #title>{{ modalContent.title }}</template>
-    <template #content>{{ modalContent.message }}</template>
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
+    <template #title>
+      <div class="pt-2">
+        {{ modalContent.title }}
+      </div>
+    </template>
+    <p>{{ modalContent.message }}</p>
   </ThemedModal>
 </template>
 
@@ -63,7 +73,7 @@ const { inspectPoll, loadUser, loadPollResponses, getLoggedInStatus, getId } = u
 const wsInstance = reactive({})
 const poll = ref({})
 const username = ref('')
-const isModalOpen = ref(true)
+const isModalOpen = ref(false)
 const modalContent = ref({ title: '', message: '' })
 
 const choices = computed(() => poll.value.choices || [])

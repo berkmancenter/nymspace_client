@@ -71,6 +71,8 @@ const maybeVotes = computed(() => props.choice.votes || [])
 const thresholdReached = computed(() => maybeVotes.value.length >= props.threshold)
 const canDoAction = !props.isExpired && props.isAuthed
 
+const emit = defineEmits(['show-modal'])
+
 async function revealResponses() {
   if (!canDoAction) {
     return
