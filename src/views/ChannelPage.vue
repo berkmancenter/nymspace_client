@@ -189,8 +189,12 @@ watch(
   }
 )
 
-// Compare method to sort the threads to put followed threads at top
-function compareFollowed(a, b) {
+// Compare method to sort the spaces to put followed threads at top.
+// If not followed, sort to put most recently updated spaces at the top.
+function sortSpaces(a, b) {
+  if (!a.isFollowed && !b.isFollowed) {
+    return new Date(b.createdAt) - new Date(a.createdAt)
+  }
   if (a.isFollowed && b.isFollowed) {
     return 0
   }
@@ -199,7 +203,7 @@ function compareFollowed(a, b) {
   } else return 1
 }
 
-const sortedItems = computed(() => [...threadsWithFollow.value, ...pollsWithType.value].sort(compareFollowed))
+const sortedItems = computed(() => [...threadsWithFollow.value, ...pollsWithType.value].sort(sortSpaces))
 // Add isFollowed property to update if the thread is followed by user
 // Add type property to distinguish space types in SpaceList.
 const threadsWithFollow = computed(() =>
