@@ -511,7 +511,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   wsInstance.value.disconnectThread()
-  wsInstance.value.disconnectPoll()
 })
 </script>
 
