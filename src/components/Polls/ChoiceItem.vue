@@ -71,6 +71,7 @@ async function onResponseClicked(choice) {
 async function sendResponse(choice) {
   try {
     await respondPoll({
+      topicId: getActivePoll.value.topic,
       pollId: getActivePoll.value._id,
       choiceText: choice.text
     })

@@ -50,6 +50,7 @@ async function sendResponse() {
   if (responseText.value.length > 0 && responseText.value.length <= 250) {
     try {
       await respondPoll({
+        topicId: getActivePoll.value.topic,
         pollId: getActivePoll.value._id,
         choiceText: responseText.value
       })

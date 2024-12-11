@@ -477,8 +477,8 @@ async function inspectPoll(pollId) {
   return pollDetails
 }
 
-async function respondPoll({ pollId, choiceText }) {
-  await PollService.respondPoll(pollId, choiceText)
+async function respondPoll({ topicId, pollId, choiceText }) {
+  await PollService.respondPoll(topicId, pollId, choiceText)
 }
 
 async function loadPollResponses(pollId) {
