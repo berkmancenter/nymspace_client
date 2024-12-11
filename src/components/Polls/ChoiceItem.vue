@@ -1,13 +1,13 @@
 <template>
   <!-- Threshold reached choice -->
   <div
-    class="p-2 align-choices-center border-2 rounded-lg shadow-lg"
+    class="p-2 flex flex-col justify-between border-2 rounded-lg shadow-lg"
     :class="
       thresholdReached ? 'bg-green-50 border-green-500 border-2' : !canDoAction ? 'bg-gray-100' : 'bg-white border-gray-100 '
     "
   >
     <p class="text-sm">{{ choice.text }}</p>
-    <div class="flex flex-row items-end justify-between">
+    <div class="flex flex-row items-end justify-between mt-2">
       <CheckIcon v-if="canDoAction && choice.isSelected" class="w-6 h-6 text-blue-500" />
       <span v-else></span>
 
