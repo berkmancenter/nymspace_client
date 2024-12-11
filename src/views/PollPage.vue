@@ -39,6 +39,10 @@
       Start a new one at any time!
     </p>
   </div>
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal" @show-modal="showModal">
+    <template #title>{{ modalContent.title }}</template>
+    <template #content>{{ modalContent.message }}</template>
+  </ThemedModal>
 </template>
 
 <script setup>
@@ -47,9 +51,10 @@ import { useRoute, useRouter } from 'vue-router'
 import useStore from '../composables/global/useStore'
 import ResponseInput from '../components/Polls/ResponseInput.vue'
 import ChoiceItem from '../components/Polls/ChoiceItem.vue'
+import ThemedModal from '../components/Shared/ThemedModal.vue'
 import SocketioService from '../service/socket.service'
-import { ChevronLeftIcon } from '@heroicons/vue/outline'
 import { VueCookieNext } from 'vue-cookie-next'
+import { ChevronLeftIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
 const router = useRouter()
@@ -58,6 +63,8 @@ const { inspectPoll, loadUser, loadPollResponses, getLoggedInStatus, getId } = u
 const wsInstance = reactive({})
 const poll = ref({})
 const username = ref('')
+const isModalOpen = ref(true)
+const modalContent = ref({ title: '', message: '' })
 
 const choices = computed(() => poll.value.choices || [])
 const isExpired = computed(() => new Date(poll.value.expirationDate) < new Date())
@@ -172,6 +179,18 @@ watch(
 
 function navigateBack() {
   router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
+}
+
+function closeModal() {
+  document.querySelector('body').classList.remove('modal-open')
+  isModalOpen.value = false
+}
+
+function showModal(value) {
+  window.scrollTo({ top: 0, left: 0 })
+  isModalOpen.value = true
+  modalContent.value = value
+  document.querySelector('body').classList.add('modal-open')
 }
 
 onUnmounted(() => {
