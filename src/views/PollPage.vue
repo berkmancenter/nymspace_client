@@ -48,17 +48,18 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, reactive } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useStore from '../composables/global/useStore'
 import ResponseInput from '../components/Polls/ResponseInput.vue'
 import ChoiceItem from '../components/Polls/ChoiceItem.vue'
 import SocketioService from '../service/socket.service'
 import { ChevronLeftIcon } from '@heroicons/vue/outline'
+import { VueCookieNext } from 'vue-cookie-next'
 
 const route = useRoute()
 const router = useRouter()
-const { inspectPoll, loadUser, loadPollResponses } = useStore
+const { inspectPoll, loadUser, loadPollResponses, getLoggedInStatus, getId } = useStore
 
 const wsInstance = reactive({})
 const poll = ref({})
@@ -72,6 +73,35 @@ const choiceId = computed(() => route.params.choiceId)
 const choice = computed(() => choices.value.find((item) => item._id === choiceId.value))
 
 /**
+ * Join topic if topic exist and
+ * user is logged in (either guest or user)
+ */
+function joinTopic(topicId) {
+  if (topicId && getLoggedInStatus.value) {
+    wsInstance.value.joinTopic({
+      topicId,
+      token: VueCookieNext.getCookie('access_token')
+    })
+  }
+}
+
+/**
+ * Method to reconnect poll and choice websocket calls on
+ * initialization and disconnection
+ */
+const reconnectSockets = () => {
+  wsInstance.value.addErrorHandler()
+  wsInstance.value.addChoiceHandler(choiceHandler)
+  joinTopic(route.params.channelId)
+
+  wsInstance.value.onConnect(() => {
+    setTimeout(() => {
+      joinUser()
+    }, 100)
+  })
+}
+
+/**
  * Load poll and responses
  */
 onMounted(async () => {
@@ -81,9 +111,8 @@ onMounted(async () => {
 
   // Set up WebSocket handler for poll choices
   wsInstance.value = new SocketioService()
-  wsInstance.value.addChoiceHandler(async () => {
-    await refreshPollData()
-  }, user)
+  wsInstance.value.addDisconnectHandler(reconnectSockets)
+  reconnectSockets()
 })
 
 async function fetchPollDetails(pollId) {
@@ -114,11 +143,23 @@ async function fetchPollResponses(pollId) {
   }
 }
 
+function choiceHandler(data) {
+  refreshPollData()
+}
+
 async function refreshPollData() {
   fetchPollDetails(route.params.pollId)
   fetchPollResponses(route.params.pollId)
 }
 
+function joinUser() {
+  if (getLoggedInStatus.value) {
+    wsInstance.value.joinUser({
+      userId: getId.value,
+      token: VueCookieNext.getCookie('access_token')
+    })
+  }
+}
 /**
  * Watch pollId on router params to
  * clear and fetch responses for new poll
@@ -139,4 +180,8 @@ watch(
 function navigateBack() {
   router.push({ name: 'home.polls', params: { pollId: route.params.pollId } })
 }
+
+onUnmounted(() => {
+  wsInstance.value.disconnectPoll()
+})
 </script>
