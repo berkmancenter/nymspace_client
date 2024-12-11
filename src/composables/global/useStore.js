@@ -478,7 +478,7 @@ async function inspectPoll(pollId) {
 }
 
 async function respondPoll({ topicId, pollId, choiceText }) {
-  await PollService.respondPoll(topicId, pollId, choiceText)
+  return await PollService.respondPoll(topicId, pollId, choiceText)
 }
 
 async function loadPollResponses(pollId) {

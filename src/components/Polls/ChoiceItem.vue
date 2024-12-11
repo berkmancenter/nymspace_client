@@ -92,14 +92,21 @@ async function voteForChoice() {
 }
 
 async function sendResponse(choice) {
-  try {
-    await respondPoll({
-      topicId: getActivePoll.value.topic,
-      pollId: getActivePoll.value._id,
-      choiceText: props.choice.text
-    })
-  } catch (error) {
-    console.error('Error selecting choice:', error)
-  }
+  respondPoll({
+    topicId: getActivePoll.value.topic,
+    pollId: getActivePoll.value._id,
+    choiceText: props.choice.text
+  }).catch((err) => {
+    const error = err.response.data
+    if (error.code === 403 && error.message.includes('Threshold has been reached.')) {
+      emit('show-modal', {
+        title: 'Threshold reached',
+        message:
+          'The threshold for this item was reached! To protect the anonymity of the current voters, you can no longer join. However, the group of voters may choose to reveal themselves IRL!'
+      })
+    } else {
+      console.error('Error selecting choice:', error.message)
+    }
+  })
 }
 </script>
