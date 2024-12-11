@@ -29,13 +29,7 @@
   <div v-else class="flex flex-col justify-between flex-1 p-4">
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
       <template v-for="item in choices" :key="item._id">
-        <ChoiceItem
-          :choice="item"
-          :threshold="poll.threshold"
-          :is-expired="isExpired"
-          :is-authed="username != null"
-          @choice-clicked="refreshPollData"
-        />
+        <ChoiceItem :choice="item" :threshold="poll.threshold" :is-expired="isExpired" :is-authed="username != null" />
       </template>
     </div>
     <ResponseInput v-if="!isExpired && username != null" @response-sent="refreshPollData" />
