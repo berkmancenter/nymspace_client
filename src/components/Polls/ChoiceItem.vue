@@ -67,8 +67,6 @@ const props = defineProps({
 
 const router = useRouter()
 
-const emit = defineEmits(['choice-clicked'])
-
 const maybeVotes = computed(() => props.choice.votes || [])
 const thresholdReached = computed(() => maybeVotes.value.length >= props.threshold)
 
@@ -79,7 +77,6 @@ async function onResponseClicked(choice) {
   if (!thresholdReached.value) {
     // Emit event to parent which will trigger the same action as sending a new choice does
     await sendResponse(choice)
-    emit('choice-clicked')
   }
   if (thresholdReached.value) {
     router.push({ name: 'home.polls.results', params: { choiceId: choice._id } })
