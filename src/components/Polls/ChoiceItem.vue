@@ -74,7 +74,7 @@ const canDoAction = !props.isExpired && props.isAuthed
 const emit = defineEmits(['show-modal'])
 
 async function revealResponses() {
-  if (!canDoAction) {
+  if (!props.isAuthed) {
     return
   }
   if (thresholdReached.value) {
