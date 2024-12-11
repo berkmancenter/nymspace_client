@@ -11,7 +11,7 @@
           This option reached the threshold of {{ poll.threshold }}. The people who chose this option are shown below.
         </p>
         <div class="flex mt-2">
-          <div class="bg-green-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
+          <div class="bg-amber-200 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">
             Votes: {{ choice.votes.length }}
           </div>
         </div>
