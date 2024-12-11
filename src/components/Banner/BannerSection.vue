@@ -119,9 +119,12 @@
 </template>
 
 <script setup>
-import { onMounted, watch, ref, nextTick } from 'vue'
+import { onMounted, watch, ref, computed, nextTick } from 'vue'
 import useStore from '../../composables/global/useStore'
 import { defineAsyncComponent } from '@vue/runtime-core'
+import { TrashIcon, RefreshIcon, LoginIcon, DotsVerticalIcon } from '@heroicons/vue/outline'
+import ThemedModal from '../Shared/ThemedModal.vue'
+import { useRoute } from 'vue-router'
 
 const {
   getLoggedInStatus,
@@ -131,7 +134,8 @@ const {
   getGuestStatus,
   loadNewPseudonym,
   activatePseudonym,
-  loadPseudonyms
+  loadPseudonyms,
+  deletePseudonym
 } = useStore
 
 const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
@@ -146,6 +150,15 @@ const activeToken = ref('')
 const menuOpen = ref(false)
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
+}
+
+/**
+ * watch route params and check if channelId is present
+ * based on its presence update welcome message
+ */
+
+async function registerOneTime() {
+  await registerOnce()
 }
 
 // function openModal() {
