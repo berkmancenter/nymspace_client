@@ -73,11 +73,15 @@ function register() {
     registerUser(username.value, password.value, email.value)
       .then(() => {
         clearForm()
-        message.value = 'Register successful. Redirecting to home page.'
+        message.value = 'Register successful. Redirecting...'
         showSuccess.value = true
         setTimeout(() => {
-          router.push({ name: 'home.channelspage' })
-        }, 2000)
+          if (router.currentRoute.value.query.to) {
+            router.push({ path: router.currentRoute.value.query.to })
+          } else {
+            router.push({ name: 'home.channelspage' })
+          }
+        }, 500)
       })
       .catch((x) => setError(x.response.data.message, true))
   }

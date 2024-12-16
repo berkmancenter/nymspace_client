@@ -50,8 +50,8 @@
     <ResponseInput v-if="!isExpired && username != null" @response-sent="refreshPollData" />
     <div v-else-if="!username" class="flex flex-col">
       <p class="text-gray-700 text-sm text-center">
-        <a class="cursor-pointer font-bold underline">Log in</a> or
-        <a class="cursor-pointer font-bold underline">Sign up</a> to participate in this poll!
+        <a class="cursor-pointer font-bold underline" @click="loginWithReturn">Log in</a> or
+        <a class="cursor-pointer font-bold underline" @click="signupWithReturn">sign up</a> to participate in this poll!
       </p>
       <p class="italic underline text-center text-xs mt-2">
         <a
@@ -228,6 +228,14 @@ function showModal(value) {
   isModalOpen.value = true
   modalContent.value = value
   document.querySelector('body').classList.add('modal-open')
+}
+
+function loginWithReturn() {
+  router.push({ name: 'home.login', query: { to: router.currentRoute.value.path } })
+}
+
+function signupWithReturn() {
+  router.push({ name: 'home.createAccount', query: { to: router.currentRoute.value.path } })
 }
 
 onUnmounted(() => {
