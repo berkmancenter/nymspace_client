@@ -145,7 +145,7 @@ async function fetchPollResponses(pollId) {
     const responseData = await loadPollResponses(pollId)
     // Enrich choice objects with response data when available
     responseData.forEach((response) => {
-      const choice = choices.value.find((choice) => choice.text === response.choice)
+      const choice = choices.value.find((c) => c.text === response.choice)
       if (choice) {
         if (!choice.votes) {
           choice.votes = [response]
