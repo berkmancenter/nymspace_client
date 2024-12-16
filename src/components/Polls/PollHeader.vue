@@ -29,6 +29,7 @@
                 <!-- {{ expirationDate }} -->
               </div>
             </div>
+            <div class="bg-gray-200 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold">Multiple votes allowed</div>
           </div>
         </div>
       </div>
