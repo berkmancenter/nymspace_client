@@ -28,10 +28,13 @@
   <!-- Grid of responses -->
   <div v-else class="flex flex-col justify-between flex-1 p-4">
     <div>
-      <p class="text-sm mb-4">
+      <p v-if="username" class="text-sm mb-4 text-gray-700">
         Threshold Polls are meant for coordination in real life. As a result, if an option you vote for crosses the
-        threshold, your <b class="text-green-700">real username</b> will be revealed to your fellow voters.
+        threshold, your <b class="text-black">real username</b> will be revealed to your fellow voters. Your current username
+        is <b class="text-black">{{ username }}</b
+        >.
       </p>
+
       <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
         <template v-for="item in choices" :key="item._id">
           <ChoiceItem
