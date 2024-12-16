@@ -27,16 +27,22 @@
   </div>
   <!-- Grid of responses -->
   <div v-else class="flex flex-col justify-between flex-1 p-4">
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
-      <template v-for="item in choices" :key="item._id">
-        <ChoiceItem
-          :choice="item"
-          :threshold="poll.threshold"
-          :is-expired="isExpired"
-          :is-authed="username != null"
-          @show-modal="showModal"
-        />
-      </template>
+    <div>
+      <p class="text-sm mb-4">
+        Threshold Polls are meant for coordination in real life. As a result, if an option you vote for crosses the
+        threshold, your <b class="text-blue-700">real username</b> will be revealed to your fellow voters.
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
+        <template v-for="item in choices" :key="item._id">
+          <ChoiceItem
+            :choice="item"
+            :threshold="poll.threshold"
+            :is-expired="isExpired"
+            :is-authed="username != null"
+            @show-modal="showModal"
+          />
+        </template>
+      </div>
     </div>
     <ResponseInput v-if="!isExpired && username != null" @response-sent="refreshPollData" />
     <p v-else-if="!username" class="text-gray-700 text-sm text-center">Log in to an account to participate in this poll!</p>
