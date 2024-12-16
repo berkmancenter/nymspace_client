@@ -17,7 +17,7 @@
             :class="tab === 1 ? 'text-black bg-gray-200 font-bold' : ''"
             @click="openTab(1)"
           >
-            <HashtagIcon class="w-5 h-5" />
+            <ChatIcon class="w-5 h-5" />
             Thread
           </button>
         </li>
@@ -70,7 +70,7 @@ import { ref } from '@vue/reactivity'
 import ThemedModal from './ThemedModal.vue'
 import CreateThread from '../Threads/CreateThread.vue'
 import CreatePoll from '../Polls/CreatePoll.vue'
-import { PlusCircleIcon, HashtagIcon, UserGroupIcon } from '@heroicons/vue/outline'
+import { PlusCircleIcon, ChatIcon, UserGroupIcon } from '@heroicons/vue/outline'
 
 const props = defineProps({
   show: {
