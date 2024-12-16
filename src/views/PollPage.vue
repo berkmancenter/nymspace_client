@@ -48,7 +48,25 @@
       </div>
     </div>
     <ResponseInput v-if="!isExpired && username != null" @response-sent="refreshPollData" />
-    <p v-else-if="!username" class="text-gray-700 text-sm text-center">Log in to an account to participate in this poll!</p>
+    <div v-else-if="!username" class="flex flex-col">
+      <p class="text-gray-700 text-sm text-center">
+        <a class="cursor-pointer font-bold underline">Log in</a> or
+        <a class="cursor-pointer font-bold underline">Sign up</a> to participate in this poll!
+      </p>
+      <p class="italic underline text-center text-xs mt-2">
+        <a
+          class="cursor-pointer"
+          @click="
+            showModal({
+              title: 'Why do I need an account for threshold polls?',
+              message:
+                'Threshold Polls are meant for coordination in real life. As a result, if an option you vote for crosses the threshold, your username is revealed to your fellow voters. Signing up ensures you have a username to reveal!'
+            })
+          "
+          >Why?</a
+        >
+      </p>
+    </div>
     <p v-else class="text-gray-700 text-sm text-center">
       This poll has ended and no new votes can be cast. <br />
       Start a new one at any time!
