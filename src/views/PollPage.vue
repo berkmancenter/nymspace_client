@@ -30,7 +30,7 @@
     <div>
       <p class="text-sm mb-4">
         Threshold Polls are meant for coordination in real life. As a result, if an option you vote for crosses the
-        threshold, your <b class="text-blue-700">real username</b> will be revealed to your fellow voters.
+        threshold, your <b class="text-green-700">real username</b> will be revealed to your fellow voters.
       </p>
       <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
         <template v-for="item in choices" :key="item._id">
