@@ -176,7 +176,7 @@ async function fetchPollResponses(pollId) {
       }
     })
   } catch (error) {
-    console.error('Error fetching poll responses:', error)
+    console.log('Error fetching poll responses:', error.response.data.message)
   }
 }
 
