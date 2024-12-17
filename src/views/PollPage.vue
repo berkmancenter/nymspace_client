@@ -27,19 +27,46 @@
   </div>
   <!-- Grid of responses -->
   <div v-else class="flex flex-col justify-between flex-1 p-4">
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
-      <template v-for="item in choices" :key="item._id">
-        <ChoiceItem
-          :choice="item"
-          :threshold="poll.threshold"
-          :is-expired="isExpired"
-          :is-authed="username != null"
-          @show-modal="showModal"
-        />
-      </template>
+    <div>
+      <p v-if="username" class="text-sm mb-4 text-gray-700">
+        Threshold Polls are meant for coordination in real life. As a result, if an option you vote for crosses the
+        threshold, your <b class="text-black">real username</b> will be revealed to your fellow voters. Your current username
+        is <b class="text-black">{{ username }}</b
+        >.
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows pb-4">
+        <template v-for="item in choices" :key="item._id">
+          <ChoiceItem
+            :choice="item"
+            :threshold="poll.threshold"
+            :is-expired="isExpired"
+            :is-authed="username != null"
+            @show-modal="showModal"
+          />
+        </template>
+      </div>
     </div>
     <ResponseInput v-if="!isExpired && username != null" @response-sent="refreshPollData" />
-    <p v-else-if="!username" class="text-gray-700 text-sm text-center">Log in to an account to participate in this poll!</p>
+    <div v-else-if="!username" class="flex flex-col">
+      <p class="text-gray-700 text-sm text-center">
+        <a class="cursor-pointer font-bold underline" @click="loginWithReturn">Log in</a> or
+        <a class="cursor-pointer font-bold underline" @click="signupWithReturn">sign up</a> to participate in this poll!
+      </p>
+      <p class="italic underline text-center text-xs mt-2">
+        <a
+          class="cursor-pointer"
+          @click="
+            showModal({
+              title: 'Why do I need an account for threshold polls?',
+              message:
+                'Threshold Polls are meant for coordination in real life. As a result, if an option you vote for crosses the threshold, your username is revealed to your fellow voters. Signing up ensures you have a username to reveal!'
+            })
+          "
+          >Why?</a
+        >
+      </p>
+    </div>
     <p v-else class="text-gray-700 text-sm text-center">
       This poll has ended and no new votes can be cast. <br />
       Start a new one at any time!
@@ -139,7 +166,7 @@ async function fetchPollResponses(pollId) {
     const responseData = await loadPollResponses(pollId)
     // Enrich choice objects with response data when available
     responseData.forEach((response) => {
-      const choice = choices.value.find((choice) => choice.text === response.choice)
+      const choice = choices.value.find((c) => c.text === response.choice)
       if (choice) {
         if (!choice.votes) {
           choice.votes = [response]
@@ -149,7 +176,7 @@ async function fetchPollResponses(pollId) {
       }
     })
   } catch (error) {
-    console.error('Error fetching poll responses:', error)
+    console.log('Error fetching poll responses:', error.response.data.message)
   }
 }
 
@@ -201,6 +228,14 @@ function showModal(value) {
   isModalOpen.value = true
   modalContent.value = value
   document.querySelector('body').classList.add('modal-open')
+}
+
+function loginWithReturn() {
+  router.push({ name: 'home.login', query: { to: router.currentRoute.value.path } })
+}
+
+function signupWithReturn() {
+  router.push({ name: 'home.createAccount', query: { to: router.currentRoute.value.path } })
 }
 
 onUnmounted(() => {

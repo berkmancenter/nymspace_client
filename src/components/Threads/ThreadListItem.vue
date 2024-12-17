@@ -2,7 +2,7 @@
   <router-link :to="threadLink" :class="getThreadClass(item)" @click="props.toggleSideMenu">
     <div class="flex flex-1 gap-1 truncate">
       <div class="font-semibold justify-self-end">
-        <HashtagIcon :class="item.isFollowed ? 'fill-current text-harvard-red' : ''" class="inline-block w-4 h-4" />
+        <ChatIcon :class="item.isFollowed ? 'fill-current text-harvard-red' : ''" class="inline-block w-4 h-4" />
       </div>
       <div class="font-semibold justify-self-end" data-testid="unlock-thread">
         <LockClosedIcon v-if="item.locked" class="inline-block w-4 h-4" @click="unlockThread" />
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ChatAltIcon, HashtagIcon } from '@heroicons/vue/outline'
+import { ChatIcon, ChatAltIcon } from '@heroicons/vue/outline'
 import { LockClosedIcon } from '@heroicons/vue/solid'
 import { computed } from 'vue'
 import useStore from '../../composables/global/useStore'

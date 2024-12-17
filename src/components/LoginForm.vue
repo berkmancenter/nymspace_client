@@ -70,7 +70,7 @@ function login() {
       })
       .catch((x) => setError(x.response.data.message, true))
   } else {
-    setError('Usename and Password required', true)
+    setError('Username and Password required', true)
   }
 }
 
