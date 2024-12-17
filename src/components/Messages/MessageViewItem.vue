@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div
     class="flex-auto py-2 pl-4 shrink group hover:bg-gray-100"
@@ -24,7 +25,11 @@
               }}</span
             >
           </div>
-          <div v-html="formattedBody"></div>
+          <div
+            :class="[item.pause ? 'bg-yellow-100' : '']"
+            :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
+            v-html="formattedBody"
+          ></div>
         </div>
       </div>
       <div
@@ -177,6 +182,7 @@ function getFormattedTag(tag) {
  * Search for all pseudonym tags and format them
  */
 const formattedBody = computed(() => {
+  // eslint-disable-next-line no-useless-escape
   const regex = /(@\"[A-Za-z0-9\s]+\")/g
   let matches = []
   let tempStr = props.item.body

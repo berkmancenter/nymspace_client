@@ -41,6 +41,13 @@
       This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.
     </div>
     <div
+      v-if="discussionPause"
+      class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+    >
+      The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback from the
+      discussion facilitator before responding.
+    </div>
+    <div
       v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
       class="z-50 w-full p-1 text-center text-white transition-all bg-harvard-red sm:rounded-t"
     >
@@ -55,7 +62,11 @@
     <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2" :class="sending ? 'animate-pulse' : ''">
       <div
         class="block p-1 mr-4 text-sm border rounded shadow-sm"
-        :class="shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage ? 'border-harvard-red' : 'border-gray-500'"
+        :class="
+          shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause
+            ? 'border-harvard-red'
+            : 'border-gray-500'
+        "
       >
         <textarea
           id="messageTextArea"
@@ -72,8 +83,8 @@
 
         <button
           class="flex justify-end w-full text-black"
-          :disabled="message.length > 4999"
-          :class="message.length > 4999 ? 'text-gray-400' : ''"
+          :disabled="message.length > 4999 || discussionPause"
+          :class="message.length > 4999 || discussionPause ? 'text-gray-400' : ''"
           @click="sendMessage"
         >
           <svg
@@ -153,6 +164,7 @@ const goodReputation = ref(false)
 
 const wsInstance = reactive({})
 const shouldDisplayMessageBoxLocked = ref(false)
+const discussionPause = ref(0)
 const shouldDisplayUnableToSendMessage = ref(false)
 const unableToSendSpecialMessage = ref('')
 const newMessagesNotice = ref(false)
@@ -395,6 +407,13 @@ function messageHandler(data) {
    */
   if (data.thread === route.params.threadId) {
     addMessage(data)
+    if (data.pause) {
+      discussionPause.value = data.pause
+      setTimeout(() => {
+        discussionPause.value = 0
+        scrollToBottom()
+      }, data.pause * 1000)
+    }
   }
 
   /**
