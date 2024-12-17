@@ -8,7 +8,7 @@
       <div style="max-width: 92%" class="">
         <div v-linkified class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
           <div class="font-bold" @click="addToMessage(item.pseudonym)">
-            {{ item.pseudonym || item.owner }}
+            {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
             <span v-if="item.owner === userId" class="font-thin">(you) </span>
             <span class="font-thin text-gray">
               {{
