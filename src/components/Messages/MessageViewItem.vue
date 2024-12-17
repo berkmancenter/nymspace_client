@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div
     class="flex-auto py-2 pl-4 shrink group hover:bg-gray-100"
@@ -7,7 +8,7 @@
       <div style="max-width: 92%" class="">
         <div v-linkified class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
           <div class="font-bold" @click="addToMessage(item.pseudonym)">
-            {{ item.pseudonym || item.owner }}
+            {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
             <span v-if="item.owner === userId" class="font-thin">(you) </span>
             <span class="font-thin text-gray">
               {{
@@ -24,7 +25,11 @@
               }}</span
             >
           </div>
-          <div v-html="formattedBody"></div>
+          <div
+            :class="[item.pause ? 'bg-yellow-100' : '']"
+            :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
+            v-html="formattedBody"
+          ></div>
         </div>
       </div>
       <div
@@ -177,6 +182,7 @@ function getFormattedTag(tag) {
  * Search for all pseudonym tags and format them
  */
 const formattedBody = computed(() => {
+  // eslint-disable-next-line no-useless-escape
   const regex = /(@\"[A-Za-z0-9\s]+\")/g
   let matches = []
   let tempStr = props.item.body
