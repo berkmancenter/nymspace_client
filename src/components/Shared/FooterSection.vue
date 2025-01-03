@@ -1,18 +1,9 @@
 <template>
   <div
-    class="pb-3 sm:py-3 sm:px-10 text-black bg-white border-t hover:text-gray-900 flex justify-between px-4 sm:flex-col sm:justify-start space-y-4 flex-wrap items-center"
+    class="flex flex-wrap items-center justify-between px-4 pb-3 space-y-4 text-black bg-white border-t sm:py-3 sm:px-10 hover:text-gray-900 sm:flex-col sm:justify-start"
   >
-    <a
-      href="https://cyber.harvard.edu/"
-      target="_blank"
-      class="flex sm:flex-col items-center -mb-4 sm:-mb-3"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        alt="Berkman Klein Center logo"
-        class="h-5 sm:h-8 mb-1"
-        viewBox="0 0 450 200"
-      >
+    <a href="https://cyber.harvard.edu/" target="_blank" class="flex items-center -mb-4 sm:flex-col sm:-mb-3">
+      <svg xmlns="http://www.w3.org/2000/svg" alt="Berkman Klein Center logo" class="h-5 mb-1 sm:h-8" viewBox="0 0 450 200">
         <title>Harvard Berkman Klein Center Logo</title>
         <rect x="125.1" width="10" height="171.1" fill="#a51c30"></rect>
         <rect x="286.93" width="10" height="171.1" fill="#a51c30"></rect>
@@ -29,25 +20,23 @@
           fill="#a51c30"
         ></polygon>
       </svg>
-      <span class="font-bold leading-3"
-        >Berkman <span class="hidden sm:inline-block"> Klein Center</span></span
-      >
+      <span class="font-bold leading-3">Berkman <span class="hidden sm:inline-block"> Klein Center</span></span>
     </a>
-    <div class="flex gap-4 items-center">
+    <div class="flex items-center gap-4">
       <router-link :to="path" class="">
-        <p class="inline-block hover:text-harvard-red text-black">Home</p>
+        <p class="inline-block text-black hover:text-harvard-red">Home</p>
       </router-link>
       <a
-        class="hover:text-gray-800 text-black flex items-center gap-1"
-        href="https://cyber.harvard.edu/projects/nymity"
+        class="flex items-center gap-1 text-black hover:text-gray-800"
+        href="https://cyber.harvard.edu/projects/nymity-0"
         rel="noopener"
         target="_blank"
         >About <ExternalLinkIcon class="w-4 h-4" />
       </a>
       <a
-        href="https://github.com/berkmancenter/threads/discussions"
+        href="https://github.com/berkmancenter/threads_client"
         target="_blank"
-        class="hover:text-gray-800 text-black flex items-center gap-1"
+        class="flex items-center gap-1 text-black hover:text-gray-800"
       >
         GitHub
         <img :src="githubLogo" alt="nymspace GitHub" class="w-4" />
@@ -57,8 +46,7 @@
 </template>
 
 <script setup>
-import githubLogo from "../../assets/GitHub-Mark-64px.png";
-import berkmanLogo from "../../assets/berkman-klein-center-logo.png";
-import { ExternalLinkIcon } from "@heroicons/vue/outline";
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
+import githubLogo from '../../assets/GitHub-Mark-64px.png'
+import { ExternalLinkIcon } from '@heroicons/vue/outline'
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
 </script>

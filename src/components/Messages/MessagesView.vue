@@ -1,38 +1,27 @@
 <template>
-  <div
-    class="h-1 flex-shrink flex-1 flex flex-col rounded-b items-center border-gray-500 w-full overflow-y-auto"
-  >
-    <div v-if="items.length" class="w-full h-1 flex-shrink flex flex-col">
+  <div class="flex flex-col items-center flex-1 flex-shrink w-full h-1 overflow-y-auto border-gray-500 rounded-b">
+    <div v-if="items.length" class="flex flex-col flex-shrink w-full h-1">
       <template v-for="item in items" :key="item.id">
-        <MessageViewItem :item="item" v-bind="$attrs" :userId="userId" />
+        <MessageViewItem :item="item" v-bind="$attrs" :user-id="userId" />
       </template>
     </div>
-    <div
-      v-if="!items.length"
-      class="text-gray-500 p-2 flex-1 flex flex-col w-full text-center justify-center"
-    >
+    <div v-if="!items.length" class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500">
       Start chatting
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  inheritAttrs: false,
-};
-</script>
-
 <script setup>
-import MessageViewItem from "./MessageViewItem.vue";
+import MessageViewItem from './MessageViewItem.vue'
 
 defineProps({
   items: {
     type: Array,
-    required: true,
+    required: true
   },
   userId: {
     type: String,
-    required: true,
-  },
-});
+    required: true
+  }
+})
 </script>

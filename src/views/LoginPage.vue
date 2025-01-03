@@ -9,37 +9,25 @@
 
         <p>You may create up to 5 pseudonyms assocated with one account.</p>
 
-        <p>
-          After [1 week], your account receives the ability to downvote messages
-          in a thread.
-        </p>
+        <p>After [1 week], your account receives the ability to downvote messages in a thread.</p>
 
         <p>
-          Good community behavior is rewarded, and vice versa: if your messages
-          repeatedly receive downvotes, suggesting the community finds them
-          unhelpful or inappropriate, your ability to downvote will be revoked
-          (until a sufficient number of upvotes are accumulated).
+          Good community behavior is rewarded, and vice versa: if your messages repeatedly receive downvotes, suggesting the
+          community finds them unhelpful or inappropriate, your ability to downvote will be revoked (until a sufficient
+          number of upvotes are accumulated).
         </p>
 
-        <p>
-          Please email threads_qs@eon.law.harvard.edu with any questions about
-          your account.
-        </p>
+        <p>Please email threads_qs@eon.law.harvard.edu with any questions about your account.</p>
       </div>
     </div>
-    <router-link
-      class="inline-block hover:underline underline font-bold my-10"
-      :to="path"
-      >Return Home</router-link
-    >
+    <router-link class="inline-block hover:underline underline font-bold my-10" :to="path">Return Home</router-link>
   </div>
 </template>
-<script setup>
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "/";
-</script>
+<script setup></script>
 <script>
-import LoginForm from "../components/LoginForm.vue";
-export default { components: { LoginForm } };
+import LoginForm from '../components/LoginForm.vue'
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : '/'
+export default { components: { LoginForm } }
 </script>
 <style scoped>
 .login-bg p {

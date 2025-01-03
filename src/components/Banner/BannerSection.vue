@@ -1,17 +1,14 @@
 <template>
-  <div class="flex w-full justify-end flex-1 gap-4">
-    <div class="relative inline-block text-left mt-1 w-full">
-      <div div class="flex items-center justify-end gap-2 w-full">
-        <div
-          v-if="!getGuestStatus"
-          class="w-full gap-3 flex justify-end items-center"
-        >
+  <div class="flex justify-end flex-1 w-full gap-4">
+    <div class="relative inline-block w-full mt-1 text-left">
+      <div div class="flex items-center justify-end w-full gap-2">
+        <div v-if="!getGuestStatus" class="flex items-center justify-end w-full gap-3">
           <select
+            id="pseudonymSelect"
             v-model="activeToken"
             :disabled="getGuestStatus"
             class="shadow rounded-md border-0 py-0.5 pl-1 pr-1 text-gray-900 ring-0 border-b-1 ring-inset ring-gray-300 focus:ring-0 sm:text-sm sm:leading-6"
             @change="activateToken"
-            id="pseudonymSelect"
           >
             <option v-for="pseudonym in getPseudonyms" :value="pseudonym.token">
               {{ pseudonym.pseudonym }}
@@ -21,36 +18,25 @@
         <div v-if="getGuestStatus">
           {{ getActivePseudonym.pseudonym }}
         </div>
-        <button
-          type="button"
-          class=""
-          id="menu-button"
-          aria-expanded="true"
-          aria-haspopup="true"
-          @click="toggleMenu"
-        >
+        <button id="menu-button" type="button" class="" aria-expanded="true" aria-haspopup="true" @click="toggleMenu">
           <DotsVerticalIcon class="w-5" />
         </button>
       </div>
 
-      <div
-        class="fixed inset-0 z-10"
-        @click="menuOpen = false"
-        :class="menuOpen ? '' : 'hidden'"
-      >
+      <div class="fixed inset-0 z-10" :class="menuOpen ? '' : 'hidden'" @click="menuOpen = false">
         <div
-          class="absolute right-2 z-0 mt-10 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          class="absolute z-0 w-56 mt-10 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg right-2 ring-1 ring-black ring-opacity-5 focus:outline-none"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
           tabindex="-1"
         >
           <div role="none">
-            <div class="mt-2 p-2 space-y-2" role="none">
+            <div class="p-2 mt-2 space-y-2" role="none">
               <router-link
-                :to="`${path}/login`"
                 v-if="getGuestStatus"
-                class="text-black flex gap-2 items-center"
+                :to="`${path}/login`"
+                class="flex items-center gap-2 text-black"
                 title="Retain a pseudonym across sessions"
               >
                 <LoginIcon class="w-4 h-4" />
@@ -59,22 +45,18 @@
               <!-- <button
                 v-if="getPseudonyms.length > 1"
                 @click="openModal"
-                class="flex gap-2 items-center"
+                class="flex items-center gap-2"
               >
                 <TrashIcon
-                  class="h-4 w-4 inline-block cursor-pointer"
+                  class="inline-block w-4 h-4 cursor-pointer"
                   title="Delete pseudonym"
                 />
                 Delete pseudonym
               </button> -->
 
-              <button
-                v-if="getGuestStatus"
-                @click="refreshPseudonym"
-                class="flex gap-2 items-center"
-              >
+              <button v-if="getGuestStatus" class="flex items-center gap-2" @click="refreshPseudonym">
                 <RefreshIcon
-                  class="h-4 w-4 inline-block cursor-pointer hover:text-harvard-red"
+                  class="inline-block w-4 h-4 cursor-pointer hover:text-harvard-red"
                   title="Get a new pseudonym"
                 />
                 New pseudonym
@@ -94,10 +76,10 @@
       </div>
     </div>
 
-    <!-- <Modal :is-open="isModalOpen" @close-modal="closeModal">
+    <!-- <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
       <template v-slot:title>Delete Pseudonym</template>
       <div class="text-xl">Are you sure you want to delete pseudonym?</div>
-      <div class="text-lg mt-3">
+      <div class="mt-3 text-lg">
         Please select the pseudonym to delete
         <select
           v-model="pseudonymToDelete"
@@ -114,7 +96,7 @@
           </option>
         </select>
       </div>
-      <div class="text-xs mt-4">
+      <div class="mt-4 text-xs">
         If you want to delete the active pseudonym, please activate other
         pseudonym first and come back here.
       </div>
@@ -127,27 +109,22 @@
       <template v-slot:actions>
         <button
           @click="processDelete"
-          class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+          class="px-2 py-2 font-semibold text-white bg-gray-600 rounded shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
         >
           Delete
         </button>
       </template>
-    </Modal> -->
+    </ThemedModal> -->
   </div>
 </template>
 
 <script setup>
-import { onMounted, watch, ref, computed, nextTick } from "vue";
-import useStore from "../../composables/global/useStore";
-import { defineAsyncComponent } from "@vue/runtime-core";
-import {
-  TrashIcon,
-  RefreshIcon,
-  LoginIcon,
-  DotsVerticalIcon,
-} from "@heroicons/vue/outline";
-import Modal from "../Shared/Modal.vue";
-import { useRoute } from "vue-router";
+import { onMounted, watch, ref, computed, nextTick } from 'vue'
+import useStore from '../../composables/global/useStore'
+import { defineAsyncComponent } from '@vue/runtime-core'
+import { TrashIcon, RefreshIcon, LoginIcon, DotsVerticalIcon } from '@heroicons/vue/outline'
+import ThemedModal from '../Shared/ThemedModal.vue'
+import { useRoute } from 'vue-router'
 
 const {
   getLoggedInStatus,
@@ -158,11 +135,11 @@ const {
   loadNewPseudonym,
   activatePseudonym,
   loadPseudonyms,
-  deletePseudonym,
-} = useStore;
+  deletePseudonym
+} = useStore
 
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
-const activeToken = ref("");
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
+const activeToken = ref('')
 // const pseudonymToDelete = ref("");
 // const isModalOpen = ref(false);
 // const message = ref("");
@@ -170,9 +147,9 @@ const activeToken = ref("");
 // const inactivePseudonyms = computed(() =>
 //   getPseudonyms.value.filter((x) => !x.active)
 // );
-const menuOpen = ref(false);
+const menuOpen = ref(false)
 function toggleMenu() {
-  menuOpen.value = !menuOpen.value;
+  menuOpen.value = !menuOpen.value
 }
 
 /**
@@ -181,7 +158,7 @@ function toggleMenu() {
  */
 
 async function registerOneTime() {
-  await registerOnce();
+  await registerOnce()
 }
 
 // function openModal() {
@@ -192,9 +169,9 @@ async function registerOneTime() {
 // }
 
 async function refreshPseudonym() {
-  await loadNewPseudonym();
-  await registerOnce();
-  adjustSelect();
+  await loadNewPseudonym()
+  await registerOnce()
+  adjustSelect()
 }
 
 // function closeModal() {
@@ -210,7 +187,7 @@ async function refreshPseudonym() {
  */
 // async function processDelete() {
 //   isError.value = true;
-//   if (pseudonymToDelete.value.trim().length === 0) {
+//   if (pseudonymToDelete.value.trim().length = === 0) {
 //     message.value = "Please select a pseudonym.";
 //     return;
 //   }
@@ -228,22 +205,22 @@ async function refreshPseudonym() {
 // }
 
 async function activateToken() {
-  await activatePseudonym(activeToken.value);
-  adjustSelect();
+  await activatePseudonym(activeToken.value)
+  adjustSelect()
 }
 
 function adjustSelect() {
   // Adject select tag width when select tag is visible on DOM
   if (!getGuestStatus.value) {
-    let sel = document.getElementById("pseudonymSelect");
-    let tempOption = document.createElement("option");
-    tempOption.textContent = sel.selectedOptions[0].textContent;
-    let tempSelect = document.createElement("select");
-    tempSelect.style.visibility = "hidden";
-    tempSelect.style.position = "fixed";
-    tempSelect.appendChild(tempOption);
-    sel.after(tempSelect);
-    tempSelect.remove();
+    const sel = document.getElementById('pseudonymSelect')
+    const tempOption = document.createElement('option')
+    tempOption.textContent = sel.selectedOptions[0].textContent
+    const tempSelect = document.createElement('select')
+    tempSelect.style.visibility = 'hidden'
+    tempSelect.style.position = 'fixed'
+    tempSelect.appendChild(tempOption)
+    sel.after(tempSelect)
+    tempSelect.remove()
   }
 }
 
@@ -254,18 +231,18 @@ watch(
   () => getActivePseudonym.value?.token,
   (val, prevVal) => {
     if (val !== prevVal && val !== activeToken.value) {
-      activeToken.value = val;
+      activeToken.value = val
     }
   }
-);
+)
 
 onMounted(async () => {
   if (getLoggedInStatus.value && !getGuestStatus.value) {
-    await loadPseudonyms();
+    await loadPseudonyms()
   }
-  activeToken.value = getActivePseudonym.value?.token;
+  activeToken.value = getActivePseudonym.value?.token
   nextTick(() => {
-    adjustSelect();
-  });
-});
+    adjustSelect()
+  })
+})
 </script>

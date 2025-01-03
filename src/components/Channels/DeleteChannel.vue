@@ -1,23 +1,19 @@
 <template>
-  <button
-    v-if="show"
-    @click.prevent="openModal"
-    class="flex items-center gap-x-0.5 rounded-md py-1 hover:text-gray-900"
-  >
+  <button v-if="show" class="flex items-center gap-x-0.5 rounded-md py-1 hover:text-gray-900" @click.prevent="openModal">
     <TrashIcon class="h-4 w-4" />
     <span class="sr-only">Delete</span>
   </button>
-  <Modal :is-open="isModalOpen" @close-modal="closeModal">
-    <template v-slot:title>Delete Channel</template>
+  <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
+    <template #title>Delete Channel</template>
     <div>
       Are you sure you want to delete
       <span class="text-harvard-red">{{ name }}</span
       >?
     </div>
-    <template v-slot:actions>
+    <template #actions>
       <button
-        @click="closeModal"
         class="rounded bg-gray-300 px-2 py-2 font-semibold shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        @click="closeModal"
       >
         Cancel
       </button>
@@ -28,37 +24,38 @@
         Delete
       </button>
     </template>
-  </Modal>
+  </ThemedModal>
 </template>
 
 <script setup>
-import { TrashIcon } from "@heroicons/vue/outline";
-import { ref } from "@vue/reactivity";
-import Modal from "../Shared/Modal.vue";
+import { TrashIcon } from '@heroicons/vue/outline'
+import { ref } from '@vue/reactivity'
+import ThemedModal from '../Shared/ThemedModal.vue'
 
 defineProps({
   show: {
     type: Boolean,
-    required: true,
+    required: true
   },
   name: {
     type: String,
-    required: true,
-  },
-});
+    required: false,
+    default: ''
+  }
+})
 
-const emit = defineEmits(["delete-channel"]);
+const emit = defineEmits(['delete-channel'])
 
-const isModalOpen = ref(false);
+const isModalOpen = ref(false)
 
 function closeModal() {
-  document.querySelector("body").classList.remove("modal-open");
-  isModalOpen.value = false;
+  document.querySelector('body').classList.remove('modal-open')
+  isModalOpen.value = false
 }
 
 function openModal() {
-  window.scrollTo({ top: 0, left: 0 });
-  document.querySelector("body").classList.add("modal-open");
-  isModalOpen.value = true;
+  window.scrollTo({ top: 0, left: 0 })
+  document.querySelector('body').classList.add('modal-open')
+  isModalOpen.value = true
 }
 </script>

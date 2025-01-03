@@ -1,45 +1,34 @@
 <template>
   <button
-    :disabled="getPseudonyms.length >= 5"
     v-if="!getGuestStatus && getPseudonyms.length < 5"
-    @click="createPseudonym"
+    :disabled="getPseudonyms.length >= 5"
     :title="getNewPseudonymButtonTitle()"
     class="flex gap-2 items-center"
+    @click="createPseudonym"
   >
     <PlusCircleIcon class="w-4 h-4" />
     New pseudonym
   </button>
-  <div
-    v-if="getPseudonyms.length == 5"
-    class="flex gap-2 items-center text-gray-400"
-  >
+  <div v-if="getPseudonyms.length === 5" class="flex gap-2 items-center text-gray-400">
     <PlusCircleIcon class="w-4 h-4" /> limit reached
   </div>
-  <button
-    v-if="!getGuestStatus"
-    @click="signout"
-    class="flex gap-2 items-center"
-  >
+  <button v-if="!getGuestStatus" class="flex gap-2 items-center" @click="signout">
     <LogoutIcon class="h-4 w-4" /> Logout
   </button>
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-import store from "../../composables/global/useStore";
-import {
-  LogoutIcon,
-  PlusCircleIcon,
-  RefreshIcon,
-} from "@heroicons/vue/outline";
+import { useRouter } from 'vue-router'
+import store from '../../composables/global/useStore'
+import { LogoutIcon, PlusCircleIcon, RefreshIcon } from '@heroicons/vue/outline'
 
-const emit = defineEmits(["create-pseudonym"]);
-const router = useRouter();
-const { logout, getGuestStatus, createNewPseudonym, getPseudonyms } = store;
+const emit = defineEmits(['create-pseudonym'])
+const router = useRouter()
+const { logout, getGuestStatus, createNewPseudonym, getPseudonyms } = store
 
 async function signout() {
-  logout();
-  router.push({ name: "home.channelspage" });
+  logout()
+  router.push({ name: 'home.channelspage' })
 }
 
 /**
@@ -50,22 +39,21 @@ async function signout() {
  */
 function loginViaGuest() {
   router.push({
-    name: "home.login",
+    name: 'home.login',
     query: {
-      to: router.currentRoute.value.path,
-    },
-  });
+      to: router.currentRoute.value.path
+    }
+  })
 }
 
 async function createPseudonym() {
-  await createNewPseudonym();
-  emit("create-pseudonym");
+  await createNewPseudonym()
+  emit('create-pseudonym')
 }
 
 function getNewPseudonymButtonTitle() {
-  if (getPseudonyms.value.length >= 5)
-    return "Maximum of five pseudonyms reached.";
-  return "";
+  if (getPseudonyms.value.length >= 5) return 'Maximum of five pseudonyms reached.'
+  return ''
 }
 </script>
 

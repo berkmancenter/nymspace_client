@@ -1,39 +1,35 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div
-    class="pl-4 shrink flex-auto group hover:bg-gray-100 py-2"
-    :class="
-      item.hasDownvoted || item.hasUpvoted
-        ? 'bg-yellow-50 hover:bg-yellow-100'
-        : ''
-    "
+    class="flex-auto py-2 pl-4 shrink group hover:bg-gray-100"
+    :class="item.hasDownvoted || item.hasUpvoted ? 'bg-yellow-50 hover:bg-yellow-100' : ''"
   >
-    <div class="flex justify-between items-center px-1 text-sm relative">
+    <div class="relative flex items-center justify-between px-1 text-sm">
       <div style="max-width: 92%" class="">
-        <div
-          class="thread-message"
-          v-linkified
-          :class="getMessageClass(item)"
-          :title="item.createdAt"
-        >
-          <div @click="addToMessage(item.pseudonym)" class="font-bold">
-            {{ item.pseudonym || item.owner }}
+        <div v-linkified class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
+          <div class="font-bold" @click="addToMessage(item.pseudonym)">
+            {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
             <span v-if="item.owner === userId" class="font-thin">(you) </span>
-            <span class="text-gray font-thin">
+            <span class="font-thin text-gray">
               {{
                 new Date(item.createdAt)
-                  .toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
+                  .toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
                   })
-                  .split(",")
-                  .join(" at ")
+                  .split(',')
+                  .join(' at ')
               }}</span
             >
           </div>
-          <div v-html="formattedBody"></div>
+          <div
+            :class="[item.pause ? 'bg-yellow-100' : '']"
+            :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
+            v-html="formattedBody"
+          ></div>
         </div>
       </div>
       <div
@@ -41,19 +37,8 @@
         class="ml-2 opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-2 px-3 py-0.5 absolute flex items-center gap-2"
       >
         <div v-if="isVoting">
-          <svg
-            class="animate-spin h-5 w-5 text-gray-600"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
+          <svg class="w-5 h-5 text-gray-600 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path
               class="opacity-75"
               fill="currentColor"
@@ -61,19 +46,11 @@
             ></path>
           </svg>
         </div>
-        <div
-          v-if="!isVoting && !item.hasDownvoted"
-          class="flex items-center"
-          :class="getUpVoteClass(item)"
-        >
+        <div v-if="!isVoting && !item.hasDownvoted" class="flex items-center" :class="getUpVoteClass(item)">
           <ChevronUpIcon
+            class="w-4 h-4"
+            :class="!getActiveThread.locked && (item.canVote || item.hasUpvoted) ? 'cursor-pointer' : 'pointer-events-none'"
             @click="_upvote(item)"
-            class="h-4 w-4"
-            :class="
-              !getActiveThread.locked && (item.canVote || item.hasUpvoted)
-                ? 'cursor-pointer'
-                : 'pointer-events-none'
-            "
           />
         </div>
         <div
@@ -82,154 +59,138 @@
           :class="getDownVoteClass(item)"
         >
           <ChevronDownIcon
-            @click="_downvote(item)"
-            class="h-4 w-4"
+            class="w-4 h-4"
             :class="
-              !getActiveThread.locked &&
-              (item.canVote || item.hasDownvoted) &&
-              !getGuestStatus.value &&
-              item.goodReputation
+              !getActiveThread.locked && (item.canVote || item.hasDownvoted) && !getGuestStatus.value && item.goodReputation
                 ? 'cursor-pointer'
                 : 'pointer-events-none'
             "
+            @click="_downvote(item)"
           />
         </div>
       </div>
     </div>
-    <div
-      v-if="item.upVotes.length || item.downVotes.length"
-      class="text-gray-500 flex ml-1 mt-1 mb-1"
-    >
+    <div v-if="item.upVotes.length || item.downVotes.length" class="flex mt-1 mb-1 ml-1 text-gray-500">
       <div
         v-if="item.upVotes.length"
-        class="mr-1 flex gap-1 items-center bg-blue-50 ring-1 ring-blue-200 rounded-full px-2 py-1"
+        class="flex items-center gap-1 px-2 py-1 mr-1 rounded-full bg-blue-50 ring-1 ring-blue-200"
       >
-        <ChevronUpIcon class="h-3 w-3" /><span class="text-xs">{{
-          item.upVotes.length
-        }}</span>
+        <ChevronUpIcon class="w-3 h-3" /><span class="text-xs">{{ item.upVotes.length }}</span>
       </div>
       <div
         v-if="item.downVotes.length"
-        class="mr-1 flex gap-1 items-center bg-blue-50 ring-1 ring-blue-200 rounded-full px-2 py-1"
+        class="flex items-center gap-1 px-2 py-1 mr-1 rounded-full bg-blue-50 ring-1 ring-blue-200"
       >
-        <ChevronDownIcon class="h-3 w-3" /><span class="text-xs">{{
-          item.downVotes.length
-        }}</span>
+        <ChevronDownIcon class="w-3 h-3" /><span class="text-xs">{{ item.downVotes.length }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/vue/outline";
-import { ref, computed } from "vue";
-import useStore from "../../composables/global/useStore";
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/outline'
+import { ref, computed } from 'vue'
+import useStore from '../../composables/global/useStore'
 
-const { upvote, downvote, getGuestStatus, getActiveChannel, getActiveThread } =
-  useStore;
+const { upvote, downvote, getGuestStatus, getActiveChannel, getActiveThread } = useStore
 
-const isVoting = ref(false);
+const isVoting = ref(false)
 
 async function _upvote(item) {
-  let complete = false;
+  let complete = false
   const checkComplete = setInterval(() => {
-    isVoting.value = true;
+    isVoting.value = true
     if (complete) {
-      isVoting.value = false;
-      clearInterval(checkComplete);
+      isVoting.value = false
+      clearInterval(checkComplete)
     }
-  }, 400);
+  }, 400)
 
-  await upvote(item.id, !item.hasUpvoted);
-  complete = true;
+  await upvote(item.id, !item.hasUpvoted)
+  complete = true
 }
 
 async function _downvote(item) {
-  isVoting.value = true;
-  await downvote(item.id, !item.hasDownvoted);
-  isVoting.value = false;
+  isVoting.value = true
+  await downvote(item.id, !item.hasDownvoted)
+  isVoting.value = false
 }
 
 const props = defineProps({
   item: {
     type: Object,
-    required: true,
+    required: true
   },
   userId: {
     type: String,
-    required: true,
-  },
-});
+    required: true
+  }
+})
 
-const emits = defineEmits(["tag-click"]);
+const emits = defineEmits(['tag-click'])
 
-const showVoting = computed(
-  () => getActiveChannel.value && getActiveChannel.value.votingAllowed
-);
+const showVoting = computed(() => getActiveChannel.value && getActiveChannel.value.votingAllowed)
 
 function checkOwner(votes, id, className) {
   if (votes && votes.length > 0) {
     // someone has voted, so turn black
-    className = "text-black";
+    className = 'text-black'
     for (let i = 0; i < votes.length; i++) {
-      if (votes[i].owner && votes[i].owner == id) {
+      if (votes[i].owner && votes[i].owner === id) {
         // current user has voted, so turn red
-        className = "text-harvard-red";
-        break;
+        className = 'text-harvard-red'
+        break
       }
     }
   } else {
     // nobody has voted, so turn gray
-    className += " text-gray-300";
+    className += ' text-gray-300'
   }
-  return className;
+  return className
 }
 
 function getUpVoteClass(item) {
-  let className =
-    !getActiveThread.value.locked && item.canVote ? "hover:text-gray-500" : "";
-  return checkOwner(item.upVotes, useStore.getId.value, className);
+  const className = !getActiveThread.value.locked && item.canVote ? 'hover:text-gray-500' : ''
+  return checkOwner(item.upVotes, useStore.getId.value, className)
 }
 
 function getDownVoteClass(item) {
-  let className =
-    !getActiveThread.value.locked &&
-    item.canVote &&
-    !getGuestStatus.value &&
-    item.goodReputation
-      ? "hover:text-gray-500"
-      : "";
-  return checkOwner(item.downVotes, useStore.getId.value, className);
+  const className =
+    !getActiveThread.value.locked && item.canVote && !getGuestStatus.value && item.goodReputation
+      ? 'hover:text-gray-500'
+      : ''
+  return checkOwner(item.downVotes, useStore.getId.value, className)
 }
 
 // emit to update message in messagespage
 function addToMessage(pseudonym) {
-  emits("tag-click", pseudonym, true);
+  emits('tag-click', pseudonym, true)
 }
 
 function getMessageClass(item) {
-  return item.downVotes.length > 2 ? "text-gray-400" : "text-black";
+  return item.downVotes.length > 2 ? 'text-gray-400' : 'text-black'
 }
 
 /**
  * Build html tag for tagged pseudonym
  */
 function getFormattedTag(tag) {
-  return `<span class='tag'>@${/@"([A-Za-z0-9\s]+)"/g.exec(tag)[1]}</span>`;
+  return `<span class='tag'>@${/@"([A-Za-z0-9\s]+)"/g.exec(tag)[1]}</span>`
 }
 
 /**
  * Search for all pseudonym tags and format them
  */
 const formattedBody = computed(() => {
-  let regex = /(@\"[A-Za-z0-9\s]+\")/g;
-  let matches = [];
-  let tempStr = props.item.body;
+  // eslint-disable-next-line no-useless-escape
+  const regex = /(@\"[A-Za-z0-9\s]+\")/g
+  let matches = []
+  let tempStr = props.item.body
   while ((matches = regex.exec(props.item.body)) !== null) {
-    tempStr = tempStr.replace(matches[0], getFormattedTag(matches[0]));
+    tempStr = tempStr.replace(matches[0], getFormattedTag(matches[0]))
   }
-  return tempStr;
-});
+  return tempStr
+})
 </script>
 
 <style scoped>

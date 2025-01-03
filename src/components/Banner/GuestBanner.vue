@@ -1,17 +1,10 @@
 <template>
-  <button class="btn" @click="$emit('login')">
-    Use pseudonym for one session
-  </button>
+  <button class="btn" @click="$emit('login')">Use pseudonym for one session</button>
 
-  <router-link
-    :to="`${path}/login`"
-    class="btn"
-    title="Retain a pseudonym across sessions"
-    >Login</router-link
-  >
+  <router-link :to="`${path}/login`" class="btn" title="Retain a pseudonym across sessions">Login</router-link>
 </template>
 <script>
-const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : "";
+const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
 </script>
 <style scoped>
 .btn {

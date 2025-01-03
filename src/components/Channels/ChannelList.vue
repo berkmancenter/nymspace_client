@@ -7,19 +7,19 @@
 </template>
 
 <script>
-import ChannelListItem from "./ChannelListItem.vue";
+import ChannelListItem from './ChannelListItem.vue'
 
 export default {
   components: {
-    ChannelListItem,
+    ChannelListItem
   },
   props: {
     items: {
       type: Array,
-      required: true,
-    },
-  },
-};
+      required: true
+    }
+  }
+}
 </script>
 
 <style scoped>
