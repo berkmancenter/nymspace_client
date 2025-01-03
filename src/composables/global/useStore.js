@@ -29,12 +29,17 @@ const state = reactive({
   messages: [],
   showChatOnly: false,
   enableAgents: false,
+  enablePolls: false,
   availableAgents: []
 })
 
 // Mutations
 function setEnableAgents(enableAgents) {
   state.enableAgents = enableAgents
+}
+
+function setEnablePolls(enablePolls) {
+  state.enablePolls = enablePolls
 }
 
 function setAvailableAgents(availableAgents) {
@@ -396,6 +401,7 @@ async function logout() {
 
 async function loadConfig() {
   const config = await ThreadService.loadConfig()
+  setEnablePolls(config.enablePolls)
   setEnableAgents(config.enableAgents)
   setAvailableAgents(config.availableAgents)
 }
@@ -403,6 +409,7 @@ async function loadConfig() {
 // Getters
 const getAvailableAgents = computed(() => state.availableAgents)
 const getEnableAgents = computed(() => state.enableAgents)
+const getEnablePolls = computed(() => state.enablePolls)
 const getUserThreads = computed(() => state.userThreads)
 const getUserChannels = computed(() => state.userChannels)
 
@@ -479,6 +486,7 @@ async function createPoll(payload) {
 }
 
 async function loadPolls(channelId) {
+  if (!getEnablePolls.value) return
   if (!getLoggedInStatus.value) await registerOnce()
   const polls = await PollService.getPolls(channelId)
   setPolls(polls)
@@ -590,7 +598,9 @@ export default {
   setShowChatOnly,
 
   getEnableAgents,
+  getEnablePolls,
   setEnableAgents,
+  setEnablePolls,
   setAvailableAgents,
   getAvailableAgents,
   loadConfig

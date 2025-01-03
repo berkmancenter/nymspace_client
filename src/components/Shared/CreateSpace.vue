@@ -1,16 +1,16 @@
 <template>
   <button
     v-if="show"
-    class="flex gap-2 justify-start items-center bg-black text-white p-2 rounded-md shadow-md"
+    class="flex items-center justify-start gap-2 p-2 text-white bg-black rounded-md shadow-md"
     @click="openModal"
   >
-    <PlusCircleIcon class="w-5 h-5" /> new space
+    <PlusCircleIcon class="w-5 h-5" /> {{ getEnablePolls ? 'new space' : 'new thread' }}
   </button>
   <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>New space</template>
     <!-- Space type tabs -->
     <template #fixed-content>
-      <ul class="px-4 flex flex-wrap text-center text-gray-500 border-b border-gray-200">
+      <ul class="flex flex-wrap px-4 text-center text-gray-500 border-b border-gray-200">
         <li>
           <button
             class="flex gap-1 px-4 py-2 rounded-t-lg"
@@ -21,7 +21,7 @@
             Thread
           </button>
         </li>
-        <li>
+        <li v-if="getEnablePolls">
           <button
             class="flex gap-1 px-4 py-2 rounded-t-lg"
             :class="tab === 2 ? 'text-black bg-gray-200 font-bold' : ''"
@@ -49,14 +49,14 @@
     <!-- Action buttons -->
     <template #actions>
       <button
-        class="rounded bg-gray-300 px-2 py-2 font-semibold shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        class="px-2 py-2 font-semibold bg-gray-300 rounded shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
         @click="closeModal"
       >
         Cancel
       </button>
       <button
         v-if="tab === 1 || (tab === 2 && isLoggedIn)"
-        class="rounded bg-gray-600 px-2 py-2 font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+        class="px-2 py-2 font-semibold text-white bg-gray-600 rounded shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
         @click="onSubmit"
       >
         Create
@@ -71,6 +71,9 @@ import ThemedModal from './ThemedModal.vue'
 import CreateThread from '../Threads/CreateThread.vue'
 import CreatePoll from '../Polls/CreatePoll.vue'
 import { PlusCircleIcon, ChatIcon, UserGroupIcon } from '@heroicons/vue/outline'
+import useStore from '../../composables/global/useStore'
+
+const { getEnablePolls } = useStore
 
 const props = defineProps({
   show: {
