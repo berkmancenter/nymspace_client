@@ -28,12 +28,17 @@ const state = reactive({
   majorError: '',
   messages: [],
   showChatOnly: false,
+  maxMessageLength: 2000,
   enableAgents: false,
   enablePolls: false,
   availableAgents: []
 })
 
 // Mutations
+function setMaxMessageLength(maxMessageLength) {
+  state.maxMessageLength = maxMessageLength
+}
+
 function setEnableAgents(enableAgents) {
   state.enableAgents = enableAgents
 }
@@ -401,12 +406,14 @@ async function logout() {
 
 async function loadConfig() {
   const config = await ThreadService.loadConfig()
+  setMaxMessageLength(config.maxMessageLength)
   setEnablePolls(config.enablePolls)
   setEnableAgents(config.enableAgents)
   setAvailableAgents(config.availableAgents)
 }
 
 // Getters
+const getMaxMessageLength = computed(() => state.maxMessageLength)
 const getAvailableAgents = computed(() => state.availableAgents)
 const getEnableAgents = computed(() => state.enableAgents)
 const getEnablePolls = computed(() => state.enablePolls)
@@ -597,6 +604,8 @@ export default {
   showChatOnly,
   setShowChatOnly,
 
+  getMaxMessageLength,
+  setMaxMessageLength,
   getEnableAgents,
   getEnablePolls,
   setEnableAgents,

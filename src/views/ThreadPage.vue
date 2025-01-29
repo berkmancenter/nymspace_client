@@ -29,7 +29,7 @@
     </div>
 
     <div
-      v-if="message.length > 4999"
+      v-if="message.length >= getMaxMessageLength"
       class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
     >
       You are over the character limit and cannot send this message.
@@ -83,8 +83,8 @@
 
         <button
           class="flex justify-end w-full text-black"
-          :disabled="message.length > 4999 || discussionPause"
-          :class="message.length > 4999 || discussionPause ? 'text-gray-400' : ''"
+          :disabled="message.length >= getMaxMessageLength || discussionPause"
+          :class="message.length >= getMaxMessageLength || discussionPause ? 'text-gray-400' : ''"
           @click="sendMessage"
         >
           <svg
@@ -104,8 +104,8 @@
         </button>
       </div>
       <p class="text-xs">
-        <span :class="message.length > 4999 ? 'text-harvard-red' : ''">{{ message.length }}</span
-        >/5000 character limit
+        <span :class="message.length >= getMaxMessageLength ? 'text-harvard-red' : ''">{{ message.length }}</span
+        >/{{ getMaxMessageLength }} character limit
       </p>
     </div>
   </div>
@@ -129,6 +129,7 @@ const {
   clearMessages,
   loadThread,
   getLoggedInStatus,
+  getMaxMessageLength,
   getThread,
   getPseudonyms,
   getActivePseudonym,
@@ -283,7 +284,7 @@ async function sendMessage() {
   shouldDisplayUnableToSendMessage.value = false
   unableToSendSpecialMessage.value = ''
 
-  if (message.value.length > 4999) {
+  if (message.value.length >= getMaxMessageLength.value) {
     return
   }
 
