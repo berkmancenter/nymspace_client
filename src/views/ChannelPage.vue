@@ -7,8 +7,8 @@
         :class="threadsMenuOpen ? '-left-20 sm:left-0' : '-left-full sm:left-0'"
       >
         <div class="flex items-center justify-between sm:hidden">
-          <router-link :to="path" class="pl-4 text-lg font-bold sm:text-2xl text-harvard-red">
-            <img :src="nymspaceLogo" alt="nymspace" class="h-4" />
+          <router-link :to="path" class="text-lg sm:text-2xl">
+            <p class="inline-block font-bold text-harvard-red">nymspace</p>
           </router-link>
           <button class="flex justify-end w-full p-4" @click="toggleSideMenu">
             <XIcon class="w-6 h-6" />
@@ -93,7 +93,7 @@ import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
 import ThemedModal from '../components/Shared/ThemedModal.vue'
 import { XIcon, ViewListIcon } from '@heroicons/vue/outline'
-import nymspaceLogo from '../assets/nymspace-logo.png'
+// import nymspaceLogo from '../assets/nymspace-logo.png'
 
 const route = useRoute()
 
