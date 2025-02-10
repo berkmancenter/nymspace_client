@@ -131,6 +131,7 @@ const {
 
 const router = useRouter()
 const threads = getThreads
+const thread = getThread
 const polls = getPolls
 const wsInstance = reactive({})
 const channel = ref(getChannel(route.params.channelId))
@@ -188,6 +189,20 @@ watch(
     } else {
       isPollActive.value = false
     }
+  },
+  {
+    immediate: true
+  }
+)
+
+/**
+ * Watch for changes to the thread and update it so that
+ * the thread name and lock state in sync after editing
+ */
+watch(
+  thread,
+  async () => {
+    maybeThread.value = getThread(route.params.threadId)
   },
   {
     immediate: true
