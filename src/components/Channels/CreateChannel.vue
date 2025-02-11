@@ -1,16 +1,23 @@
 <template>
-  <select
+  <button
     v-if="getLoggedInStatus && !getGuestStatus"
-    v-model="channelType"
-    class="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
-    @change="openModal"
+    class="rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
+    @click="openModal"
   >
-    <option disabled selected value="">Create New Channel</option>
-    <option value="public">Public</option>
-    <option value="private">Private</option>
-  </select>
+    New Channel
+  </button>
   <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>Create {{ channelTypeName }} Channel</template>
+    <div v-if="publicChannelCreationEnabled" class="mb-4">
+      <label class="font-semibold mr-2">Channel type:</label>
+      <select
+        v-model="channelType"
+        class="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
+      >
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+    </div>
     <span class="font-semibold">Channel name:</span>
     <div>
       <input
@@ -77,8 +84,9 @@ import useStore from '../../composables/global/useStore'
 import ThemedModal from '../Shared/ThemedModal.vue'
 const { getLoggedInStatus, createChannel, getGuestStatus, loadUser } = useStore
 
+const publicChannelCreationEnabled = ref(import.meta.env.VITE_NYMSPACE_ENABLE_PUBLIC_CHANNEL_CREATION === 'true')
 const isModalOpen = ref(false)
-const channelType = ref('')
+const channelType = ref('private')
 const channelName = ref('')
 const disableVoting = ref(false)
 const disableThreadCreation = ref(false)
@@ -95,7 +103,6 @@ const isEmailValid = computed(() => {
 function closeModal() {
   document.querySelector('body').classList.remove('modal-open')
   isModalOpen.value = false
-  channelType.value = ''
 }
 
 async function openModal() {
