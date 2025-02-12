@@ -31,6 +31,7 @@ const state = reactive({
   maxMessageLength: 2000,
   enableAgents: false,
   enablePolls: false,
+  enablePublicChannelCreation: false,
   availableAgents: []
 })
 
@@ -45,6 +46,10 @@ function setEnableAgents(enableAgents) {
 
 function setEnablePolls(enablePolls) {
   state.enablePolls = enablePolls
+}
+
+function setEnablePublicChannelCreation(enablePublicChannelCreation) {
+  state.enablePublicChannelCreation = enablePublicChannelCreation
 }
 
 function setAvailableAgents(availableAgents) {
@@ -410,6 +415,7 @@ async function loadConfig() {
   setEnablePolls(config.enablePolls)
   setEnableAgents(config.enableAgents)
   setAvailableAgents(config.availableAgents)
+  setEnablePublicChannelCreation(config.enablePublicChannelCreation)
 }
 
 // Getters
@@ -417,6 +423,7 @@ const getMaxMessageLength = computed(() => state.maxMessageLength)
 const getAvailableAgents = computed(() => state.availableAgents)
 const getEnableAgents = computed(() => state.enableAgents)
 const getEnablePolls = computed(() => state.enablePolls)
+const getEnablePublicChannelCreation = computed(() => state.enablePublicChannelCreation)
 const getUserThreads = computed(() => state.userThreads)
 const getUserChannels = computed(() => state.userChannels)
 
@@ -608,6 +615,7 @@ export default {
   setMaxMessageLength,
   getEnableAgents,
   getEnablePolls,
+  getEnablePublicChannelCreation,
   setEnableAgents,
   setEnablePolls,
   setAvailableAgents,

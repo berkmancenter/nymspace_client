@@ -7,7 +7,7 @@
 import Channels from '../components/Channels/Channels.vue'
 import { computed, onMounted } from 'vue'
 import useStore from '../composables/global/useStore'
-const { loadChannels, getChannels, getUserChannels, loadUserChannels } = useStore
+const { loadChannels, getChannels, getUserChannels, loadUserChannels, loadConfig } = useStore
 // const searchText = ref('')
 
 const channelsWithFollow = computed(() => {
@@ -20,6 +20,7 @@ const channelsWithFollow = computed(() => {
 })
 
 onMounted(async () => {
+  await loadConfig()
   await loadUserChannels()
   await loadChannels()
 })
