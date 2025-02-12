@@ -8,7 +8,7 @@
   </button>
   <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
     <template #title>Create {{ channelTypeName }} Channel</template>
-    <div v-if="publicChannelCreationEnabled" class="mb-4">
+    <div v-if="getEnablePublicChannelCreation" class="mb-4">
       <label class="font-semibold mr-2">Channel type:</label>
       <select
         v-model="channelType"
@@ -82,9 +82,8 @@
 import { computed, ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
 import ThemedModal from '../Shared/ThemedModal.vue'
-const { getLoggedInStatus, createChannel, getGuestStatus, loadUser } = useStore
+const { getLoggedInStatus, createChannel, getGuestStatus, loadUser, getEnablePublicChannelCreation } = useStore
 
-const publicChannelCreationEnabled = ref(import.meta.env.VITE_NYMSPACE_ENABLE_PUBLIC_CHANNEL_CREATION === 'true')
 const isModalOpen = ref(false)
 const channelType = ref('private')
 const channelName = ref('')
