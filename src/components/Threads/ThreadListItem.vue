@@ -12,7 +12,11 @@
       </div>
     </div>
     <div class="text-sm font-thin justify-self-end">
-      {{ new Intl.NumberFormat('en-US').format(item.messageCount ? item.messageCount : item.messages.length) }}
+      {{
+        new Intl.NumberFormat('en-US').format(
+          item.messageCount ? item.messageCount : item.messages ? item.messages.length : 0
+        )
+      }}
       <ChatAltIcon class="inline-block w-4 h-4" />
     </div>
   </router-link>
