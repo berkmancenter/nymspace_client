@@ -410,8 +410,9 @@ function messageHandler(data) {
   /**
    * Update thread's message count
    */
+  console.log(threadToUpdate)
   if (threadToUpdate) {
-    threadToUpdate.messageCount = data.count
+    threadToUpdate.messageCount = data.threadMessageCount
   }
 }
 

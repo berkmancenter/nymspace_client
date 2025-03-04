@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col flex-1 sm:mt-2 sm:p-4 bg-gray-50">
+  <div class="flex flex-col flex-1 sm:p-4 bg-gray-50">
     <div class="flex flex-col-reverse flex-1 gap-2 sm:gap-0 sm:flex-row">
       <!-- Side menu shown on small screens -->
       <div
@@ -259,11 +259,11 @@ function joinTopic(topicId) {
  */
 function threadHandler(data) {
   if (route.params.channelId === data.topic.id) {
-    const { id, isFollowed, messages, name, slug, owner } = data
+    const { id, isFollowed, messageCount, name, slug, owner } = data
     setThread({
       id,
       isFollowed,
-      messageCount: messages.length,
+      messageCount,
       name,
       slug,
       owner: owner?.id
