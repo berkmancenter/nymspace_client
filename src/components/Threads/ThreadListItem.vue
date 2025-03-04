@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="text-sm font-thin justify-self-end">
-      {{ new Intl.NumberFormat('en-US').format(item.messageCount ? item.messageCount : item.messages.length) }}
+      {{ new Intl.NumberFormat('en-US').format(item.messageCount) }}
       <ChatAltIcon class="inline-block w-4 h-4" />
     </div>
   </router-link>
@@ -41,6 +41,7 @@ const props = defineProps({
     required: true
   }
 })
+
 function getThreadClass(item) {
   let className = 'px-2 flex items-center gap-2 justify-between py-1 text-gray-700 hover:bg-gray-300 cursor-pointer'
   if (props.item.id === route.params.threadId) className += ' bg-gray-300'
