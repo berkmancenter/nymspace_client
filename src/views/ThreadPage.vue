@@ -5,11 +5,11 @@
         if (el) messageViewRef = el
       }
     "
+    :key="2"
     :items="updatedMsgs"
     :user-id="userId"
     @tag-click="tagClick"
   />
-
   <div class="mt-5 text-xs">
     <span
       v-if="newMessagesNotice"
@@ -33,6 +33,12 @@
       class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
     >
       You are over the character limit and cannot send this message.
+    </div>
+    <div
+      v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
+      class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+    >
+      This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread creator.
     </div>
     <div
       v-if="shouldDisplayMessageBoxLocked"
@@ -165,6 +171,7 @@ const goodReputation = ref(false)
 
 const wsInstance = reactive({})
 const shouldDisplayMessageBoxLocked = ref(false)
+const shouldDisplayMessageHitTheButton = ref(false)
 const discussionPause = ref(0)
 const shouldDisplayUnableToSendMessage = ref(false)
 const unableToSendSpecialMessage = ref('')
@@ -221,8 +228,14 @@ watch(
       } else {
         shouldDisplayMessageBoxLocked.value = false
       }
+      if (now?.hitTheButton) {
+        shouldDisplayMessageHitTheButton.value = true
+      } else {
+        shouldDisplayMessageHitTheButton.value = false
+      }
     } else {
       shouldDisplayMessageBoxLocked.value = now?.locked
+      shouldDisplayMessageHitTheButton.value = now?.hitTheButton
     }
   },
   {
@@ -410,7 +423,7 @@ function messageHandler(data) {
   /**
    * Update thread's message count
    */
-  console.log(threadToUpdate)
+
   if (threadToUpdate) {
     threadToUpdate.messageCount = data.threadMessageCount
   }
@@ -502,6 +515,9 @@ const reconnectSockets = (user) => {
   wsInstance.value.addErrorHandler()
   wsInstance.value.addVotesHandler(onVoteHandler)
   wsInstance.value.addMessageHandler(messageHandler, user)
+  wsInstance.value.addMessagesRevealHandler(async () => {
+    await loadMessages(route.params.threadId)
+  })
 
   wsInstance.value.onConnect(() => {
     setTimeout(() => {
@@ -543,6 +559,9 @@ onMounted(async () => {
 
 onUnmounted(() => {
   wsInstance.value.disconnectThread()
+  if (wsInstance.value && wsInstance.value.removeAllHandlers) {
+    wsInstance.value.removeAllHandlers()
+  }
 })
 </script>
 

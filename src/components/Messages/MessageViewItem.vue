@@ -4,11 +4,17 @@
     class="flex-auto py-2 pl-4 shrink group hover:bg-gray-100"
     :class="item.hasDownvoted || item.hasUpvoted ? 'bg-yellow-50 hover:bg-yellow-100' : ''"
   >
-    <div class="relative flex items-center justify-between px-1 text-sm">
+    <div class="px-1 text-sm">
       <div style="max-width: 92%" class="">
-        <div v-linkified class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
-          <div class="font-bold" @click="addToMessage(item.pseudonym)">
-            {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
+        <div class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
+          <div class="font-bold flex items-center gap-1" @click="addToMessage(item.pseudonym)">
+            <span
+              v-if="item.pseudonym === null"
+              class="inline-block bg-gray-300 text-gray-400 rounded-full px-3 py-1 w-24 h-3"
+            ></span>
+            <span v-else>
+              {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
+            </span>
             <span v-if="item.owner === userId" class="font-thin">(you) </span>
             <span class="font-thin text-gray">
               {{
@@ -25,7 +31,15 @@
               }}</span
             >
           </div>
+          <div v-if="item.body === null">
+            <div class="inline-block bg-gray-300 text-gray-400 rounded-full px-3 py-1 w-full h-3"></div>
+            <div class="inline-block bg-gray-300 text-gray-400 rounded-full px-3 py-1 w-10/12 h-3"></div>
+            <div class="inline-block bg-gray-300 text-gray-400 rounded-full px-3 py-1 w-11/12 h-3"></div>
+          </div>
+
           <div
+            v-if="!!item.body"
+            v-linkified
             :class="[item.pause ? 'bg-yellow-100' : '']"
             :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
             v-html="formattedBody"
@@ -182,6 +196,11 @@ function getFormattedTag(tag) {
  * Search for all pseudonym tags and format them
  */
 const formattedBody = computed(() => {
+  // Handle null/undefined body values during message loading
+  if (!props.item.body) {
+    return ''
+  }
+
   // eslint-disable-next-line no-useless-escape
   const regex = /(@\"[A-Za-z0-9\s]+\")/g
   let matches = []

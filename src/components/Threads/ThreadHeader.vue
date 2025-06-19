@@ -12,8 +12,15 @@
         </h2>
       </div>
       <div class="flex items-center gap-2">
-        <DeleteThread :show="canEditDeleteThread" :item="thread" />
-        <EditThread :show="canEditDeleteThread" :item="thread" />
+        <button
+          v-if="isAdmin && thread.hitTheButton"
+          class="flex items-center justify-start gap-2 p-1 text-white bg-gray-500 text-sm rounded-md shadow-md"
+          @click="reveal"
+        >
+          The Button
+        </button>
+        <DeleteThread :show="isAdmin" :item="thread" />
+        <EditThread :show="isAdmin" :item="thread" />
       </div>
     </div>
     <router-view></router-view>
@@ -31,8 +38,9 @@ import ThemedModal from '../Shared/ThemedModal.vue'
 import DeleteThread from './DeleteThread.vue'
 import EditThread from './EditThread.vue'
 import { ViewListIcon } from '@heroicons/vue/outline/'
+import useStore from '../../composables/global/useStore'
 
-defineProps({
+const props = defineProps({
   thread: {
     type: Object,
     required: true
@@ -49,13 +57,14 @@ defineProps({
     type: Function,
     required: true
   },
-  canEditDeleteThread: {
+  isAdmin: {
     type: Boolean,
     required: true
   }
 })
 
 const isThreadModalOpen = ref(false)
+const { revealHitTheButtonHiddenMessages } = useStore
 
 function openThreadModal() {
   document.querySelector('body').classList.add('modal-open')
@@ -65,6 +74,9 @@ function openThreadModal() {
 function closeThreadModal() {
   document.querySelector('body').classList.remove('modal-open')
   isThreadModalOpen.value = false
+}
+function reveal() {
+  revealHitTheButtonHiddenMessages(props.thread.id)
 }
 </script>
 
