@@ -69,6 +69,12 @@ class SocketioService {
     this._socketInstance.on('message:new', onMessageHandler)
   }
 
+  addMessagesRevealHandler(onMessagesRevealHandler) {
+    // Messages reveal bind
+    this._socketInstance.off('messages:reveal')
+    this._socketInstance.on('messages:reveal', onMessagesRevealHandler)
+  }
+
   addThreadHandler(onThreadHandler) {
     // New Thread bind
     this._socketInstance.off('thread:new', onThreadHandler)

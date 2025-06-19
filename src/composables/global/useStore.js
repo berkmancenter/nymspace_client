@@ -103,7 +103,9 @@ function removeThread(id) {
 }
 
 function setMessages(messages) {
-  state.messages = [...messages]
+  // Ensure messages is an array and filter out any invalid entries
+  const validMessages = Array.isArray(messages) ? messages.filter((msg) => msg && msg.id) : []
+  state.messages = [...validMessages]
 }
 
 function setMessage(message) {
@@ -175,6 +177,15 @@ async function updateThread(payload) {
   await loadThreads(getActiveChannel.value.id)
   if (getActiveThread.value) {
     setActiveThread(getThread(getActiveThread.value.id))
+  }
+}
+
+async function revealHitTheButtonHiddenMessages(threadId) {
+  await ThreadService.revealHitTheButtonHiddenMessages(threadId)
+  await loadThreads(getActiveChannel.value.id)
+  if (getActiveThread.value) {
+    setActiveThread(getThread(getActiveThread.value.id))
+    await loadMessages(getActiveThread.value.id)
   }
 }
 
@@ -620,5 +631,7 @@ export default {
   setEnablePolls,
   setAvailableAgents,
   getAvailableAgents,
-  loadConfig
+  loadConfig,
+
+  revealHitTheButtonHiddenMessages
 }

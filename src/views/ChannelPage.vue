@@ -47,7 +47,7 @@
         :channel="channel"
         :is-thread-active="isThreadActive"
         :toggle-side-menu="toggleSideMenu"
-        :can-edit-delete-thread="canEditDeleteThread"
+        :is-admin="canEditDeleteThread"
       />
       <PollHeader
         v-else-if="isPollActive"

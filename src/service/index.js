@@ -35,6 +35,14 @@ export default {
       .then((x) => x.data)
   },
 
+  revealHitTheButtonHiddenMessages: async function (payload) {
+    return await axios
+      .put('/threads/reveal', {
+        threadId: payload
+      })
+      .then((x) => x.data)
+  },
+
   createThread: async function (payload) {
     return await axios
       .post('/threads', {
