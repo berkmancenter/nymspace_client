@@ -4,7 +4,7 @@
     class="flex-auto py-2 pl-4 shrink group hover:bg-gray-100"
     :class="item.hasDownvoted || item.hasUpvoted ? 'bg-yellow-50 hover:bg-yellow-100' : ''"
   >
-    <div class="px-1 text-sm">
+    <div class="px-1 text-sm relative">
       <div style="max-width: 92%" class="">
         <div class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
           <div class="font-bold flex items-center gap-1" @click="addToMessage(item.pseudonym)">
