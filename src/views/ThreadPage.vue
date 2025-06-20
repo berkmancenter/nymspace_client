@@ -134,6 +134,7 @@
             :replies="threadReplies"
             :user-id="userId"
             :loading="loadingReplies"
+            :thread-locked="shouldDisplayMessageBoxLocked"
             @close="closeReplyThread"
             @send-reply="sendReplyToThread"
           />
