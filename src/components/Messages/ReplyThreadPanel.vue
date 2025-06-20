@@ -76,35 +76,15 @@
       This thread is locked. Replies cannot be sent until it is unlocked by the thread creator.
     </div>
     <div v-else class="border-t p-4">
-      <div class="relative">
-        <textarea
-          v-model="replyText"
-          placeholder="Reply..."
-          class="w-full p-2 border rounded-md resize-none text-sm"
-          rows="3"
-          @keydown.enter.prevent="sendReply"
-        ></textarea>
-        <button
-          @click="sendReply"
-          :disabled="!replyText.trim() || sending"
-          class="absolute bottom-2 right-2 p-1 rounded hover:bg-gray-100 disabled:opacity-50"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-5 h-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-            />
-          </svg>
-        </button>
-      </div>
+      <MessageInput
+        v-model="replyText"
+        placeholder="Reply..."
+        :max-length="maxReplyLength"
+        :sending="sending"
+        :textarea-class="'w-full p-2 border-0 rounded-md resize-none text-sm outline-none'"
+        test-id="reply-text-area"
+        @send="sendReply"
+      />
     </div>
   </div>
 </template>
@@ -114,6 +94,10 @@ import { ref, watch, computed } from 'vue'
 import { XIcon } from '@heroicons/vue/outline'
 import HiddenMessage from './HiddenMessage.vue'
 import HiddenPseudonym from './HiddenPseudonym.vue'
+import MessageInput from './MessageInput.vue'
+import useStore from '../../composables/global/useStore'
+
+const { getMaxMessageLength } = useStore
 
 const props = defineProps({
   parentMessage: {
@@ -144,12 +128,13 @@ const replyText = ref('')
 const sending = ref(false)
 
 const replyCount = computed(() => props.replies.length)
+const maxReplyLength = computed(() => getMaxMessageLength.value)
 
-async function sendReply() {
-  if (!replyText.value.trim() || sending.value) return
+async function sendReply(messageText) {
+  if (!messageText.trim() || sending.value) return
 
   sending.value = true
-  emit('send-reply', replyText.value)
+  emit('send-reply', messageText)
   replyText.value = ''
   sending.value = false
 }
