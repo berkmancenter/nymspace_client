@@ -1,6 +1,6 @@
 <template>
-  <div class="h-full flex flex-col">
-    <div class="p-4 border-b bg-gray-50">
+  <div class="absolute inset-0 flex flex-col overflow-hidden">
+    <div class="flex-shrink-0 p-4 border-b bg-gray-50">
       <div class="flex items-center justify-between">
         <h3 class="font-semibold text-lg">
           <HiddenPseudonym v-if="parentMessage.pseudonym === null" />

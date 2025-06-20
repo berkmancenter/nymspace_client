@@ -5,51 +5,50 @@
     :class="item.hasDownvoted || item.hasUpvoted ? 'bg-yellow-50 hover:bg-yellow-100' : ''"
   >
     <div class="px-1 text-sm relative">
-      <div style="max-width: 92%" class="">
-        <div class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
-          <div class="font-bold flex items-center gap-1" @click="addToMessage(item.pseudonym)">
-            <HiddenPseudonym v-if="item.pseudonym === null" />
-            <span v-else>
-              {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
-            </span>
-            <span v-if="item.owner === userId" class="font-thin">(you) </span>
-            <span class="font-thin text-gray-400">
-              {{
-                new Date(item.createdAt)
-                  .toLocaleString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })
-                  .split(',')
-                  .join(' at ')
-              }}</span
-            >
-          </div>
-          <HiddenMessage v-if="item.body === null" />
-          <div
-            v-else
-            v-linkified
-            :class="[item.pause ? 'bg-yellow-100' : '']"
-            :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
-            v-html="formattedBody"
-          ></div>
+      <div class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
+        <div class="font-bold flex items-center gap-1" @click="addToMessage(item.pseudonym)">
+          <HiddenPseudonym v-if="item.pseudonym === null" />
+          <span v-else>
+            {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
+          </span>
+          <span v-if="item.owner === userId" class="font-thin">(you) </span>
+          <span class="font-thin text-gray-400">
+            {{
+              new Date(item.createdAt)
+                .toLocaleString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+                .split(',')
+                .join(' at ')
+            }}</span
+          >
         </div>
-
-        <button
-          v-if="item.replyCount > 0"
-          @click="handleViewThread"
-          class="group text-xs text-gray-600 hover:text-gray-800 flex justify-between items-center gap-1 w-full hover:bg-gray-300 rounded-md p-1 -ml-1 mt-1"
-        >
-        <div class="flex items-center gap-1">
-          <ChatAltIcon class="w-3 h-3" />
-          {{ item.replyCount }} {{ item.replyCount === 1 ? 'reply' : 'replies' }}
-        </div>
-          <ChevronRightIcon class="w-4 h-4 group-hover:block hidden transition-transform duration-200" />
-        </button>
+        <HiddenMessage v-if="item.body === null" />
+        <div
+          v-else
+          v-linkified
+          :class="[item.pause ? 'bg-yellow-100' : '']"
+          :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
+          v-html="formattedBody"
+        ></div>
       </div>
+
+      <button
+        v-if="item.replyCount > 0"
+        @click="handleViewThread"
+        class="group text-xs text-gray-600 hover:text-gray-800 flex justify-between items-center gap-1 w-full hover:bg-gray-300 rounded-md p-1 -ml-1 mt-1"
+      >
+      <div class="flex items-center gap-1">
+        <ChatAltIcon class="w-3 h-3" />
+        {{ item.replyCount }} {{ item.replyCount === 1 ? 'reply' : 'replies' }}
+      </div>
+        <ChevronRightIcon class="w-4 h-4 group-hover:block hidden transition-transform duration-200" />
+      </button>
+
       <div
         v-if="showVoting && item.owner !== userId"
-        class="opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-1 px-3 py-0.5 absolute flex items-center gap-2"
+        class="opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-1.5 px-3 py-0.5 absolute flex items-center gap-2"
       >
         <div v-if="isVoting">
           <svg class="w-5 h-5 text-gray-600 animate-spin" fill="none" viewBox="0 0 24 24">

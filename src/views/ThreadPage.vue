@@ -1,12 +1,12 @@
 <template>
-  <div class="h-full">
+  <div class="flex-1 flex flex-col min-h-0">
     <splitpanes
       v-if="selectedThreadMessage"
       class="h-full"
       @resize="onPaneResize"
     >
       <pane :size="mainPaneSize" :min-size="isMobile && selectedThreadMessage ? 0 : 40" :class="{ 'hidden': isMobile && selectedThreadMessage }">
-        <div class="h-full flex flex-col">
+        <div class="h-full flex flex-col overflow-hidden">
           <MessagesView
             :ref="
               (el) => {
@@ -128,19 +128,20 @@
         </div>
       </pane>
       <pane :size="replyPaneSize" :max-size="100" :min-size="isMobile ? 100 : 20" :class="{ 'border-l border-gray-200': !isMobile }">
-        <ReplyThreadPanel
-          :parent-message="selectedThreadMessage"
-          :replies="threadReplies"
-          :user-id="userId"
-          :loading="loadingReplies"
-          @close="closeReplyThread"
-          @send-reply="sendReplyToThread"
-        />
+        <div class="h-full overflow-hidden relative">
+          <ReplyThreadPanel
+            :parent-message="selectedThreadMessage"
+            :replies="threadReplies"
+            :user-id="userId"
+            :loading="loadingReplies"
+            @close="closeReplyThread"
+            @send-reply="sendReplyToThread"
+          />
+        </div>
       </pane>
     </splitpanes>
 
-    <!-- Full screen view when no replies are open -->
-    <div v-else class="h-full flex flex-col">
+    <div v-else class="flex-1 flex flex-col min-h-0">
       <MessagesView
         :ref="
           (el) => {
