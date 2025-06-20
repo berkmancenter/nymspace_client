@@ -1,118 +1,264 @@
 <template>
-  <MessagesView
-    :ref="
-      (el) => {
-        if (el) messageViewRef = el
-      }
-    "
-    :key="2"
-    :items="updatedMsgs"
-    :user-id="userId"
-    @tag-click="tagClick"
-  />
-  <div class="mt-5 text-xs">
-    <span
-      v-if="newMessagesNotice"
-      :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
-      class="z-50 p-1 -mt-6 text-white transition-all rounded-t cursor-pointer bg-harvard-red w-min whitespace-nowrap"
-      @click="scrollToBottom('smooth')"
-      >New messages</span
+  <div class="h-full">
+    <splitpanes
+      v-if="selectedThreadMessage"
+      class="h-full"
+      @resize="onPaneResize"
     >
-    <div
-      v-if="pseudonymMismatch"
-      class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-      style="margin-top: 1rem"
-    >
-      The pseudonym for this thread is
-      <strong>{{ pseudonymForThread.pseudonym }}</strong
-      >. Please switch to this pseudonym to send a message.
-    </div>
+      <pane :size="mainPaneSize" :min-size="isMobile && selectedThreadMessage ? 0 : 40" :class="{ 'hidden': isMobile && selectedThreadMessage }">
+        <div class="h-full flex flex-col">
+          <MessagesView
+            :ref="
+              (el) => {
+                if (el) messageViewRef = el
+              }
+            "
+            :key="2"
+            :items="updatedMsgs"
+            :user-id="userId"
+            @tag-click="tagClick"
+            @reply-click="handleReplyClick"
+            @view-thread="handleViewThread"
+          />
+          <div class="mt-5 text-xs">
+            <span
+              v-if="newMessagesNotice"
+              :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
+              class="z-50 p-1 -mt-6 text-white transition-all rounded-t cursor-pointer bg-harvard-red w-min whitespace-nowrap"
+              @click="scrollToBottom('smooth')"
+              >New messages</span
+            >
+            <div
+              v-if="pseudonymMismatch"
+              class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+              style="margin-top: 1rem"
+            >
+              The pseudonym for this thread is
+              <strong>{{ pseudonymForThread.pseudonym }}</strong
+              >. Please switch to this pseudonym to send a message.
+            </div>
 
-    <div
-      v-if="message.length >= getMaxMessageLength"
-      class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-    >
-      You are over the character limit and cannot send this message.
-    </div>
-    <div
-      v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
-      class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-    >
-      This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread creator.
-    </div>
-    <div
-      v-if="shouldDisplayMessageBoxLocked"
-      class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-    >
-      This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.
-    </div>
-    <div
-      v-if="discussionPause"
-      class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-    >
-      The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback from the
-      discussion facilitator before responding.
-    </div>
-    <div
-      v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
-      class="z-50 w-full p-1 text-center text-white transition-all bg-harvard-red sm:rounded-t"
-    >
-      {{ unableToSendSpecialMessage || 'Unable to send message. Please try again later.' }}
-    </div>
-    <PromptDirtyDraft :show="prompt" @response="response" />
-  </div>
+            <div
+              v-if="message.length >= getMaxMessageLength"
+              class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+            >
+              You are over the character limit and cannot send this message.
+            </div>
+            <div
+              v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
+              class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+            >
+              This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread creator.
+            </div>
+            <div
+              v-if="shouldDisplayMessageBoxLocked"
+              class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+            >
+              This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.
+            </div>
+            <div
+              v-if="discussionPause"
+              class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+            >
+              The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback from the
+              discussion facilitator before responding.
+            </div>
+            <div
+              v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
+              class="z-50 w-full p-1 text-center text-white transition-all bg-harvard-red sm:rounded-t"
+            >
+              {{ unableToSendSpecialMessage || 'Unable to send message. Please try again later.' }}
+            </div>
+            <PromptDirtyDraft :show="prompt" @response="response" />
+          </div>
 
-  <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageTextArea" @tag-click="tagClick" />
+          <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageTextArea" @tag-click="tagClick" />
 
-  <div class="flex flex-col pl-4">
-    <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2" :class="sending ? 'animate-pulse' : ''">
-      <div
-        class="block p-1 mr-4 text-sm border rounded shadow-sm"
-        :class="
-          shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause
-            ? 'border-harvard-red'
-            : 'border-gray-500'
+          <div class="flex flex-col pl-4">
+            <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2" :class="sending ? 'animate-pulse' : ''">
+              <div
+                class="block p-1 mr-4 text-sm border rounded shadow-sm"
+                :class="
+                  shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause
+                    ? 'border-harvard-red'
+                    : 'border-gray-500'
+                "
+              >
+                <textarea
+                  id="messageTextArea"
+                  ref="messageTextArea"
+                  v-model="message"
+                  class="w-full h-20 bg-white outline-none"
+                  placeholder="Message (hit enter to send)"
+                  data-testid="message-text-area"
+                  :disabled="sending"
+                  @keypress="watchTagging"
+                  @keydown.enter.prevent="sendMessage"
+                >
+                </textarea>
+
+                <button
+                  class="flex justify-end w-full text-black"
+                  :disabled="message.length >= getMaxMessageLength || discussionPause"
+                  :class="message.length >= getMaxMessageLength || discussionPause ? 'text-gray-400' : ''"
+                  @click="sendMessage"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="block w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <p class="text-xs">
+                <span :class="message.length >= getMaxMessageLength ? 'text-harvard-red' : ''">{{ message.length }}</span
+                >/{{ getMaxMessageLength }} character limit
+              </p>
+            </div>
+          </div>
+        </div>
+      </pane>
+      <pane :size="replyPaneSize" :max-size="100" :min-size="isMobile ? 100 : 20" :class="{ 'border-l border-gray-200': !isMobile }">
+        <ReplyThreadPanel
+          :parent-message="selectedThreadMessage"
+          :replies="threadReplies"
+          :user-id="userId"
+          :loading="loadingReplies"
+          @close="closeReplyThread"
+          @send-reply="sendReplyToThread"
+        />
+      </pane>
+    </splitpanes>
+
+    <!-- Full screen view when no replies are open -->
+    <div v-else class="h-full flex flex-col">
+      <MessagesView
+        :ref="
+          (el) => {
+            if (el) messageViewRef = el
+          }
         "
-      >
-        <textarea
-          id="messageTextArea"
-          ref="messageTextArea"
-          v-model="message"
-          class="w-full h-20 bg-white outline-none"
-          placeholder="Message (hit enter to send)"
-          data-testid="message-text-area"
-          :disabled="sending"
-          @keypress="watchTagging"
-          @keydown.enter.prevent="sendMessage"
+        :key="2"
+        :items="updatedMsgs"
+        :user-id="userId"
+        @tag-click="tagClick"
+        @reply-click="handleReplyClick"
+        @view-thread="handleViewThread"
+      />
+      <div class="mt-5 text-xs">
+        <span
+          v-if="newMessagesNotice"
+          :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
+          class="z-50 p-1 -mt-6 text-white transition-all rounded-t cursor-pointer bg-harvard-red w-min whitespace-nowrap"
+          @click="scrollToBottom('smooth')"
+          >New messages</span
         >
-        </textarea>
+        <div
+          v-if="pseudonymMismatch"
+          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+          style="margin-top: 1rem"
+        >
+          The pseudonym for this thread is
+          <strong>{{ pseudonymForThread.pseudonym }}</strong
+          >. Please switch to this pseudonym to send a message.
+        </div>
 
-        <button
-          class="flex justify-end w-full text-black"
-          :disabled="message.length >= getMaxMessageLength || discussionPause"
-          :class="message.length >= getMaxMessageLength || discussionPause ? 'text-gray-400' : ''"
-          @click="sendMessage"
+        <div
+          v-if="message.length >= getMaxMessageLength"
+          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="block w-6 h-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-            />
-          </svg>
-        </button>
+          You are over the character limit and cannot send this message.
+        </div>
+        <div
+          v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
+          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+        >
+          This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread creator.
+        </div>
+        <div
+          v-if="shouldDisplayMessageBoxLocked"
+          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+        >
+          This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.
+        </div>
+        <div
+          v-if="discussionPause"
+          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+        >
+          The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback from the
+          discussion facilitator before responding.
+        </div>
+        <div
+          v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
+          class="z-50 w-full p-1 text-center text-white transition-all bg-harvard-red sm:rounded-t"
+        >
+          {{ unableToSendSpecialMessage || 'Unable to send message. Please try again later.' }}
+        </div>
+        <PromptDirtyDraft :show="prompt" @response="response" />
       </div>
-      <p class="text-xs">
-        <span :class="message.length >= getMaxMessageLength ? 'text-harvard-red' : ''">{{ message.length }}</span
-        >/{{ getMaxMessageLength }} character limit
-      </p>
+
+      <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageTextArea" @tag-click="tagClick" />
+
+      <div class="flex flex-col pl-4">
+        <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2" :class="sending ? 'animate-pulse' : ''">
+          <div
+            class="block p-1 mr-4 text-sm border rounded shadow-sm"
+            :class="
+              shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause
+                ? 'border-harvard-red'
+                : 'border-gray-500'
+            "
+          >
+            <textarea
+              id="messageTextArea"
+              ref="messageTextArea"
+              v-model="message"
+              class="w-full h-20 bg-white outline-none"
+              placeholder="Message (hit enter to send)"
+              data-testid="message-text-area"
+              :disabled="sending"
+              @keypress="watchTagging"
+              @keydown.enter.prevent="sendMessage"
+            >
+            </textarea>
+
+            <button
+              class="flex justify-end w-full text-black"
+              :disabled="message.length >= getMaxMessageLength || discussionPause"
+              :class="message.length >= getMaxMessageLength || discussionPause ? 'text-gray-400' : ''"
+              @click="sendMessage"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="block w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                />
+              </svg>
+            </button>
+          </div>
+          <p class="text-xs">
+            <span :class="message.length >= getMaxMessageLength ? 'text-harvard-red' : ''">{{ message.length }}</span
+            >/{{ getMaxMessageLength }} character limit
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -120,11 +266,16 @@
 <script setup>
 import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 import { onMounted, ref, nextTick, watch, onUnmounted, computed, watchEffect, reactive } from 'vue'
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 import MessagesView from '../components/Messages/MessagesView.vue'
 import TagList from '../components/Messages/TagList.vue'
 import PromptDirtyDraft from '../components/Messages/PromptDirtyDraft.vue'
+import ReplyThreadPanel from '../components/Messages/ReplyThreadPanel.vue'
+import { XIcon } from '@heroicons/vue/outline'
 import useStore from '../composables/global/useStore'
 import SocketioService from '../service/socket.service'
+import ThreadService from '../service'
 import { VueCookieNext } from 'vue-cookie-next'
 
 const route = useRoute()
@@ -150,6 +301,10 @@ const {
 const messages = getMessages
 const message = ref('')
 const tagListVisible = ref(false)
+
+const selectedThreadMessage = ref(null)
+const threadReplies = ref([])
+const loadingReplies = ref(false)
 const messageViewRef = ref(null)
 const messageTextArea = ref(null)
 const thread = ref(getThread(route.params.threadId))
@@ -178,6 +333,7 @@ const unableToSendSpecialMessage = ref('')
 const newMessagesNotice = ref(false)
 const lastMessageScrollOffset = ref(true)
 const userId = ref('')
+
 /**
  * Dialog feature
  */
@@ -185,6 +341,38 @@ const resolveRef = ref({})
 const rejectRef = ref({})
 const prompt = ref(false)
 const sending = ref(false)
+
+const isMobile = ref(false)
+const basePaneSize = ref({ main: 60, reply: 40 })
+
+const mainPaneSize = computed(() => {
+  if (isMobile.value && selectedThreadMessage.value) {
+    return 0
+  }
+  return basePaneSize.value.main
+})
+
+const replyPaneSize = computed(() => {
+  if (isMobile.value && selectedThreadMessage.value) {
+    return 100
+  }
+  return basePaneSize.value.reply
+})
+
+function onPaneResize(event) {
+  if (!isMobile.value) {
+    basePaneSize.value.main = event[0].size
+    basePaneSize.value.reply = event[1].size
+  }
+}
+
+function checkMobile() {
+  isMobile.value = window.innerWidth < 768 // md breakpoint in Tailwind
+}
+
+function handleResize() {
+  checkMobile()
+}
 
 onBeforeRouteLeave(async (to, from) => {
   return await processDirtyMessage()
@@ -284,14 +472,63 @@ const updatedMsgs = computed((x) => {
     x.upVotes.findIndex((y) => y.owner === getId.value) === -1 &&
     x.downVotes.findIndex((y) => y.owner === getId.value) === -1
 
-  return messages.value.map((x) => ({
+  const result = messages.value.map((x) => ({
     ...x,
     canVote: hasNotVoted(x) && isNotOwner(x),
     goodReputation: goodReputation.value,
     hasUpvoted: x.upVotes.findIndex((y) => y.owner === getId.value) > -1,
     hasDownvoted: x.downVotes.findIndex((y) => y.owner === getId.value) > -1
   }))
+
+  return result
 })
+
+function handleReplyClick(messageItem) {
+  handleViewThread(messageItem)
+}
+
+async function handleViewThread(messageItem) {
+  selectedThreadMessage.value = messageItem
+  loadingReplies.value = true
+
+  try {
+    const replies = await ThreadService.getMessageReplies(messageItem.id || messageItem._id)
+    threadReplies.value = replies
+  } catch (error) {
+    console.error('Failed to load replies:', error)
+    threadReplies.value = []
+  } finally {
+    loadingReplies.value = false
+  }
+}
+
+function closeReplyThread() {
+  selectedThreadMessage.value = null
+  threadReplies.value = []
+}
+
+async function sendReplyToThread(replyText) {
+  if (!replyText.trim() || !selectedThreadMessage.value) return
+
+  try {
+    const messageData = {
+      body: replyText,
+      thread: route.params.threadId,
+      user: getActivePseudonym.value?.pseudonym,
+      parentMessage: selectedThreadMessage.value.id || selectedThreadMessage.value._id
+    }
+
+    await wsInstance.value.sendMessage({
+      message: messageData,
+      userId: getId.value,
+      token: VueCookieNext.getCookie('access_token')
+    })
+
+    await handleViewThread(selectedThreadMessage.value)
+  } catch (error) {
+    console.error('Failed to send reply:', error)
+  }
+}
 
 async function sendMessage() {
   shouldDisplayUnableToSendMessage.value = false
@@ -400,7 +637,36 @@ function messageHandler(data) {
    * message thread
    */
   if (data.thread === route.params.threadId) {
-    addMessage(data)
+    // Only add to main messages if it's not a reply
+    if (!data.parentMessage) {
+      addMessage(data)
+    } else {
+      // This is a reply, update the parent message's reply count
+      const parentId = data.parentMessage
+      const messagesCopy = [...messages.value]
+      const parentIndex = messagesCopy.findIndex(m => (m.id || m._id) === parentId)
+
+      if (parentIndex !== -1) {
+        messagesCopy[parentIndex] = {
+          ...messagesCopy[parentIndex],
+          replyCount: (messagesCopy[parentIndex].replyCount || 0) + 1
+        }
+        clearMessages()
+        messagesCopy.forEach(msg => addMessage(msg))
+      }
+    }
+
+    // If we're viewing a thread and this is a reply to it, add to replies
+    if (selectedThreadMessage.value && data.parentMessage === (selectedThreadMessage.value.id || selectedThreadMessage.value._id)) {
+      // Format the data to match what we expect
+      const formattedReply = {
+        ...data,
+        id: data.id || data._id,
+        createdAt: data.createdAt || new Date().toISOString()
+      }
+      threadReplies.value.push(formattedReply)
+    }
+
     if (data.pause) {
       discussionPause.value = data.pause
       setTimeout(() => {
@@ -414,9 +680,9 @@ function messageHandler(data) {
    * Scroll to bottom if the message belongs to current user
    * or if the user is already scrolled to the bottom
    */
-  if (data.owner === getId.value || lastMessageScrollOffset.value > -5) {
+  if (!data.parentMessage && (data.owner === getId.value || lastMessageScrollOffset.value > -5)) {
     scrollToBottom()
-  } else {
+  } else if (!data.parentMessage) {
     newMessagesNotice.value = true
   }
 
@@ -517,6 +783,14 @@ const reconnectSockets = (user) => {
   wsInstance.value.addMessageHandler(messageHandler, user)
   wsInstance.value.addMessagesRevealHandler(async () => {
     await loadMessages(route.params.threadId)
+    if (selectedThreadMessage.value) {
+      try {
+        const replies = await ThreadService.getMessageReplies(selectedThreadMessage.value.id || selectedThreadMessage.value._id)
+        threadReplies.value = replies
+      } catch (error) {
+        console.error('Failed to refresh replies after reveal:', error)
+      }
+    }
   })
 
   wsInstance.value.onConnect(() => {
@@ -534,6 +808,9 @@ onMounted(async () => {
   await fetchMessages(route.params.threadId)
   await fetchThreadDetails(route.params.threadId)
   messageTextArea.value?.focus()
+
+  checkMobile()
+  window.addEventListener('resize', handleResize)
 
   wsInstance.value = new SocketioService()
   wsInstance.value.addDisconnectHandler(reconnectSockets)
@@ -562,6 +839,8 @@ onUnmounted(() => {
   if (wsInstance.value && wsInstance.value.removeAllHandlers) {
     wsInstance.value.removeAllHandlers()
   }
+
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
