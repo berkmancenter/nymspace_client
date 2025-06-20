@@ -38,6 +38,11 @@ export default [
                 component: ThreadPage
               },
               {
+                path: 'threads/:threadId?/reply/:replyId?',
+                name: 'home.threads.reply',
+                component: ThreadPage
+              },
+              {
                 path: 'polls/:pollId?',
                 name: 'home.polls',
                 component: PollPage,

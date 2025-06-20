@@ -266,7 +266,7 @@
 </template>
 
 <script setup>
-import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 import { onMounted, ref, nextTick, watch, onUnmounted, computed, watchEffect, reactive } from 'vue'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
@@ -281,6 +281,7 @@ import ThreadService from '../service'
 import { VueCookieNext } from 'vue-cookie-next'
 
 const route = useRoute()
+const router = useRouter()
 const {
   loadMessages,
   addMessage,
@@ -486,10 +487,29 @@ const updatedMsgs = computed((x) => {
 })
 
 function handleReplyClick(messageItem) {
-  handleViewThread(messageItem)
+  const messageId = messageItem.id || messageItem._id
+  router.push({
+    name: 'home.threads.reply',
+    params: {
+      channelId: route.params.channelId,
+      threadId: route.params.threadId,
+      replyId: messageId
+    }
+  })
 }
 
 async function handleViewThread(messageItem) {
+  // Update URL when viewing thread
+  const messageId = messageItem.id || messageItem._id
+  router.push({
+    name: 'home.threads.reply',
+    params: {
+      channelId: route.params.channelId,
+      threadId: route.params.threadId,
+      replyId: messageId
+    }
+  })
+
   selectedThreadMessage.value = messageItem
   loadingReplies.value = true
 
@@ -507,6 +527,13 @@ async function handleViewThread(messageItem) {
 function closeReplyThread() {
   selectedThreadMessage.value = null
   threadReplies.value = []
+  router.push({
+    name: 'home.threads',
+    params: {
+      channelId: route.params.channelId,
+      threadId: route.params.threadId
+    }
+  })
 }
 
 async function sendReplyToThread(replyText) {
@@ -761,6 +788,26 @@ watch(
 )
 
 /**
+ * Watch replyId on router params to open replies to a message
+ * when on a replies URI
+ */
+watch(
+  () => route.params.replyId,
+  async (replyId) => {
+    if (replyId && messages.value.length > 0) {
+      const messageItem = messages.value.find(m => (m.id || m._id) === replyId)
+      if (messageItem) {
+        handleViewThread(messageItem)
+      }
+    } else if (!replyId && selectedThreadMessage.value) {
+      // Clear the reply view if replyId is removed from route
+      selectedThreadMessage.value = null
+      threadReplies.value = []
+    }
+  }
+)
+
+/**
  * Join all threads on page load so that their
  * message counts stay in sync
  */
@@ -809,6 +856,15 @@ onMounted(async () => {
   goodReputation.value = user.goodReputation
   await fetchMessages(route.params.threadId)
   await fetchThreadDetails(route.params.threadId)
+
+  // Check if there's a replyId in the route and open reply panel
+  if (route.params.replyId && messages.value.length > 0) {
+    const messageItem = messages.value.find(m => (m.id || m._id) === route.params.replyId)
+    if (messageItem) {
+      await handleViewThread(messageItem)
+    }
+  }
+
   messageTextArea.value?.focus()
 
   checkMobile()
