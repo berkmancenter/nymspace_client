@@ -47,7 +47,6 @@
       </button>
 
       <div
-        v-if="showVoting && item.owner !== userId"
         class="opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-1.5 px-3 py-0.5 absolute flex items-center gap-2"
       >
         <div v-if="isVoting">
@@ -60,7 +59,7 @@
             ></path>
           </svg>
         </div>
-        <div v-if="!isVoting && !item.hasDownvoted" class="flex items-center" :class="getUpVoteClass(item)">
+        <div v-if="!isVoting && !item.hasDownvoted && showVoting && item.owner !== userId" class="flex items-center" :class="getUpVoteClass(item)">
           <ChevronUpIcon
             class="w-4 h-4"
             :class="!getActiveThread.locked && (item.canVote || item.hasUpvoted) ? 'cursor-pointer' : 'pointer-events-none'"
@@ -68,7 +67,7 @@
           />
         </div>
         <div
-          v-if="!isVoting && !getGuestStatus && !item.hasUpvoted"
+          v-if="!isVoting && !getGuestStatus && !item.hasUpvoted && showVoting && item.owner !== userId"
           class="flex items-center"
           :class="getDownVoteClass(item)"
         >
