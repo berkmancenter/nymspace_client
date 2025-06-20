@@ -8,21 +8,15 @@
       <div style="max-width: 92%" class="">
         <div class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
           <div class="font-bold flex items-center gap-1" @click="addToMessage(item.pseudonym)">
-            <span
-              v-if="item.pseudonym === null"
-              class="inline-block bg-gray-300 text-gray-400 rounded-full px-3 py-1 w-24 h-3"
-            ></span>
+            <HiddenPseudonym v-if="item.pseudonym === null" />
             <span v-else>
               {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
             </span>
             <span v-if="item.owner === userId" class="font-thin">(you) </span>
-            <span class="font-thin text-gray">
+            <span class="font-thin text-gray-400">
               {{
                 new Date(item.createdAt)
                   .toLocaleString('en-US', {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit'
                   })
@@ -31,24 +25,31 @@
               }}</span
             >
           </div>
-          <div v-if="item.body === null">
-            <div class="inline-block bg-gray-300 text-gray-400 rounded-full px-3 py-1 w-full h-3"></div>
-            <div class="inline-block bg-gray-300 text-gray-400 rounded-full px-3 py-1 w-10/12 h-3"></div>
-            <div class="inline-block bg-gray-300 text-gray-400 rounded-full px-3 py-1 w-11/12 h-3"></div>
-          </div>
-
+          <HiddenMessage v-if="item.body === null" />
           <div
-            v-if="!!item.body"
+            v-else
             v-linkified
             :class="[item.pause ? 'bg-yellow-100' : '']"
             :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
             v-html="formattedBody"
           ></div>
         </div>
+
+        <button
+          v-if="item.replyCount > 0"
+          @click="handleViewThread"
+          class="group text-xs text-gray-600 hover:text-gray-800 flex justify-between items-center gap-1 w-full hover:bg-gray-300 rounded-md p-1 -ml-1 mt-1"
+        >
+        <div class="flex items-center gap-1">
+          <ChatAltIcon class="w-3 h-3" />
+          {{ item.replyCount }} {{ item.replyCount === 1 ? 'reply' : 'replies' }}
+        </div>
+          <ChevronRightIcon class="w-4 h-4 group-hover:block hidden transition-transform duration-200" />
+        </button>
       </div>
       <div
         v-if="showVoting && item.owner !== userId"
-        class="ml-2 opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-2 px-3 py-0.5 absolute flex items-center gap-2"
+        class="opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-1 px-3 py-0.5 absolute flex items-center gap-2"
       >
         <div v-if="isVoting">
           <svg class="w-5 h-5 text-gray-600 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -82,6 +83,11 @@
             @click="_downvote(item)"
           />
         </div>
+        <ReplyIcon
+          class="w-4 h-4 cursor-pointer hover:text-blue-600"
+          @click="handleReply"
+          title="Reply to this message"
+        />
       </div>
     </div>
     <div v-if="item.upVotes.length || item.downVotes.length" class="flex mt-1 mb-1 ml-1 text-gray-500">
@@ -102,8 +108,10 @@
 </template>
 
 <script setup>
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/outline'
+import { ChevronUpIcon, ChevronDownIcon, ChevronRightIcon, ReplyIcon, ChatAltIcon } from '@heroicons/vue/outline'
 import { ref, computed } from 'vue'
+import HiddenMessage from './HiddenMessage.vue'
+import HiddenPseudonym from './HiddenPseudonym.vue'
 import useStore from '../../composables/global/useStore'
 
 const { upvote, downvote, getGuestStatus, getActiveChannel, getActiveThread } = useStore
@@ -120,13 +128,13 @@ async function _upvote(item) {
     }
   }, 400)
 
-  await upvote(item.id, !item.hasUpvoted)
+  await upvote(item.id || item._id, !item.hasUpvoted)
   complete = true
 }
 
 async function _downvote(item) {
   isVoting.value = true
-  await downvote(item.id, !item.hasDownvoted)
+  await downvote(item.id || item._id, !item.hasDownvoted)
   isVoting.value = false
 }
 
@@ -141,7 +149,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['tag-click'])
+const emits = defineEmits(['tag-click', 'reply-click', 'view-thread'])
 
 const showVoting = computed(() => getActiveChannel.value && getActiveChannel.value.votingAllowed)
 
@@ -183,6 +191,14 @@ function addToMessage(pseudonym) {
 
 function getMessageClass(item) {
   return item.downVotes.length > 2 ? 'text-gray-400' : 'text-black'
+}
+
+function handleReply() {
+  emits('reply-click', props.item)
+}
+
+function handleViewThread() {
+  emits('view-thread', props.item)
 }
 
 /**

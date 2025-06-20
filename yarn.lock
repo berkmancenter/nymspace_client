@@ -72,6 +72,7 @@ __metadata:
     postcss: "npm:^8.4.49"
     prettier: "npm:^3.4.2"
     socket.io-client: "npm:^4.8.1"
+    splitpanes: "npm:^4.0.4"
     tailwindcss: "npm:^3.4.17"
     utf-8-validate: "npm:^6.0.5"
     uuid: "npm:^11.0.3"
@@ -4336,6 +4337,15 @@ __metadata:
   dependencies:
     through: "npm:2"
   checksum: 10c0/7f489e7ed5ff8a2e43295f30a5197ffcb2d6202c9cf99357f9690d645b19c812bccf0be3ff336fea5054cda17ac96b91d67147d95dbfc31fbb5804c61962af85
+  languageName: node
+  linkType: hard
+
+"splitpanes@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "splitpanes@npm:4.0.4"
+  peerDependencies:
+    vue: ^3.2.0
+  checksum: 10c0/a2a8097981b13b5a6d84a5eb3d56d80b3f93ef1e5faf8d4a08cab1eb633c92bcfe61805b189a463480c908096cffef79ae5a1c3da378ef31a19571df22430474
   languageName: node
   linkType: hard
 

@@ -103,8 +103,7 @@ function removeThread(id) {
 }
 
 function setMessages(messages) {
-  // Ensure messages is an array and filter out any invalid entries
-  const validMessages = Array.isArray(messages) ? messages.filter((msg) => msg && msg.id) : []
+  const validMessages = Array.isArray(messages) ? messages.filter((msg) => msg && (msg.id || msg._id)) : []
   state.messages = [...validMessages]
 }
 
@@ -113,7 +112,7 @@ function setMessage(message) {
 }
 
 function updateMessage(message) {
-  const messageId = state.messages.findIndex((x) => x.id === message.id)
+  const messageId = state.messages.findIndex((x) => (x.id || x._id) === (message.id || message._id))
   if (messageId > -1) {
     state.messages.splice(messageId, 1, message)
   } else {

@@ -103,6 +103,10 @@ export default {
     return await axios.get(`/messages/${threadId}`).then((x) => x.data)
   },
 
+  getMessageReplies: async function (messageId) {
+    return await axios.get(`/messages/${messageId}/replies`).then((x) => x.data)
+  },
+
   getUserThreads: async function () {
     return await axios.get('/threads/userThreads').then((x) => x.data)
   },
