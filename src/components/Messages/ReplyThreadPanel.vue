@@ -72,7 +72,10 @@
       </div>
     </div>
 
-    <div class="border-t p-4">
+    <div v-if="threadLocked" class="text-center text-yellow-800 bg-yellow-100 p-2 rounded text-xs">
+      This thread is locked. Replies cannot be sent until it is unlocked by the thread creator.
+    </div>
+    <div v-else class="border-t p-4">
       <div class="relative">
         <textarea
           v-model="replyText"
@@ -126,6 +129,10 @@ const props = defineProps({
     required: true
   },
   loading: {
+    type: Boolean,
+    default: false
+  },
+  threadLocked: {
     type: Boolean,
     default: false
   }
