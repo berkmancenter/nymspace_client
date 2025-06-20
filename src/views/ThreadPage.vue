@@ -72,57 +72,20 @@
             <PromptDirtyDraft :show="prompt" @response="response" />
           </div>
 
-          <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageTextArea" @tag-click="tagClick" />
+          <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageInput?.textareaRef" @tag-click="tagClick" />
 
           <div class="flex flex-col pl-4">
-            <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2" :class="sending ? 'animate-pulse' : ''">
-              <div
-                class="block p-1 mr-4 text-sm border rounded shadow-sm"
-                :class="
-                  shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause
-                    ? 'border-harvard-red'
-                    : 'border-gray-500'
-                "
-              >
-                <textarea
-                  id="messageTextArea"
-                  ref="messageTextArea"
-                  v-model="message"
-                  class="w-full h-20 bg-white outline-none"
-                  placeholder="Message (hit enter to send)"
-                  data-testid="message-text-area"
-                  :disabled="sending"
-                  @keypress="watchTagging"
-                  @keydown.enter.prevent="sendMessage"
-                >
-                </textarea>
-
-                <button
-                  class="flex justify-end w-full text-black"
-                  :disabled="message.length >= getMaxMessageLength || discussionPause"
-                  :class="message.length >= getMaxMessageLength || discussionPause ? 'text-gray-400' : ''"
-                  @click="sendMessage"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="block w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <p class="text-xs">
-                <span :class="message.length >= getMaxMessageLength ? 'text-harvard-red' : ''">{{ message.length }}</span
-                >/{{ getMaxMessageLength }} character limit
-              </p>
+            <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2 mr-4" :class="sending ? 'animate-pulse' : ''">
+              <MessageInput
+                ref="messageInput"
+                v-model="message"
+                :max-length="getMaxMessageLength"
+                :sending="sending"
+                :disabled="discussionPause > 0"
+                :has-error="shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause > 0"
+                @send="sendMessage"
+                @keypress="watchTagging"
+              />
             </div>
           </div>
         </div>
@@ -208,59 +171,22 @@
         <PromptDirtyDraft :show="prompt" @response="response" />
       </div>
 
-      <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageTextArea" @tag-click="tagClick" />
+              <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageInput?.textareaRef" @tag-click="tagClick" />
 
-      <div class="flex flex-col pl-4">
-        <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2" :class="sending ? 'animate-pulse' : ''">
-          <div
-            class="block p-1 mr-4 text-sm border rounded shadow-sm"
-            :class="
-              shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause
-                ? 'border-harvard-red'
-                : 'border-gray-500'
-            "
-          >
-            <textarea
-              id="messageTextArea"
-              ref="messageTextArea"
+              <div class="flex flex-col pl-4">
+          <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2 mr-4" :class="sending ? 'animate-pulse' : ''">
+            <MessageInput
+              ref="messageInput"
               v-model="message"
-              class="w-full h-20 bg-white outline-none"
-              placeholder="Message (hit enter to send)"
-              data-testid="message-text-area"
-              :disabled="sending"
+              :max-length="getMaxMessageLength"
+              :sending="sending"
+              :disabled="discussionPause > 0"
+              :has-error="shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause > 0"
+              @send="sendMessage"
               @keypress="watchTagging"
-              @keydown.enter.prevent="sendMessage"
-            >
-            </textarea>
-
-            <button
-              class="flex justify-end w-full text-black"
-              :disabled="message.length >= getMaxMessageLength || discussionPause"
-              :class="message.length >= getMaxMessageLength || discussionPause ? 'text-gray-400' : ''"
-              @click="sendMessage"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="block w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                />
-              </svg>
-            </button>
+            />
           </div>
-          <p class="text-xs">
-            <span :class="message.length >= getMaxMessageLength ? 'text-harvard-red' : ''">{{ message.length }}</span
-            >/{{ getMaxMessageLength }} character limit
-          </p>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -274,6 +200,7 @@ import MessagesView from '../components/Messages/MessagesView.vue'
 import TagList from '../components/Messages/TagList.vue'
 import PromptDirtyDraft from '../components/Messages/PromptDirtyDraft.vue'
 import ReplyThreadPanel from '../components/Messages/ReplyThreadPanel.vue'
+import MessageInput from '../components/Messages/MessageInput.vue'
 import { XIcon } from '@heroicons/vue/outline'
 import useStore from '../composables/global/useStore'
 import SocketioService from '../service/socket.service'
@@ -309,7 +236,7 @@ const selectedThreadMessage = ref(null)
 const threadReplies = ref([])
 const loadingReplies = ref(false)
 const messageViewRef = ref(null)
-const messageTextArea = ref(null)
+const messageInput = ref(null)
 const thread = ref(getThread(route.params.threadId))
 const pseudonymForThread = computed(() => {
   return getPseudonyms.value.filter((x) => {
@@ -559,11 +486,11 @@ async function sendReplyToThread(replyText) {
   }
 }
 
-async function sendMessage() {
+async function sendMessage(messageText) {
   shouldDisplayUnableToSendMessage.value = false
   unableToSendSpecialMessage.value = ''
 
-  if (message.value.length >= getMaxMessageLength.value) {
+  if (!messageText || messageText.length >= getMaxMessageLength.value) {
     return
   }
 
@@ -576,11 +503,11 @@ async function sendMessage() {
     }
   }, 100)
 
-  if (message.value.trim().length > 0 && !getActiveThread.value?.locked && !pseudonymMismatch.value) {
+  if (messageText.trim().length > 0 && !getActiveThread.value?.locked && !pseudonymMismatch.value) {
     try {
       await wsInstance.value.sendMessage({
         message: {
-          body: message.value,
+          body: messageText,
           thread: route.params.threadId,
           user: getActivePseudonym.value?.pseudonym
         },
@@ -630,7 +557,7 @@ function tagClick(value, isClickedDirect = false) {
   } else {
     message.value = message.value.replace(/$/, `@${pseudonym}`)
   }
-  messageTextArea.value.focus()
+  messageInput.value?.focus()
 }
 
 /**
@@ -865,7 +792,7 @@ onMounted(async () => {
     }
   }
 
-  messageTextArea.value?.focus()
+  messageInput.value?.focus()
 
   checkMobile()
   window.addEventListener('resize', handleResize)
