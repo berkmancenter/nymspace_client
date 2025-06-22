@@ -1,12 +1,14 @@
 <template>
   <div class="absolute inset-0 flex flex-col overflow-hidden">
-    <div class="flex-shrink-0 p-4 border-b bg-gray-50">
-      <div class="flex items-center justify-between">
-        <h3 class="font-semibold text-lg">
+    <div class="flex-shrink-0 p-4 border-b bg-gray-50 truncate">
+      <div class="flex items-center justify-between truncate">
+        <h3 class="font-semibold text-lg truncate">
           <HiddenPseudonym v-if="parentMessage.pseudonym === null" />
           <span v-else class="font-semibold">{{ parentMessage.pseudonym }}</span>
         </h3>
-        <XIcon class="w-5 h-5 cursor-pointer text-gray-500 hover:text-gray-700" @click="$emit('close')" />
+        <div class="">
+          <XIcon class="w-5 h-5 cursor-pointer text-gray-500 hover:text-gray-700" @click="$emit('close')" />
+        </div>
       </div>
 
       <div class="flex items-center gap-2 mb-2">
@@ -45,12 +47,12 @@
       <div v-else class="space-y-4">
         <div v-for="reply in replies" :key="reply.id || reply._id" class="group">
           <div class="flex items-start gap-2">
-            <div class="flex-1">
+            <div class="flex-1 truncate">
               <div class="flex items-center gap-2 mb-1">
                 <HiddenPseudonym v-if="reply.pseudonym === null" />
-                <span v-else class="font-semibold text-sm">{{ reply.pseudonym }}</span>
+                <span v-else class="font-semibold text-sm truncate">{{ reply.pseudonym }}</span>
                 <span v-if="reply.owner === userId" class="text-xs text-gray-500">(you)</span>
-                <span class="text-xs text-gray-500">
+                <span class="text-xs text-gray-500 truncate">
                   {{
                     new Date(reply.createdAt).toLocaleString('en-US', {
                       hour: '2-digit',
@@ -85,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { XIcon } from '@heroicons/vue/outline'
 import HiddenMessage from './HiddenMessage.vue'
 import HiddenPseudonym from './HiddenPseudonym.vue'
@@ -133,11 +135,4 @@ async function sendReply(messageText) {
   replyText.value = ''
   sending.value = false
 }
-
-watch(
-  () => props.parentMessage,
-  () => {
-    replyText.value = ''
-  }
-)
 </script>

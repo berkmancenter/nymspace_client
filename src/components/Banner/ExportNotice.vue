@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showNotice && isGuest" class="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-4">
+  <div v-if="showNotice && isGuest" class="bg-yellow-50 border-b border-yellow-200 p-4">
     <div class="flex">
       <div class="flex-shrink-0">
         <ExclamationIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />

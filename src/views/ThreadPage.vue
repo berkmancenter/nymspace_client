@@ -1,12 +1,8 @@
 <template>
   <div class="flex-1 flex flex-col min-h-0">
     <ExportNotice />
-    <splitpanes v-if="selectedThreadMessage" class="h-full" @resize="onPaneResize">
-      <pane
-        :size="mainPaneSize"
-        :min-size="isMobile && selectedThreadMessage ? 0 : 40"
-        :class="{ hidden: isMobile && selectedThreadMessage }"
-      >
+    <splitpanes class="h-full" @resize="onPaneResize">
+      <pane :size="mainPaneSize" :min-size="40" :class="{ 'mobile-slide-left': isMobile && selectedThreadMessage }">
         <div class="h-full flex flex-col overflow-hidden">
           <MessagesView
             :ref="
@@ -102,12 +98,13 @@
       </pane>
       <pane
         :size="replyPaneSize"
-        :max-size="100"
-        :min-size="isMobile ? 100 : 20"
-        :class="{ 'border-l border-gray-200': !isMobile }"
+        :max-size="selectedThreadMessage ? 100 : 0"
+        :min-size="selectedThreadMessage ? 20 : 0"
+        :class="{ 'mobile-slide-in': isMobile && selectedThreadMessage }"
       >
-        <div class="h-full overflow-hidden relative">
+        <div class="h-full overflow-hidden relative ml-1">
           <ReplyThreadPanel
+            v-if="selectedThreadMessage"
             :parent-message="selectedThreadMessage"
             :replies="threadReplies"
             :user-id="userId"
@@ -119,99 +116,6 @@
         </div>
       </pane>
     </splitpanes>
-
-    <div v-else class="flex-1 flex flex-col min-h-0">
-      <MessagesView
-        :ref="
-          (el) => {
-            if (el) messageViewRef = el
-          }
-        "
-        :key="2"
-        :items="updatedMsgs"
-        :user-id="userId"
-        @tag-click="tagClick"
-        @reply-click="handleReplyClick"
-        @view-thread="handleViewThread"
-      />
-      <div class="mt-5 text-xs">
-        <span
-          v-if="newMessagesNotice"
-          :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
-          class="z-50 p-1 -mt-6 text-white transition-all rounded-t cursor-pointer bg-harvard-red w-min whitespace-nowrap"
-          @click="scrollToBottom('smooth')"
-          >New messages</span
-        >
-        <div
-          v-if="pseudonymMismatch"
-          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-          style="margin-top: 1rem"
-        >
-          The pseudonym for this thread is
-          <strong>{{ pseudonymForThread.pseudonym }}</strong
-          >. Please switch to this pseudonym to send a message.
-        </div>
-
-        <div
-          v-if="message.length >= getMaxMessageLength"
-          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-        >
-          You are over the character limit and cannot send this message.
-        </div>
-        <div
-          v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
-          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-        >
-          This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread
-          creator.
-        </div>
-        <div
-          v-if="shouldDisplayMessageBoxLocked"
-          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-        >
-          This thread is now locked. Messages cannot be sent until it is unlocked by the thread creator.
-        </div>
-        <div
-          v-if="discussionPause"
-          class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-        >
-          The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback from
-          the discussion facilitator before responding.
-        </div>
-        <div
-          v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
-          class="z-50 w-full p-1 text-center text-white transition-all bg-harvard-red sm:rounded-t"
-        >
-          {{ unableToSendSpecialMessage || 'Unable to send message. Please try again later.' }}
-        </div>
-        <PromptDirtyDraft :show="prompt" @response="response" />
-      </div>
-
-      <TagList
-        :items="filteredTags"
-        :visible="tagListVisible"
-        :msg-txt-area="messageInput?.textareaRef || null"
-        @tag-click="tagClick"
-      />
-
-      <div class="flex flex-col pl-4">
-        <div
-          v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked"
-          class="mb-2 mr-4"
-          :class="sending ? 'animate-pulse' : ''"
-        >
-          <MessageInput
-            ref="messageInput"
-            v-model="message"
-            :max-length="getMaxMessageLength"
-            :sending="sending"
-            :disabled="discussionPause > 0"
-            :has-error="shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause > 0"
-            @send="sendMessage"
-          />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -300,13 +204,16 @@ const isMobile = ref(false)
 const basePaneSize = ref({ main: 60, reply: 40 })
 
 const mainPaneSize = computed(() => {
-  if (isMobile.value && selectedThreadMessage.value) {
-    return 0
+  if (!selectedThreadMessage.value) {
+    return 100
   }
   return basePaneSize.value.main
 })
 
 const replyPaneSize = computed(() => {
+  if (!selectedThreadMessage.value) {
+    return 0
+  }
   if (isMobile.value && selectedThreadMessage.value) {
     return 100
   }
@@ -454,7 +361,6 @@ function handleReplyClick(messageItem) {
 }
 
 async function handleViewThread(messageItem) {
-  // Update URL when viewing thread
   const messageId = messageItem.id || messageItem._id
   router.push({
     name: 'home.threads.reply',
@@ -621,31 +527,25 @@ function messageHandler(data) {
    * message thread
    */
   if (data.thread === route.params.threadId) {
-    // Only add to main messages if it's not a reply
     if (!data.parentMessage) {
       addMessage(data)
     } else {
-      // This is a reply, update the parent message's reply count
       const parentId = data.parentMessage
-      const messagesCopy = [...messages.value]
-      const parentIndex = messagesCopy.findIndex((m) => (m.id || m._id) === parentId)
+      const messages = getMessages.value
+      const parentIndex = messages.findIndex((m) => (m.id || m._id) === parentId)
 
       if (parentIndex !== -1) {
-        messagesCopy[parentIndex] = {
-          ...messagesCopy[parentIndex],
-          replyCount: (messagesCopy[parentIndex].replyCount || 0) + 1
-        }
-        clearMessages()
-        messagesCopy.forEach((msg) => addMessage(msg))
+        updateMessage({
+          ...messages[parentIndex],
+          replyCount: (messages[parentIndex].replyCount || 0) + 1
+        })
       }
     }
 
-    // If we're viewing a thread and this is a reply to it, add to replies
     if (
       selectedThreadMessage.value &&
       data.parentMessage === (selectedThreadMessage.value.id || selectedThreadMessage.value._id)
     ) {
-      // Format the data to match what we expect
       const formattedReply = {
         ...data,
         id: data.id || data._id,
@@ -881,5 +781,57 @@ onUnmounted(() => {
 <style scoped>
 textarea {
   resize: none;
+}
+
+:deep(.splitpanes__pane) {
+  transition: none !important;
+}
+
+:deep(.splitpanes__splitter) {
+  transition: 0.4s all;
+  margin-left: 0px !important;
+  z-index: 2000 !important;
+  width: 4px !important;
+  background-color: #e5e7eb !important;
+  border-color: #e5e7eb !important;
+}
+
+:deep(.splitpanes__splitter:before) {
+  background-color: #e5e7eb !important;
+  border-color: #e5e7eb !important;
+}
+
+:deep(.splitpanes__splitter:hover) {
+  background-color: #afb0b1 !important;
+  border-color: #afb0b1 !important;
+}
+
+:deep(.splitpanes__splitter:hover:before) {
+  background-color: #afb0b1 !important;
+  border-color: #afb0b1 !important;
+}
+
+/* Mobile slide animations that preserve scroll position */
+@media (max-width: 767px) {
+  .mobile-slide-left {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .mobile-slide-in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: white;
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  :deep(.splitpanes__splitter) {
+    display: none; /* Hide splitter on mobile */
+  }
 }
 </style>
