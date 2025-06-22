@@ -77,7 +77,7 @@
           <TagList
             :items="filteredTags"
             :visible="tagListVisible"
-            :msg-txt-area="messageInput?.textareaRef"
+            :msg-txt-area="messageInput?.textareaRef || null"
             @tag-click="tagClick"
           />
 
@@ -95,7 +95,6 @@
                 :disabled="discussionPause > 0"
                 :has-error="shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause > 0"
                 @send="sendMessage"
-                @keypress="watchTagging"
               />
             </div>
           </div>
@@ -191,7 +190,7 @@
       <TagList
         :items="filteredTags"
         :visible="tagListVisible"
-        :msg-txt-area="messageInput?.textareaRef"
+        :msg-txt-area="messageInput?.textareaRef || null"
         @tag-click="tagClick"
       />
 
@@ -209,7 +208,6 @@
             :disabled="discussionPause > 0"
             :has-error="shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause > 0"
             @send="sendMessage"
-            @keypress="watchTagging"
           />
         </div>
       </div>
@@ -316,9 +314,13 @@ const replyPaneSize = computed(() => {
 })
 
 function onPaneResize(event) {
-  if (!isMobile.value) {
-    basePaneSize.value.main = event[0].size
-    basePaneSize.value.reply = event[1].size
+  if (!isMobile.value && event && Array.isArray(event) && event.length >= 2) {
+    if (event[0] && typeof event[0].size === 'number') {
+      basePaneSize.value.main = event[0].size
+    }
+    if (event[1] && typeof event[1].size === 'number') {
+      basePaneSize.value.reply = event[1].size
+    }
   }
 }
 
@@ -764,6 +766,21 @@ watch(
 )
 
 /**
+ * Watch for messages to be loaded and check if we need to open reply panel
+ */
+watch(
+  () => messages.value.length,
+  async (newLength) => {
+    if (newLength > 0 && route.params.replyId && !selectedThreadMessage.value) {
+      const messageItem = messages.value.find((m) => (m.id || m._id) === route.params.replyId)
+      if (messageItem) {
+        await handleViewThread(messageItem)
+      }
+    }
+  }
+)
+
+/**
  * Join all threads on page load so that their
  * message counts stay in sync
  */
@@ -816,6 +833,7 @@ onMounted(async () => {
   await fetchThreadDetails(route.params.threadId)
 
   // Check if there's a replyId in the route and open reply panel
+  await nextTick()
   if (route.params.replyId && messages.value.length > 0) {
     const messageItem = messages.value.find((m) => (m.id || m._id) === route.params.replyId)
     if (messageItem) {

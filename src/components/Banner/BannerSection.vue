@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, onMounted } from 'vue'
 import useStore from '../../composables/global/useStore'
 import { defineAsyncComponent } from '@vue/runtime-core'
 import { RefreshIcon, LoginIcon, DotsVerticalIcon } from '@heroicons/vue/outline'
@@ -161,4 +161,8 @@ async function activateToken() {
     await activatePseudonym(activeToken.value)
   }
 }
+
+onMounted(() => {
+  adjustSelect()
+})
 </script>

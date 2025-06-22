@@ -6,17 +6,17 @@
   >
     <div class="px-1 text-sm relative">
       <div class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
-        <div class="font-bold flex items-center gap-1" @click="addToMessage(item.pseudonym)">
+        <div class="font-bold flex items-center gap-1 truncate" @click="addToMessage(item.pseudonym)">
           <HiddenPseudonym v-if="item.pseudonym === null" />
           <span v-else>
             {{ item.fromAgent ? (item.pseudonym || item.owner) + ' [bot]' : item.pseudonym || item.owner }}
           </span>
           <span v-if="item.owner === userId" class="font-thin">(you) </span>
-          <span class="font-thin text-gray-400">
+          <span class="font-thin text-gray-400 truncate">
             {{
               new Date(item.createdAt)
                 .toLocaleString('en-US', {
-                  hour: '2-digit',
+                  hour: 'numeric',
                   minute: '2-digit'
                 })
                 .split(',')
