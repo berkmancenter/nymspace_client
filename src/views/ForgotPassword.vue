@@ -5,7 +5,9 @@
       <div class="mt-8">
         <CheckCircleIcon class="w-28 h-w-28 text-green-500" />
       </div>
-      <div class="mt-4 text-2xl">If your email address exists, a password reset instruction email will be sent to you.</div>
+      <div class="mt-4 text-2xl">
+        If your email is associated with your account, a password reset email will be sent to you.
+      </div>
     </template>
     <div class="w-96">
       <template v-if="!isLinkSent">

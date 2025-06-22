@@ -8,7 +8,7 @@
       <div class="mt-4 text-2xl">
         Password changed successfully.
         <router-link to="login" class="font-bold text-harvard-red hover:underline">Login</router-link>
-        to use the threads application.
+        to use Nymspace.
       </div>
     </template>
     <div class="w-96">
