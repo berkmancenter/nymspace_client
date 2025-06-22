@@ -2,7 +2,7 @@
   <div class="flex flex-col flex-1 sm:p-4 bg-gray-50">
     <div class="hidden sm:flex flex-1">
       <splitpanes class="hidden sm:flex flex-1 gap-2 sm:gap-0 sm:rounded shadow" @resize="onPaneResize">
-        <pane :size="sidebarSize" :min-size="15" :max-size="50">
+        <pane :size="sidebarSize" :min-size="20" :max-size="50">
           <div class="flex flex-col h-full bg-gray-100 border-r border-gray-300 shadow sm:bg-gray-100 sm:rounded-l">
             <div
               class="flex items-center justify-between gap-6 px-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"

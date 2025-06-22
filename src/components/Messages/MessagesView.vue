@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center flex-1 flex-shrink w-full h-1 overflow-y-auto border-gray-500 rounded-b">
+  <div class="flex flex-col items-center flex-1 flex-shrink w-full h-1 overflow-y-auto border-gray-500 rounded-b mr-8">
     <div v-if="itemsWithSeparators.length" class="flex flex-col flex-shrink w-full h-1">
       <template v-for="item in itemsWithSeparators" :key="item.id || item.separatorKey">
         <div v-if="item.isSeparator" class="flex items-center my-4 px-4">
