@@ -1,138 +1,74 @@
 <template>
   <div class="flex flex-col flex-1 sm:p-4 bg-gray-50">
-    <div class="hidden sm:flex flex-1">
-      <splitpanes class="hidden sm:flex flex-1 gap-2 sm:gap-0 sm:rounded shadow" @resize="onPaneResize">
-        <pane :size="sidebarSize" :min-size="22" :max-size="50">
-          <div class="flex flex-col h-full bg-gray-100 border-r border-gray-300 shadow sm:bg-gray-100 sm:rounded-l">
-            <div
-              class="flex items-center justify-between gap-6 px-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"
-            >
-              <h2 class="text-xl font-bold truncate threads-title">
-                <button class="w-full truncate" @click="openModal">
-                  {{ channel.name }}
-                </button>
-              </h2>
-
-              <div class="flex items-center gap-2">
-                <EditChannel :item="channel" :show="canEditDeleteChannel(channel)" />
-                <DeleteChannel
-                  :show="canEditDeleteChannel(channel)"
-                  :name="channel.name"
-                  @delete-channel="processDeleteChannel"
-                />
-              </div>
-            </div>
-            <div class="flex-1 overflow-y-auto">
-              <SpaceList :items="sortedItems" :toggle-side-menu="toggleSideMenu" />
-            </div>
-            <div class="flex flex-col gap-1 p-4">
-              <CreateSpace :show="canCreate" :is-logged-in="isLoggedIn" />
-            </div>
-          </div>
-        </pane>
-
-        <pane :size="100 - sidebarSize" class="main-content-pane flex flex-col">
-          <ThreadHeader
-            v-if="isThreadActive"
-            :thread="maybeThread"
-            :channel="channel"
-            :is-thread-active="isThreadActive"
-            :toggle-side-menu="toggleSideMenu"
-            :is-admin="canEditDeleteThread"
-          />
-          <PollHeader
-            v-else-if="isPollActive"
-            :poll="maybePoll"
-            :toggle-side-menu="toggleSideMenu"
-            :is-admin="canEditDeleteThread"
-          />
-
-          <div v-else class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
-            <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
-              <div class="flex gap-2 truncate">
-                <button class="sm:hidden" @click="toggleSideMenu">
-                  <ViewListIcon class="w-6 text-black h-7" />
-                </button>
-                <div></div>
-              </div>
-              <div class="flex items-center gap-2"></div>
-            </div>
-            <div class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500">
-              <p>Select or create a new space to get started.</p>
-            </div>
-          </div>
-        </pane>
-      </splitpanes>
-    </div>
-    <div class="sm:hidden flex flex-col-reverse flex-1 gap-2 sm:gap-0 sm:flex-row">
-      <div
-        class="absolute top-0 z-10 flex flex-col flex-1 w-full h-full pl-20 transition-all duration-500 ease-in-out bg-gray-100 border-r border-gray-300 shadow sm:transition-none sm:w-52 sm:bg-gray-100 sm:flex-initial sm:rounded-l sm:relative sm:z-0 sm:left-0 sm:pl-0"
-        :class="threadsMenuOpen ? '-left-20 sm:left-0' : '-left-full sm:left-0'"
+    <splitpanes class="hidden sm:flex flex-1 sm:gap-0 sm:rounded shadow" @resize="onPaneResize">
+      <pane
+        :size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : sidebarSize"
+        :min-size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : 22"
+        :max-size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : 50"
       >
-        <div class="flex items-center justify-between sm:hidden">
-          <router-link :to="path" class="text-lg sm:text-2xl">
-            <p class="inline-block font-bold text-harvard-red">nymspace</p>
-          </router-link>
-          <button class="flex justify-end w-full p-4" @click="toggleSideMenu">
-            <XIcon class="w-6 h-6" />
-          </button>
-        </div>
-        <div
-          class="flex items-center justify-between gap-6 px-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"
-        >
-          <h2 class="text-xl font-bold truncate threads-title">
-            <button class="w-full truncate" @click="openModal">
-              {{ channel.name }}
-            </button>
-          </h2>
+        <div class="flex flex-col h-full bg-gray-100 border-r border-gray-300 shadow sm:bg-gray-100 sm:rounded-l">
+          <div
+            class="flex items-center justify-between gap-6 px-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"
+          >
+            <h2 class="text-xl font-bold truncate threads-title">
+              <button class="w-full truncate" @click="openModal">
+                {{ channel.name }}
+              </button>
+            </h2>
 
-          <div class="flex items-center gap-2">
-            <EditChannel :item="channel" :show="canEditDeleteChannel(channel)" />
-            <DeleteChannel
-              :show="canEditDeleteChannel(channel)"
-              :name="channel.name"
-              @delete-channel="processDeleteChannel"
-            />
+            <div class="flex items-center gap-2">
+              <EditChannel :item="channel" :show="canEditDeleteChannel(channel)" />
+              <DeleteChannel
+                :show="canEditDeleteChannel(channel)"
+                :name="channel.name"
+                @delete-channel="processDeleteChannel"
+              />
+            </div>
+          </div>
+          <div class="flex-1 overflow-y-auto">
+            <SpaceList :items="sortedItems" :toggle-side-menu="toggleSideMenu" />
+          </div>
+          <div class="flex flex-col gap-1 p-4">
+            <CreateSpace :show="canCreate" :is-logged-in="isLoggedIn" />
           </div>
         </div>
-        <div class="flex-1 overflow-y-auto">
-          <SpaceList :items="sortedItems" :toggle-side-menu="toggleSideMenu" />
-        </div>
-        <div class="flex flex-col gap-1 p-4">
-          <CreateSpace :show="canCreate" :is-logged-in="isLoggedIn" />
-        </div>
-      </div>
+      </pane>
 
-      <ThreadHeader
-        v-if="isThreadActive"
-        :thread="maybeThread"
-        :channel="channel"
-        :is-thread-active="isThreadActive"
-        :toggle-side-menu="toggleSideMenu"
-        :is-admin="canEditDeleteThread"
-      />
-      <PollHeader
-        v-else-if="isPollActive"
-        :poll="maybePoll"
-        :toggle-side-menu="toggleSideMenu"
-        :is-admin="canEditDeleteThread"
-      />
+      <pane
+        :size="isMobile && threadsMenuOpen ? 0 : isMobile ? 100 : 100 - sidebarSize"
+        class="main-content-pane flex flex-col"
+      >
+        <ThreadHeader
+          v-if="isThreadActive"
+          :thread="maybeThread"
+          :channel="channel"
+          :is-thread-active="isThreadActive"
+          :toggle-side-menu="toggleSideMenu"
+          :is-admin="canEditDeleteThread"
+        />
+        <PollHeader
+          v-else-if="isPollActive"
+          :poll="maybePoll"
+          :toggle-side-menu="toggleSideMenu"
+          :is-admin="canEditDeleteThread"
+        />
 
-      <div v-else class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
-        <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
-          <div class="flex gap-2 truncate">
-            <button class="sm:hidden" @click="toggleSideMenu">
-              <ViewListIcon class="w-6 text-black h-7" />
-            </button>
-            <div></div>
+        <div v-else class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
+          <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
+            <div class="flex gap-2 truncate">
+              <button class="sm:hidden" @click="toggleSideMenu">
+                <ViewListIcon class="w-6 text-black h-7" />
+              </button>
+              <div></div>
+            </div>
+            <div class="flex items-center gap-2"></div>
           </div>
-          <div class="flex items-center gap-2"></div>
+          <div class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500">
+            <p>Select or create a new space to get started.</p>
+          </div>
         </div>
-        <div class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500">
-          <p>Select or create a new space to get started.</p>
-        </div>
-      </div>
-    </div>
+      </pane>
+    </splitpanes>
 
     <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
       <template #title>{{ channel.name }}</template>
@@ -156,8 +92,7 @@ import { VueCookieNext } from 'vue-cookie-next'
 import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
 import ThemedModal from '../components/Shared/ThemedModal.vue'
-import { XIcon, ViewListIcon } from '@heroicons/vue/outline'
-// import nymspaceLogo from '../assets/nymspace-logo.png'
+import { ViewListIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
 
@@ -225,8 +160,6 @@ const threadsMenuOpen = ref(!route.params.threadId)
 function toggleSideMenu() {
   threadsMenuOpen.value = !threadsMenuOpen.value
 }
-
-const path = import.meta.env.VITE_PATH ? `${import.meta.env.VITE_PATH}/` : '/'
 
 /**
  * Watch thread id to show/hide edit/delete buttons on the side of
@@ -433,12 +366,11 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Custom splitpanes styling for wider grab area without visual change */
 :deep(.splitpanes__splitter) {
   background-color: transparent;
   border: none;
   position: relative;
-  width: 12px; /* Wider grab area */
+  width: 12px;
   margin-left: -6px;
   margin-right: -6px;
   cursor: col-resize;
@@ -451,17 +383,16 @@ onUnmounted(() => {
   top: 0;
   bottom: 0;
   width: 1px;
-  background-color: #e5e7eb; /* gray-200 */
+  background-color: #e5e7eb;
   transform: translateX(-50%);
   transition: all 0.2s ease;
 }
 
 :deep(.splitpanes__splitter:hover:before) {
-  background-color: #9ca3af; /* gray-400 on hover */
+  background-color: #9ca3af;
   width: 3px;
 }
 
-/* Ensure proper flex layout for main content */
 .main-content-pane {
   overflow: hidden;
 }
