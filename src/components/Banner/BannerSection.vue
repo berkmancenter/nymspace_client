@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, watch } from 'vue'
+import { ref, nextTick, onMounted } from 'vue'
 import useStore from '../../composables/global/useStore'
 import { defineAsyncComponent } from '@vue/runtime-core'
 import { RefreshIcon, LoginIcon, DotsVerticalIcon } from '@heroicons/vue/outline'
