@@ -36,13 +36,13 @@
 
       <button
         v-if="item.replyCount > 0"
-        @click="handleViewThread"
         class="group text-xs text-gray-600 hover:text-gray-800 flex justify-between items-center gap-1 w-full hover:bg-gray-300 rounded-md p-1 -ml-1 mt-1"
+        @click="handleViewThread"
       >
-      <div class="flex items-center gap-1">
-        <ChatAltIcon class="w-3 h-3" />
-        {{ item.replyCount }} {{ item.replyCount === 1 ? 'reply' : 'replies' }}
-      </div>
+        <div class="flex items-center gap-1">
+          <ChatAltIcon class="w-3 h-3" />
+          {{ item.replyCount }} {{ item.replyCount === 1 ? 'reply' : 'replies' }}
+        </div>
         <ChevronRightIcon class="w-4 h-4 group-hover:block hidden transition-transform duration-200" />
       </button>
 
@@ -59,7 +59,11 @@
             ></path>
           </svg>
         </div>
-        <div v-if="!isVoting && !item.hasDownvoted && showVoting && item.owner !== userId" class="flex items-center" :class="getUpVoteClass(item)">
+        <div
+          v-if="!isVoting && !item.hasDownvoted && showVoting && item.owner !== userId"
+          class="flex items-center"
+          :class="getUpVoteClass(item)"
+        >
           <ChevronUpIcon
             class="w-4 h-4"
             :class="!getActiveThread.locked && (item.canVote || item.hasUpvoted) ? 'cursor-pointer' : 'pointer-events-none'"
@@ -81,11 +85,7 @@
             @click="_downvote(item)"
           />
         </div>
-        <ReplyIcon
-          class="w-4 h-4 cursor-pointer hover:text-blue-600"
-          @click="handleReply"
-          title="Reply to this message"
-        />
+        <ReplyIcon class="w-4 h-4 cursor-pointer hover:text-blue-600" title="Reply to this message" @click="handleReply" />
       </div>
     </div>
     <div v-if="item.upVotes.length || item.downVotes.length" class="flex mt-1 mb-1 ml-1 text-gray-500">

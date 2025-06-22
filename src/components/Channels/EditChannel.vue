@@ -79,7 +79,7 @@ const message = ref('')
 
 const isEmailValid = computed(() => {
   if (!email.value || email.value.trim().length === 0) return true
-  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value)
+  return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email.value)
 })
 
 const props = defineProps({

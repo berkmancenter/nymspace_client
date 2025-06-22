@@ -7,18 +7,14 @@
 </template>
 
 <script>
-import { ChatAltIcon } from '@heroicons/vue/outline'
 export default {
-  components: {
-    ChatAltIcon
-  },
-
   props: {
     item: {
       type: String,
       required: true
     }
   },
+  emits: ['tag-click'],
 
   methods: {
     tagClick(item) {

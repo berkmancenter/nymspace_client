@@ -14,15 +14,9 @@
       <section class="bg-white rounded-lg shadow p-6">
         <h3 class="text-xl font-semibold mb-4">Account Information</h3>
         <div v-if="user">
-          <p class="text-sm text-gray-600 mb-2">
-            <strong>Username:</strong> {{ user.username || 'Not set' }}
-          </p>
-          <p class="text-sm text-gray-600 mb-2">
-            <strong>Email:</strong> {{ user.email || 'Not set' }}
-          </p>
-          <p class="text-sm text-gray-600">
-            <strong>Account created:</strong> {{ formatDate(user.createdAt) }}
-          </p>
+          <p class="text-sm text-gray-600 mb-2"><strong>Username:</strong> {{ user.username || 'Not set' }}</p>
+          <p class="text-sm text-gray-600 mb-2"><strong>Email:</strong> {{ user.email || 'Not set' }}</p>
+          <p class="text-sm text-gray-600"><strong>Account created:</strong> {{ formatDate(user.createdAt) }}</p>
         </div>
       </section>
 
@@ -47,7 +41,7 @@ export default {
     ExportAuditLog
   },
   setup() {
-    const { getId, getUser } = useStore
+    const { getId } = useStore
     const user = ref(null)
 
     const formatDate = (dateString) => {

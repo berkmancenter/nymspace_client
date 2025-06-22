@@ -58,7 +58,7 @@ const errorMessage = ref('')
 const isLinkSent = ref(false)
 
 const isEmailValid = computed(() => {
-  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value)
+  return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email.value)
 })
 
 /**

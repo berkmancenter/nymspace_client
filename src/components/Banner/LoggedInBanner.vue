@@ -26,7 +26,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import store from '../../composables/global/useStore'
-import { LogoutIcon, PlusCircleIcon, RefreshIcon, CogIcon, ChatIcon } from '@heroicons/vue/outline'
+import { LogoutIcon, PlusCircleIcon, CogIcon, ChatIcon } from '@heroicons/vue/outline'
 
 const emit = defineEmits(['create-pseudonym'])
 const router = useRouter()
@@ -35,21 +35,6 @@ const { logout, getGuestStatus, createNewPseudonym, getPseudonyms } = store
 async function signout() {
   logout()
   router.push({ name: 'home.channelspage' })
-}
-
-/**
- * Go to login page from guest session
- * Logout guest user and pass current page
- * so the after loggin in, app can navigate
- * to same page
- */
-function loginViaGuest() {
-  router.push({
-    name: 'home.login',
-    query: {
-      to: router.currentRoute.value.path
-    }
-  })
 }
 
 async function createPseudonym() {

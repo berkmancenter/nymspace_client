@@ -27,9 +27,7 @@
       </div>
       <div v-if="parentMessage.body" class="text-sm">{{ parentMessage.body }}</div>
       <HiddenMessage v-else />
-      <div class="mt-2 text-xs text-gray-500">
-        {{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies' }}
-      </div>
+      <div class="mt-2 text-xs text-gray-500">{{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies' }}</div>
     </div>
 
     <div class="flex-1 overflow-y-auto p-4">
@@ -43,9 +41,7 @@
           ></path>
         </svg>
       </div>
-      <div v-else-if="replies.length === 0" class="text-center text-gray-500 mt-8">
-        No replies yet.
-      </div>
+      <div v-else-if="replies.length === 0" class="text-center text-gray-500 mt-8">No replies yet.</div>
       <div v-else class="space-y-4">
         <div v-for="reply in replies" :key="reply.id || reply._id" class="group">
           <div class="flex items-start gap-2">
@@ -56,11 +52,10 @@
                 <span v-if="reply.owner === userId" class="text-xs text-gray-500">(you)</span>
                 <span class="text-xs text-gray-500">
                   {{
-                    new Date(reply.createdAt)
-                      .toLocaleString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })
+                    new Date(reply.createdAt).toLocaleString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })
                   }}
                 </span>
               </div>
@@ -139,7 +134,10 @@ async function sendReply(messageText) {
   sending.value = false
 }
 
-watch(() => props.parentMessage, () => {
-  replyText.value = ''
-})
+watch(
+  () => props.parentMessage,
+  () => {
+    replyText.value = ''
+  }
+)
 </script>

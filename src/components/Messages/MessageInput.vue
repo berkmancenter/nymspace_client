@@ -1,9 +1,6 @@
 <template>
   <div class="relative">
-    <div
-      class="block p-1 text-sm border rounded shadow-sm"
-      :class="hasError ? 'border-harvard-red' : 'border-gray-500'"
-    >
+    <div class="block p-1 text-sm border rounded shadow-sm" :class="hasError ? 'border-harvard-red' : 'border-gray-500'">
       <textarea
         id="messageTextArea"
         ref="textareaRef"
@@ -96,16 +93,18 @@ const textareaRef = ref(null)
 const messageText = ref(props.modelValue)
 
 const canSend = computed(() => {
-  return messageText.value.trim().length > 0 &&
-         messageText.value.length <= props.maxLength &&
-         !props.disabled &&
-         !props.sending
+  return (
+    messageText.value.trim().length > 0 && messageText.value.length <= props.maxLength && !props.disabled && !props.sending
+  )
 })
 
 // Watch for external changes to modelValue
-watch(() => props.modelValue, (newValue) => {
-  messageText.value = newValue
-})
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    messageText.value = newValue
+  }
+)
 
 // Emit changes to parent
 watch(messageText, (newValue) => {

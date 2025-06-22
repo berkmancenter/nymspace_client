@@ -11,7 +11,7 @@
         class="mt-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
       >
         <option disabled>Sort By:</option>
-        <template v-for="sortByItem in sortByItems">
+        <template v-for="sortByItem in sortByItems" :key="sortByItem.value">
           <option :value="sortByItem.value">{{ sortByItem.name }}</option>
         </template>
       </select>
@@ -32,64 +32,83 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import ChannelList from './ChannelList.vue'
 import CreateChannel from '../Channels/CreateChannel.vue'
 import { computed, ref } from 'vue'
 import SearchBox from '../SearchBox.vue'
 
-const props = defineProps({
-  channels: {
-    type: Array,
-    required: true
-  }
-})
-
-const searchText = ref('')
-
-const sortByItems = [
-  {
-    name: 'Recent',
-    value: 'latestMessageCreatedAt'
+export default {
+  name: 'ChannelsList',
+  components: {
+    ChannelList,
+    CreateChannel,
+    SearchBox
   },
-  {
-    name: 'Activity',
-    value: 'messageCount'
-  },
-  {
-    name: 'Default',
-    value: 'defaultSortAverage'
-  }
-]
-
-const sortBy = ref('latestMessageCreatedAt')
-const order = ref('desc')
-
-const sortedItems = computed(() => [
-  ...props.channels
-    .filter((x) => !x.isFollowed)
-    .sort((a, b) => {
-      const multiplier = order.value === 'asc' ? 1 : -1
-
-      if (a[sortBy.value] === b[sortBy.value]) {
-        return 0
-      } else if (a[sortBy.value] > b[sortBy.value]) {
-        return 1 * multiplier
-      } else if (a[sortBy.value] < b[sortBy.value]) {
-        return -1 * multiplier
-      }
-    })
-])
-
-const finalItems = computed(() =>
-  [...props.channels.filter((x) => x.isFollowed), ...sortedItems.value].filter((x) => {
-    if (searchText.value.trim().length === 0) {
-      return true
-    } else {
-      return x.name?.toLowerCase().indexOf(searchText.value) > -1
+  props: {
+    channels: {
+      type: Array,
+      required: true
     }
-  })
-)
+  },
+  setup(props) {
+    const searchText = ref('')
 
-const updateSearch = (value) => (searchText.value = value?.toLowerCase())
+    const sortByItems = [
+      {
+        name: 'Recent',
+        value: 'latestMessageCreatedAt'
+      },
+      {
+        name: 'Activity',
+        value: 'messageCount'
+      },
+      {
+        name: 'Default',
+        value: 'defaultSortAverage'
+      }
+    ]
+
+    const sortBy = ref('latestMessageCreatedAt')
+    const order = ref('desc')
+
+    const sortedItems = computed(() => [
+      ...props.channels
+        .filter((x) => !x.isFollowed)
+        .sort((a, b) => {
+          const multiplier = order.value === 'asc' ? 1 : -1
+
+          if (a[sortBy.value] === b[sortBy.value]) {
+            return 0
+          } else if (a[sortBy.value] > b[sortBy.value]) {
+            return 1 * multiplier
+          } else {
+            return -1 * multiplier
+          }
+        })
+    ])
+
+    const finalItems = computed(() =>
+      [...props.channels.filter((x) => x.isFollowed), ...sortedItems.value].filter((x) => {
+        if (searchText.value.trim().length === 0) {
+          return true
+        } else {
+          return x.name?.toLowerCase().indexOf(searchText.value) > -1
+        }
+      })
+    )
+
+    const updateSearch = (value) => (searchText.value = value?.toLowerCase())
+
+    return {
+      searchText,
+      sortByItems,
+      sortBy,
+      order,
+      sortedItems,
+      finalItems,
+      updateSearch
+    }
+  }
+}
 </script>

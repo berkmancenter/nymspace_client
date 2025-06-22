@@ -3,7 +3,9 @@
 
   <router-link :to="`${path}/login`" class="btn" title="Retain a pseudonym across sessions">Login</router-link>
 </template>
-<script>
+<script setup>
+defineEmits(['login'])
+
 const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
 </script>
 <style scoped>

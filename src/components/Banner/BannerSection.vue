@@ -10,7 +10,7 @@
             class="shadow rounded-md border-0 py-0.5 pl-1 pr-1 text-gray-900 ring-0 border-b-1 ring-inset ring-gray-300 focus:ring-0 sm:text-sm sm:leading-6"
             @change="activateToken"
           >
-            <option v-for="pseudonym in getPseudonyms" :value="pseudonym.token">
+            <option v-for="pseudonym in getPseudonyms" :key="pseudonym.token" :value="pseudonym.token">
               {{ pseudonym.pseudonym }}
             </option>
           </select>
@@ -119,12 +119,10 @@
 </template>
 
 <script setup>
-import { onMounted, watch, ref, computed, nextTick } from 'vue'
+import { ref, nextTick } from 'vue'
 import useStore from '../../composables/global/useStore'
 import { defineAsyncComponent } from '@vue/runtime-core'
-import { TrashIcon, RefreshIcon, LoginIcon, DotsVerticalIcon } from '@heroicons/vue/outline'
-import ThemedModal from '../Shared/ThemedModal.vue'
-import { useRoute } from 'vue-router'
+import { RefreshIcon, LoginIcon, DotsVerticalIcon } from '@heroicons/vue/outline'
 
 const {
   getLoggedInStatus,
@@ -133,40 +131,16 @@ const {
   registerOnce,
   getGuestStatus,
   loadNewPseudonym,
-  activatePseudonym,
-  loadPseudonyms,
-  deletePseudonym
+  activatePseudonym
 } = useStore
 
 const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
 const activeToken = ref('')
-// const pseudonymToDelete = ref("");
-// const isModalOpen = ref(false);
-// const message = ref("");
-// const isError = ref(true);
-// const inactivePseudonyms = computed(() =>
-//   getPseudonyms.value.filter((x) => !x.active)
-// );
 const menuOpen = ref(false)
+
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
 }
-
-/**
- * watch route params and check if channelId is present
- * based on its presence update welcome message
- */
-
-async function registerOneTime() {
-  await registerOnce()
-}
-
-// function openModal() {
-//   pseudonymToDelete.value = "";
-//   message.value = "";
-//   document.querySelector("body").classList.add("modal-open");
-//   isModalOpen.value = true;
-// }
 
 async function refreshPseudonym() {
   await loadNewPseudonym()
@@ -174,75 +148,17 @@ async function refreshPseudonym() {
   adjustSelect()
 }
 
-// function closeModal() {
-//   document.querySelector("body").classList.remove("modal-open");
-//   isModalOpen.value = false;
-// }
-
-/**
- * Delete pseudonym, validate pseudonym is
- * selected
- * Call delete API and update message as well
- * as show error if any
- */
-// async function processDelete() {
-//   isError.value = true;
-//   if (pseudonymToDelete.value.trim().length = === 0) {
-//     message.value = "Please select a pseudonym.";
-//     return;
-//   }
-//   message.value = "";
-//   await deletePseudonym(pseudonymToDelete.value)
-//     .then(async () => {
-//       await loadPseudonyms();
-//       pseudonymToDelete.value = "";
-//       message.value = "Pseudonym deleted.";
-//       isError.value = false;
-//     })
-//     .catch(
-//       () => (message.value = "Unable to delete pseudonym. Please try again.")
-//     );
-// }
+function adjustSelect() {
+  nextTick(() => {
+    if (getPseudonyms.value.length > 0) {
+      activeToken.value = getActivePseudonym.value?.token || ''
+    }
+  })
+}
 
 async function activateToken() {
-  await activatePseudonym(activeToken.value)
-  adjustSelect()
-}
-
-function adjustSelect() {
-  // Adject select tag width when select tag is visible on DOM
-  if (!getGuestStatus.value) {
-    const sel = document.getElementById('pseudonymSelect')
-    const tempOption = document.createElement('option')
-    tempOption.textContent = sel.selectedOptions[0].textContent
-    const tempSelect = document.createElement('select')
-    tempSelect.style.visibility = 'hidden'
-    tempSelect.style.position = 'fixed'
-    tempSelect.appendChild(tempOption)
-    sel.after(tempSelect)
-    tempSelect.remove()
+  if (activeToken.value) {
+    await activatePseudonym(activeToken.value)
   }
 }
-
-/**
- * handling logout case to update activeToken
- */
-watch(
-  () => getActivePseudonym.value?.token,
-  (val, prevVal) => {
-    if (val !== prevVal && val !== activeToken.value) {
-      activeToken.value = val
-    }
-  }
-)
-
-onMounted(async () => {
-  if (getLoggedInStatus.value && !getGuestStatus.value) {
-    await loadPseudonyms()
-  }
-  activeToken.value = getActivePseudonym.value?.token
-  nextTick(() => {
-    adjustSelect()
-  })
-})
 </script>

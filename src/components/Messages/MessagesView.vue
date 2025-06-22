@@ -27,7 +27,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { format, isToday, isYesterday, isSameDay } from 'date-fns'
+import { format, isToday, isYesterday } from 'date-fns'
 import MessageViewItem from './MessageViewItem.vue'
 
 const props = defineProps({
@@ -57,10 +57,14 @@ function formatDateForSeparator(date) {
   function getOrdinal(day) {
     if (day > 3 && day < 21) return 'th'
     switch (day % 10) {
-      case 1: return 'st'
-      case 2: return 'nd'
-      case 3: return 'rd'
-      default: return 'th'
+      case 1:
+        return 'st'
+      case 2:
+        return 'nd'
+      case 3:
+        return 'rd'
+      default:
+        return 'th'
     }
   }
 
