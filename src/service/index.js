@@ -210,5 +210,73 @@ export default {
 
   loadConfig: async function () {
     return await axios.get('/config').then((x) => x.data)
+  },
+
+  updateDataExportPreference: async function (optOut) {
+    const userId = this.getUserId()
+    return await axios
+      .put(`/users/user/${userId}/preferences/export`, { optOut })
+      .then((x) => x.data)
+  },
+
+  getDataExportPreference: async function () {
+    const userId = this.getUserId()
+    return await axios.get(`/users/user/${userId}/preferences/export`).then((x) => x.data)
+  },
+
+  getExportAuditLog: async function () {
+    const userId = this.getUserId()
+    return await axios.get(`/users/user/${userId}/exports`).then((x) => x.data)
+  },
+
+  getUserId: function() {
+    const store = JSON.parse(localStorage.getItem('vuex') || '{}')
+    return store?.user?.id || ''
+  },
+
+  exportThread: async function (threadId, format = 'docx') {
+    return await axios
+      .get(`/export/thread/${threadId}`, {
+        params: { format },
+        responseType: 'blob',
+        timeout: 5 * 60 * 1000,
+        headers: {
+          'Accept': format === 'csv' ? 'application/zip' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        }
+      })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+
+        const contentDisposition = response.headers['content-disposition']
+        console.log('Response headers:', response.headers)
+        console.log('Content-Disposition:', contentDisposition)
+
+        let filename = ''
+
+        if (contentDisposition) {
+          let filenameMatch = contentDisposition.match(/filename="([^"]+)"/)
+          if (!filenameMatch) {
+            filenameMatch = contentDisposition.match(/filename=([^;]+)/)
+          }
+          if (filenameMatch) {
+            filename = filenameMatch[1].trim()
+          }
+        }
+
+        if (!filename) {
+          const dateStr = new Date().toISOString().split('T')[0]
+          filename = `thread-export-${dateStr}.${format === 'csv' ? 'zip' : 'docx'}`
+        }
+
+        link.setAttribute('download', filename)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        window.URL.revokeObjectURL(url)
+
+        return { success: true }
+      })
   }
 }

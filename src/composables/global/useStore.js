@@ -349,12 +349,13 @@ async function resetPassword(password, token) {
   })
 }
 
-async function registerUser(username, password, email) {
+async function registerUser(username, password, email, dataExportOptOut = false) {
   let payload = {
     username,
     password,
     pseudonym: getActivePseudonym.value.pseudonym,
-    token: getActivePseudonym.value.token
+    token: getActivePseudonym.value.token,
+    dataExportOptOut
   }
   if (email.trim().length > 0) {
     payload = { ...payload, email }

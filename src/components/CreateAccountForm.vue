@@ -26,6 +26,23 @@
       type="email"
       placeholder="Email (optional)"
     />
+
+    <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+      <label class="flex items-start cursor-pointer">
+        <input
+          type="checkbox"
+          v-model="dataExportOptOut"
+          class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+        >
+        <div class="ml-3">
+          <span class="text-sm font-medium text-gray-700">Exclude my messages from data exports</span>
+          <p class="text-xs text-gray-500 mt-1">
+            Thread owners can export their threads. Check this to exclude your messages from all exports.
+          </p>
+        </div>
+      </label>
+    </div>
+
     <div class="flex flex-col gap-4 mt-4">
       <div>
         <button
@@ -65,12 +82,13 @@ const email = ref('')
 const showError = ref(false)
 const showSuccess = ref(false)
 const message = ref('')
+const dataExportOptOut = ref(false)
 
 function register() {
   setError('', false)
   showError.value = false
   if (checkFormValidity() && checkPasswordsMatch()) {
-    registerUser(username.value, password.value, email.value)
+    registerUser(username.value, password.value, email.value, dataExportOptOut.value)
       .then(() => {
         clearForm()
         message.value = 'Register successful. Redirecting...'
@@ -124,6 +142,7 @@ function clearForm() {
   password.value = ''
   password2.value = ''
   email.value = ''
+  dataExportOptOut.value = false
 }
 </script>
 <style scoped>
