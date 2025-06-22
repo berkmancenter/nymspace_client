@@ -14,8 +14,8 @@
       <div class="flex items-center gap-2">
         <div v-if="isThreadOwner" class="relative">
           <button
-            @click="toggleExportMenu"
             class="flex items-center gap-1 px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+            @click="toggleExportMenu"
           >
             <DownloadIcon class="w-4 h-4" />
             Export
@@ -29,18 +29,18 @@
               @click.stop
             >
               <div v-if="exporting" class="px-4 py-2 text-sm text-gray-500">Exporting...</div>
-              <div class="py-1" v-else>
+              <div v-else class="py-1">
                 <button
-                  @click="exportThread('docx')"
                   class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
                   :disabled="exporting"
+                  @click="exportThread('docx')"
                 >
                   Export Docx
                 </button>
                 <button
-                  @click="exportThread('csv')"
                   class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
                   :disabled="exporting"
+                  @click="exportThread('csv')"
                 >
                   Export CSVs
                 </button>

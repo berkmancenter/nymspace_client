@@ -5,15 +5,11 @@
         <ExclamationIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />
       </div>
       <div class="ml-3 flex-1">
-        <h3 class="text-sm font-medium text-yellow-800">
-          Data Export Notice
-        </h3>
+        <h3 class="text-sm font-medium text-yellow-800">Data Export Notice</h3>
         <div class="mt-2 text-sm text-yellow-700">
           <p>
             As a guest user, your messages may be included in data exports by thread owners.
-            <router-link :to="{ name: 'home.createAccount' }" class="font-medium underline">
-              Create an account
-            </router-link>
+            <router-link :to="{ name: 'home.createAccount' }" class="font-medium underline"> Create an account </router-link>
             to be able to change pseudonyms and opt out of data exports.
           </p>
         </div>
@@ -21,9 +17,9 @@
       <div class="ml-auto pl-3">
         <div class="-mx-1.5 -my-1.5">
           <button
-            @click="dismissNotice"
             type="button"
             class="inline-flex bg-yellow-50 rounded-md p-1.5 text-yellow-500 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-yellow-50 focus:ring-yellow-600"
+            @click="dismissNotice"
           >
             <span class="sr-only">Dismiss</span>
             <XIcon class="h-5 w-5" aria-hidden="true" />

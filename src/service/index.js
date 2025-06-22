@@ -214,9 +214,7 @@ export default {
 
   updateDataExportPreference: async function (optOut) {
     const userId = this.getUserId()
-    return await axios
-      .put(`/users/user/${userId}/preferences/export`, { optOut })
-      .then((x) => x.data)
+    return await axios.put(`/users/user/${userId}/preferences/export`, { optOut }).then((x) => x.data)
   },
 
   getDataExportPreference: async function () {
@@ -229,7 +227,7 @@ export default {
     return await axios.get(`/users/user/${userId}/exports`).then((x) => x.data)
   },
 
-  getUserId: function() {
+  getUserId: function () {
     const store = JSON.parse(localStorage.getItem('vuex') || '{}')
     return store?.user?.id || ''
   },
@@ -241,7 +239,8 @@ export default {
         responseType: 'blob',
         timeout: 5 * 60 * 1000,
         headers: {
-          'Accept': format === 'csv' ? 'application/zip' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+          Accept:
+            format === 'csv' ? 'application/zip' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         }
       })
       .then((response) => {

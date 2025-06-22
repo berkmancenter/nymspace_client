@@ -30,10 +30,10 @@
     <div class="mt-4 p-4 bg-gray-50 rounded-lg">
       <label class="flex items-start cursor-pointer">
         <input
-          type="checkbox"
           v-model="dataExportOptOut"
+          type="checkbox"
           class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-        >
+        />
         <div class="ml-3">
           <span class="text-sm font-medium text-gray-700">Exclude my messages from data exports</span>
           <p class="text-xs text-gray-500 mt-1">

@@ -9,17 +9,24 @@
 
       <div v-if="loading" class="text-center py-4">
         <div class="inline-flex items-center">
-          <svg class="animate-spin h-5 w-5 mr-3 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg
+            class="animate-spin h-5 w-5 mr-3 text-gray-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
           </svg>
           Loading audit log...
         </div>
       </div>
 
-      <div v-else-if="error" class="text-red-600 text-sm">
-        Failed to load export audit log. Please try again later.
-      </div>
+      <div v-else-if="error" class="text-red-600 text-sm">Failed to load export audit log. Please try again later.</div>
 
       <div v-else-if="audits.length === 0" class="text-gray-500 text-sm">
         No exports found. Your messages have not been included in any thread exports yet.
@@ -30,21 +37,11 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-100">
               <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Thread
-                </th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Exported By
-                </th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Format
-                </th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Messages
-                </th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thread</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exported By</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Format</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Messages</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -56,8 +53,10 @@
                   {{ audit.exporterUsername }}
                 </td>
                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                        :class="audit.format === 'docx' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'">
+                  <span
+                    class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                    :class="audit.format === 'docx' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'"
+                  >
                     {{ audit.format.toUpperCase() }}
                   </span>
                 </td>
@@ -78,8 +77,10 @@
               <h4 class="font-medium text-gray-900 text-sm truncate flex-1 mr-2">
                 {{ audit.threadName }}
               </h4>
-              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full flex-shrink-0"
-                    :class="audit.format === 'docx' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'">
+              <span
+                class="inline-flex px-2 py-1 text-xs font-semibold rounded-full flex-shrink-0"
+                :class="audit.format === 'docx' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'"
+              >
                 {{ audit.format.toUpperCase() }}
               </span>
             </div>

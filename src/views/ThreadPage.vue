@@ -1,12 +1,12 @@
 <template>
   <div class="flex-1 flex flex-col min-h-0">
     <ExportNotice />
-    <splitpanes
-      v-if="selectedThreadMessage"
-      class="h-full"
-      @resize="onPaneResize"
-    >
-      <pane :size="mainPaneSize" :min-size="isMobile && selectedThreadMessage ? 0 : 40" :class="{ 'hidden': isMobile && selectedThreadMessage }">
+    <splitpanes v-if="selectedThreadMessage" class="h-full" @resize="onPaneResize">
+      <pane
+        :size="mainPaneSize"
+        :min-size="isMobile && selectedThreadMessage ? 0 : 40"
+        :class="{ hidden: isMobile && selectedThreadMessage }"
+      >
         <div class="h-full flex flex-col overflow-hidden">
           <MessagesView
             :ref="
@@ -49,7 +49,8 @@
               v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
               class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
             >
-              This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread creator.
+              This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread
+              creator.
             </div>
             <div
               v-if="shouldDisplayMessageBoxLocked"
@@ -61,8 +62,8 @@
               v-if="discussionPause"
               class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
             >
-              The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback from the
-              discussion facilitator before responding.
+              The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback
+              from the discussion facilitator before responding.
             </div>
             <div
               v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
@@ -73,10 +74,19 @@
             <PromptDirtyDraft :show="prompt" @response="response" />
           </div>
 
-          <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageInput?.textareaRef" @tag-click="tagClick" />
+          <TagList
+            :items="filteredTags"
+            :visible="tagListVisible"
+            :msg-txt-area="messageInput?.textareaRef"
+            @tag-click="tagClick"
+          />
 
           <div class="flex flex-col pl-4">
-            <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2 mr-4" :class="sending ? 'animate-pulse' : ''">
+            <div
+              v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked"
+              class="mb-2 mr-4"
+              :class="sending ? 'animate-pulse' : ''"
+            >
               <MessageInput
                 ref="messageInput"
                 v-model="message"
@@ -91,7 +101,12 @@
           </div>
         </div>
       </pane>
-      <pane :size="replyPaneSize" :max-size="100" :min-size="isMobile ? 100 : 20" :class="{ 'border-l border-gray-200': !isMobile }">
+      <pane
+        :size="replyPaneSize"
+        :max-size="100"
+        :min-size="isMobile ? 100 : 20"
+        :class="{ 'border-l border-gray-200': !isMobile }"
+      >
         <div class="h-full overflow-hidden relative">
           <ReplyThreadPanel
             :parent-message="selectedThreadMessage"
@@ -148,7 +163,8 @@
           v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
           class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
         >
-          This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread creator.
+          This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread
+          creator.
         </div>
         <div
           v-if="shouldDisplayMessageBoxLocked"
@@ -160,8 +176,8 @@
           v-if="discussionPause"
           class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
         >
-          The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback from the
-          discussion facilitator before responding.
+          The discussion has been paused for {{ discussionPause }} seconds. Please take a moment to consider feedback from
+          the discussion facilitator before responding.
         </div>
         <div
           v-if="shouldDisplayUnableToSendMessage && !shouldDisplayMessageBoxLocked"
@@ -172,22 +188,31 @@
         <PromptDirtyDraft :show="prompt" @response="response" />
       </div>
 
-              <TagList :items="filteredTags" :visible="tagListVisible" :msg-txt-area="messageInput?.textareaRef" @tag-click="tagClick" />
+      <TagList
+        :items="filteredTags"
+        :visible="tagListVisible"
+        :msg-txt-area="messageInput?.textareaRef"
+        @tag-click="tagClick"
+      />
 
-              <div class="flex flex-col pl-4">
-          <div v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked" class="mb-2 mr-4" :class="sending ? 'animate-pulse' : ''">
-            <MessageInput
-              ref="messageInput"
-              v-model="message"
-              :max-length="getMaxMessageLength"
-              :sending="sending"
-              :disabled="discussionPause > 0"
-              :has-error="shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause > 0"
-              @send="sendMessage"
-              @keypress="watchTagging"
-            />
-          </div>
+      <div class="flex flex-col pl-4">
+        <div
+          v-if="!pseudonymMismatch && !shouldDisplayMessageBoxLocked"
+          class="mb-2 mr-4"
+          :class="sending ? 'animate-pulse' : ''"
+        >
+          <MessageInput
+            ref="messageInput"
+            v-model="message"
+            :max-length="getMaxMessageLength"
+            :sending="sending"
+            :disabled="discussionPause > 0"
+            :has-error="shouldDisplayMessageBoxLocked || shouldDisplayUnableToSendMessage || discussionPause > 0"
+            @send="sendMessage"
+            @keypress="watchTagging"
+          />
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -203,7 +228,6 @@ import PromptDirtyDraft from '../components/Messages/PromptDirtyDraft.vue'
 import ReplyThreadPanel from '../components/Messages/ReplyThreadPanel.vue'
 import MessageInput from '../components/Messages/MessageInput.vue'
 import ExportNotice from '../components/Banner/ExportNotice.vue'
-import { XIcon } from '@heroicons/vue/outline'
 import useStore from '../composables/global/useStore'
 import SocketioService from '../service/socket.service'
 import ThreadService from '../service'
@@ -602,7 +626,7 @@ function messageHandler(data) {
       // This is a reply, update the parent message's reply count
       const parentId = data.parentMessage
       const messagesCopy = [...messages.value]
-      const parentIndex = messagesCopy.findIndex(m => (m.id || m._id) === parentId)
+      const parentIndex = messagesCopy.findIndex((m) => (m.id || m._id) === parentId)
 
       if (parentIndex !== -1) {
         messagesCopy[parentIndex] = {
@@ -610,12 +634,15 @@ function messageHandler(data) {
           replyCount: (messagesCopy[parentIndex].replyCount || 0) + 1
         }
         clearMessages()
-        messagesCopy.forEach(msg => addMessage(msg))
+        messagesCopy.forEach((msg) => addMessage(msg))
       }
     }
 
     // If we're viewing a thread and this is a reply to it, add to replies
-    if (selectedThreadMessage.value && data.parentMessage === (selectedThreadMessage.value.id || selectedThreadMessage.value._id)) {
+    if (
+      selectedThreadMessage.value &&
+      data.parentMessage === (selectedThreadMessage.value.id || selectedThreadMessage.value._id)
+    ) {
       // Format the data to match what we expect
       const formattedReply = {
         ...data,
@@ -724,7 +751,7 @@ watch(
   () => route.params.replyId,
   async (replyId) => {
     if (replyId && messages.value.length > 0) {
-      const messageItem = messages.value.find(m => (m.id || m._id) === replyId)
+      const messageItem = messages.value.find((m) => (m.id || m._id) === replyId)
       if (messageItem) {
         handleViewThread(messageItem)
       }
@@ -763,7 +790,9 @@ const reconnectSockets = (user) => {
     await loadMessages(route.params.threadId)
     if (selectedThreadMessage.value) {
       try {
-        const replies = await ThreadService.getMessageReplies(selectedThreadMessage.value.id || selectedThreadMessage.value._id)
+        const replies = await ThreadService.getMessageReplies(
+          selectedThreadMessage.value.id || selectedThreadMessage.value._id
+        )
         threadReplies.value = replies
       } catch (error) {
         console.error('Failed to refresh replies after reveal:', error)
@@ -788,7 +817,7 @@ onMounted(async () => {
 
   // Check if there's a replyId in the route and open reply panel
   if (route.params.replyId && messages.value.length > 0) {
-    const messageItem = messages.value.find(m => (m.id || m._id) === route.params.replyId)
+    const messageItem = messages.value.find((m) => (m.id || m._id) === route.params.replyId)
     if (messageItem) {
       await handleViewThread(messageItem)
     }
