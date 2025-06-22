@@ -1,5 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col min-h-0">
+    <ExportNotice />
     <splitpanes
       v-if="selectedThreadMessage"
       class="h-full"
@@ -201,6 +202,7 @@ import TagList from '../components/Messages/TagList.vue'
 import PromptDirtyDraft from '../components/Messages/PromptDirtyDraft.vue'
 import ReplyThreadPanel from '../components/Messages/ReplyThreadPanel.vue'
 import MessageInput from '../components/Messages/MessageInput.vue'
+import ExportNotice from '../components/Banner/ExportNotice.vue'
 import { XIcon } from '@heroicons/vue/outline'
 import useStore from '../composables/global/useStore'
 import SocketioService from '../service/socket.service'

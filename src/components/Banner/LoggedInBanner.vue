@@ -12,6 +12,12 @@
   <div v-if="getPseudonyms.length === 5" class="flex gap-2 items-center text-gray-400">
     <PlusCircleIcon class="w-4 h-4" /> limit reached
   </div>
+  <router-link v-if="!getGuestStatus" :to="{ name: 'home.channelspage' }" class="flex gap-2 items-center">
+    <ChatIcon class="h-4 w-4" /> Channels
+  </router-link>
+  <router-link v-if="!getGuestStatus" :to="{ name: 'home.settings' }" class="flex gap-2 items-center">
+    <CogIcon class="h-4 w-4" /> Settings
+  </router-link>
   <button v-if="!getGuestStatus" class="flex gap-2 items-center" @click="signout">
     <LogoutIcon class="h-4 w-4" /> Logout
   </button>
@@ -20,7 +26,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import store from '../../composables/global/useStore'
-import { LogoutIcon, PlusCircleIcon, RefreshIcon } from '@heroicons/vue/outline'
+import { LogoutIcon, PlusCircleIcon, RefreshIcon, CogIcon, ChatIcon } from '@heroicons/vue/outline'
 
 const emit = defineEmits(['create-pseudonym'])
 const router = useRouter()

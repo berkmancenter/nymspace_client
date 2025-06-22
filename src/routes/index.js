@@ -10,6 +10,7 @@ const ThreadPage = () => import('../views/ThreadPage.vue')
 const LandingPage = () => import('../views/LandingPage.vue')
 const NotFound = () => import('../views/NotFound.vue')
 const PollPage = () => import('../views/PollPage.vue')
+const SettingsPage = () => import('../views/SettingsPage.vue')
 
 export default [
   {
@@ -78,6 +79,11 @@ export default [
         path: 'create-account',
         name: 'home.createAccount',
         component: CreateAccountPage
+      },
+      {
+        path: 'settings',
+        name: 'home.settings',
+        component: SettingsPage
       }
     ]
   },
