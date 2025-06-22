@@ -102,7 +102,7 @@
         :min-size="selectedThreadMessage ? 20 : 0"
         :class="{ 'mobile-slide-in': isMobile && selectedThreadMessage }"
       >
-        <div class="h-full overflow-hidden relative ml-1">
+        <div class="h-full overflow-hidden relative sm:ml-1">
           <ReplyThreadPanel
             v-if="selectedThreadMessage"
             :parent-message="selectedThreadMessage"
@@ -781,10 +781,6 @@ onUnmounted(() => {
 <style scoped>
 textarea {
   resize: none;
-}
-
-:deep(.splitpanes__pane) {
-  transition: none !important;
 }
 
 :deep(.splitpanes__splitter) {
