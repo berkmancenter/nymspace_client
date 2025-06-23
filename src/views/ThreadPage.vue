@@ -755,7 +755,7 @@ textarea {
 :deep(.splitpanes__splitter) {
   transition: 0.4s all;
   margin-left: 0px !important;
-  z-index: 2000 !important;
+  z-index: 40 !important;
   width: 4px !important;
   background-color: #e5e7eb !important;
   border-color: #e5e7eb !important;

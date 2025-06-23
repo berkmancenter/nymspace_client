@@ -5,7 +5,6 @@
     <div class="bg-gray-50 p-4 rounded-lg">
       <div class="mb-4">
         <div class="flex items-start justify-between mb-4">
-          <h4 class="font-semibold mb-2">Data Export Settings</h4>
           <div v-if="saving" class="text-sm text-gray-500">Saving...</div>
           <div v-if="saved" class="text-sm text-green-600">✓ Settings saved</div>
           <div v-if="error" class="text-sm text-red-600">Error saving settings. Please try again.</div>
