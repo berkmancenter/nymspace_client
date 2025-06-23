@@ -32,7 +32,7 @@
       <div class="mt-2 text-xs text-gray-500">{{ replyCount }} {{ replyCount === 1 ? 'reply' : 'replies' }}</div>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-4">
+    <div ref="repliesContainer" class="flex-1 overflow-y-auto p-4">
       <div v-if="loading" class="flex justify-center items-center h-32">
         <svg class="w-8 h-8 text-gray-600 animate-spin" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -69,6 +69,16 @@
       </div>
     </div>
 
+    <div class="relative">
+      <span
+        v-if="newMessagesNotice"
+        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50 px-3 py-1 text-xs text-white bg-harvard-red rounded cursor-pointer hover:bg-red-700 whitespace-nowrap"
+        @click="onNewMessagesClick"
+      >
+        New replies
+      </span>
+    </div>
+
     <div v-if="threadLocked" class="text-center text-yellow-800 bg-yellow-100 p-2 rounded text-xs">
       This thread is locked. Replies cannot be sent until it is unlocked by the thread creator.
     </div>
@@ -87,12 +97,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import { XIcon } from '@heroicons/vue/outline'
 import HiddenMessage from './HiddenMessage.vue'
 import HiddenPseudonym from './HiddenPseudonym.vue'
 import MessageInput from './MessageInput.vue'
 import useStore from '../../composables/global/useStore'
+import { useMessageScroll } from '../../composables/useMessageScroll'
 
 const { getMaxMessageLength } = useStore
 
@@ -123,9 +134,46 @@ const emit = defineEmits(['close', 'send-reply'])
 
 const replyText = ref('')
 const sending = ref(false)
+const repliesContainer = ref(null)
 
 const replyCount = computed(() => props.replies.length)
 const maxReplyLength = computed(() => getMaxMessageLength.value)
+
+const { newMessagesNotice, scrollToBottom, handleNewMessage, onNewMessagesClick } = useMessageScroll({
+  containerRef: repliesContainer,
+  userId: props.userId
+})
+
+onMounted(async () => {
+  scrollToBottom()
+})
+
+watch(
+  () => props.replies,
+  async (newReplies, oldReplies) => {
+    if (!oldReplies || newReplies.length > oldReplies.length) {
+      await nextTick()
+
+      if (oldReplies && oldReplies.length > 0) {
+        const newestReply = newReplies[newReplies.length - 1]
+        if (newestReply) {
+          handleNewMessage(newestReply)
+        }
+      }
+    }
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.parentMessage,
+  async (newParent) => {
+    if (newParent) {
+      await nextTick()
+    }
+  },
+  { immediate: true }
+)
 
 async function sendReply(messageText) {
   if (!messageText.trim() || sending.value) return
@@ -134,5 +182,7 @@ async function sendReply(messageText) {
   emit('send-reply', messageText)
   replyText.value = ''
   sending.value = false
+
+  scrollToBottom()
 }
 </script>

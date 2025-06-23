@@ -18,13 +18,15 @@
             @view-thread="handleViewThread"
           />
           <div class="mt-5 text-xs">
-            <span
-              v-if="newMessagesNotice"
-              :class="newMessagesNotice ? 'opacity-100' : 'opacity-0'"
-              class="z-50 p-1 -mt-6 text-white transition-all rounded-t cursor-pointer bg-harvard-red w-min whitespace-nowrap"
-              @click="scrollToBottom('smooth')"
-              >New messages</span
-            >
+            <div class="relative">
+              <span
+                v-if="newMessagesNotice"
+                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50 px-3 py-1 text-xs text-white bg-harvard-red rounded cursor-pointer hover:bg-red-700 whitespace-nowrap"
+                @click="onNewMessagesClick"
+              >
+                New messages
+              </span>
+            </div>
             <div
               v-if="pseudonymMismatch"
               class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
@@ -107,7 +109,7 @@
             v-if="selectedThreadMessage"
             :parent-message="selectedThreadMessage"
             :replies="threadReplies"
-            :user-id="userId"
+            :user-id="getActivePseudonym?._id"
             :loading="loadingReplies"
             :thread-locked="shouldDisplayMessageBoxLocked"
             @close="closeReplyThread"
@@ -131,6 +133,7 @@ import ReplyThreadPanel from '../components/Messages/ReplyThreadPanel.vue'
 import MessageInput from '../components/Messages/MessageInput.vue'
 import ExportNotice from '../components/Banner/ExportNotice.vue'
 import useStore from '../composables/global/useStore'
+import { useMessageScroll } from '../composables/useMessageScroll'
 import SocketioService from '../service/socket.service'
 import ThreadService from '../service'
 import { VueCookieNext } from 'vue-cookie-next'
@@ -188,9 +191,12 @@ const shouldDisplayMessageHitTheButton = ref(false)
 const discussionPause = ref(0)
 const shouldDisplayUnableToSendMessage = ref(false)
 const unableToSendSpecialMessage = ref('')
-const newMessagesNotice = ref(false)
-const lastMessageScrollOffset = ref(true)
 const userId = ref('')
+
+const { newMessagesNotice, scrollToBottom, handleNewMessage, onNewMessagesClick } = useMessageScroll({
+  containerRef: messageViewRef,
+  userId: computed(() => getActivePseudonym.value?._id)
+})
 
 /**
  * Dialog feature
@@ -414,7 +420,8 @@ async function sendReplyToThread(replyText) {
       token: VueCookieNext.getCookie('access_token')
     })
 
-    await handleViewThread(selectedThreadMessage.value)
+    // Don't reload replies here - the websocket message handler will add the new reply
+    // await handleViewThread(selectedThreadMessage.value)
   } catch (error) {
     console.error('Failed to send reply:', error)
   }
@@ -529,6 +536,8 @@ function messageHandler(data) {
   if (data.thread === route.params.threadId) {
     if (!data.parentMessage) {
       addMessage(data)
+      // Handle scroll for new message
+      handleNewMessage(data)
     } else {
       const parentId = data.parentMessage
       const messages = getMessages.value
@@ -549,7 +558,8 @@ function messageHandler(data) {
       const formattedReply = {
         ...data,
         id: data.id || data._id,
-        createdAt: data.createdAt || new Date().toISOString()
+        createdAt: data.createdAt || new Date().toISOString(),
+        owner: data.owner || data.user || data.userId
       }
       threadReplies.value.push(formattedReply)
     }
@@ -561,16 +571,6 @@ function messageHandler(data) {
         scrollToBottom()
       }, data.pause * 1000)
     }
-  }
-
-  /**
-   * Scroll to bottom if the message belongs to current user
-   * or if the user is already scrolled to the bottom
-   */
-  if (!data.parentMessage && (data.owner === getId.value || lastMessageScrollOffset.value > -5)) {
-    scrollToBottom()
-  } else if (!data.parentMessage) {
-    newMessagesNotice.value = true
   }
 
   /**
@@ -598,20 +598,6 @@ async function fetchMessages(threadId) {
   loadMessages(threadId).then(async () => {
     await scrollToBottom()
   })
-}
-
-/**
- * Scoroll messages pane to bottom
- */
-async function scrollToBottom(behavior) {
-  await nextTick()
-  setTimeout(() => {
-    messageViewRef.value.$el.scrollTo({
-      top: messageViewRef.value.$el.scrollHeight,
-      left: 0,
-      behavior: behavior || 'instant'
-    })
-  }, 50)
 }
 
 /**
@@ -749,23 +735,6 @@ onMounted(async () => {
   wsInstance.value = new SocketioService()
   wsInstance.value.addDisconnectHandler(reconnectSockets)
   reconnectSockets(user)
-
-  /**
-   * watch window scroll and unset new message notice
-   * if scrolled to bottom
-   */
-  messageViewRef.value.$el.addEventListener(
-    'scroll',
-    () => {
-      lastMessageScrollOffset.value =
-        messageViewRef.value.$el.scrollTop - (messageViewRef.value.$el.scrollHeight - messageViewRef.value.$el.offsetHeight)
-
-      if (lastMessageScrollOffset.value > -5) {
-        newMessagesNotice.value = false
-      }
-    },
-    { passive: true }
-  )
 })
 
 onUnmounted(() => {

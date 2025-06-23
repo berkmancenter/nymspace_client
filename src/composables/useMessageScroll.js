@@ -15,18 +15,15 @@ export function useMessageScroll({ containerRef, userId }) {
   const getCurrentUserId = () => unref(userId)
 
   const isAtBottom = () => {
-    console.log('isAtBottom')
     if (!containerRef.value) {
       return true
     }
     const element = containerRef.value.$el || containerRef.value
     const offset = element.scrollTop - (element.scrollHeight - element.offsetHeight)
-    console.log('offset', offset, scrollThreshold, offset > scrollThreshold)
     return offset > scrollThreshold
   }
 
   const scrollToBottom = async (behavior = 'instant') => {
-    console.log('scrollToBottom')
     await nextTick()
     setTimeout(() => {
       if (!containerRef.value) return
@@ -40,7 +37,6 @@ export function useMessageScroll({ containerRef, userId }) {
   }
 
   const handleNewMessage = async (message, forceScroll = false) => {
-    console.log('handleNewMessage')
     const currentUserId = getCurrentUserId()
     const shouldAutoScroll = forceScroll || message.owner === currentUserId || isAtBottom()
 
@@ -53,7 +49,6 @@ export function useMessageScroll({ containerRef, userId }) {
   }
 
   const handleScroll = () => {
-    console.log('handleScroll', containerRef.value)
     if (!containerRef.value) {
       return
     }
@@ -66,13 +61,11 @@ export function useMessageScroll({ containerRef, userId }) {
   }
 
   const onNewMessagesClick = () => {
-    console.log('onNewMessagesClick')
     scrollToBottom('smooth')
     newMessagesNotice.value = false
   }
 
   const setupScrollListener = () => {
-    console.log('setupScrollListener')
     if (!containerRef.value) {
       return
     }
@@ -81,7 +74,6 @@ export function useMessageScroll({ containerRef, userId }) {
   }
 
   const cleanupScrollListener = () => {
-    console.log('cleanupScrollListener')
     if (!containerRef.value) {
       return
     }
