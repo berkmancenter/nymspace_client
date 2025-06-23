@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h3 class="text-xl font-semibold mb-4">Data Export Settings</h3>
+    <div class="flex items-start justify-between mb-4">
+      <h3 class="text-xl font-semibold mb-4">Data Export Settings</h3>
+      <div v-if="saving" class="text-sm text-gray-500">Saving...</div>
+      <div v-if="saved" class="text-sm text-green-600">✓ Settings saved</div>
+      <div v-if="error" class="text-sm text-red-600">Error saving settings. Please try again.</div>
+    </div>
 
     <div class="bg-gray-50 p-4 rounded-lg">
       <div class="mb-4">
-        <div class="flex items-start justify-between mb-4">
-          <div v-if="saving" class="text-sm text-gray-500">Saving...</div>
-          <div v-if="saved" class="text-sm text-green-600">✓ Settings saved</div>
-          <div v-if="error" class="text-sm text-red-600">Error saving settings. Please try again.</div>
-        </div>
         <label class="flex items-start cursor-pointer">
           <input
             v-model="dataExportOptOut"
