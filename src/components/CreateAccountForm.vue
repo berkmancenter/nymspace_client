@@ -132,7 +132,7 @@ function checkFormValidity() {
 function checkPasswordsMatch() {
   const isMatching = password.value?.trim() === password2.value?.trim()
   if (!isMatching) {
-    setError('Passwords should be same', true)
+    setError('Passwords must be the same.', true)
   }
   return isMatching
 }
