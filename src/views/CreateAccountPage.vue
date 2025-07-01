@@ -6,20 +6,30 @@
       </div>
       <div class="ring-gray-500 lg:mt-10 lg:w-3/5 lg:self-center">
         <p>Attaching an email to your account is optional.</p>
-        <p>
+        <p v-if="getEnableAutoDeletion">
           Adding an email enables recovery of forgotten passwords, and gives users the option to archive inactive Threads on
           the interface for more than 90 days.
+        </p>
+        <p v-else>
+          Adding an email enables recovery of forgotten passwords.
         </p>
       </div>
     </div>
     <router-link class="inline-block underline font-bold my-10" :to="path">Return Home</router-link>
   </div>
 </template>
-<script setup></script>
-<script>
+
+<script setup>
+import { onMounted } from 'vue'
 import CreateAccountForm from '../components/CreateAccountForm.vue'
+import useStore from '../composables/global/useStore'
+
+const { getEnableAutoDeletion, loadConfig } = useStore
 const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : '/'
-export default { components: { CreateAccountForm } }
+
+onMounted(async () => {
+  await loadConfig()
+})
 </script>
 
 <style scoped>

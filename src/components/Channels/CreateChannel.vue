@@ -44,9 +44,11 @@
     <div class="p-4 mt-8 text-yellow-700 rounded-md bg-yellow-50">
       <div class="font-semibold text-yellow-800">Reminder:</div>
       <div class="mb-4">
-        Channels remain on the Threads interface for 90 days after their last use. At that time, channel owners can be
-        emailed a reminder, offering the option for the channel to permanently remain on the interface. Enter an email
-        address that will receive that reminder (optional):
+        <span v-if="getEnableAutoDeletion">
+          Channels remain on the Threads interface for 90 days after their last use. At that time, channel owners can be
+          emailed a reminder, offering the option for the channel to permanently remain on the interface. Enter an email
+          address that will receive that reminder (optional):
+        </span>
       </div>
       <div class="font-semibold text-yellow-800">
         Email address:
@@ -79,10 +81,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from '@vue/reactivity'
+import { computed, ref, onMounted } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
 import ThemedModal from '../Shared/ThemedModal.vue'
-const { getLoggedInStatus, createChannel, getGuestStatus, loadUser, getEnablePublicChannelCreation } = useStore
+const { getLoggedInStatus, createChannel, getGuestStatus, loadUser, getEnablePublicChannelCreation, getEnableAutoDeletion, loadConfig } = useStore
 
 const isModalOpen = ref(false)
 const channelType = ref('private')
@@ -97,6 +99,10 @@ const channelTypeName = computed(() => channelType.value[0].toUpperCase() + chan
 const isEmailValid = computed(() => {
   if (!email.value || email.value.trim().length === 0) return true
   return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email.value)
+})
+
+onMounted(async () => {
+  await loadConfig()
 })
 
 function closeModal() {
