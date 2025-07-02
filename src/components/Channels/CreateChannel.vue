@@ -81,10 +81,19 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
+import { onMounted } from 'vue'
 import useStore from '../../composables/global/useStore'
 import ThemedModal from '../Shared/ThemedModal.vue'
-const { getLoggedInStatus, createChannel, getGuestStatus, loadUser, getEnablePublicChannelCreation, getEnableAutoDeletion, loadConfig } = useStore
+const {
+  getLoggedInStatus,
+  createChannel,
+  getGuestStatus,
+  loadUser,
+  getEnablePublicChannelCreation,
+  getEnableAutoDeletion,
+  loadConfig
+} = useStore
 
 const isModalOpen = ref(false)
 const channelType = ref('private')
