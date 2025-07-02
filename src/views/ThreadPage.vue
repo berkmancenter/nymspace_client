@@ -41,6 +41,13 @@
                 >
                   Reveal {{ hiddenMessageCount }} hidden message{{ hiddenMessageCount === 1 ? '' : 's' }}
                 </button>
+                <button
+                  v-if="hiddenMessageCount === 0 && shouldDisplayMessageHiddenMessageMode && isAdmin"
+                  class="px-3 py-1 text-xs text-white bg-harvard-red rounded cursor-pointer hover:bg-red-700 whitespace-nowrap"
+                  @click="exitHiddenMessageMode"
+                >
+                  Exit hidden message mode
+                </button>
 
               </div>
             </div>
@@ -60,12 +67,18 @@
             >
               You are over the character limit and cannot send this message.
             </div>
-            <div
-              v-if="shouldDisplayMessageHiddenMessageMode && !shouldDisplayMessageBoxLocked"
-              class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
-            >
-              This thread is in hidden message mode. Your messages will be hidden until revealed by the facilitator.
-            </div>
+                          <div
+                v-if="shouldDisplayMessageHiddenMessageMode && !shouldDisplayMessageBoxLocked && !isAdmin"
+                class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+              >
+                This thread is in hidden message mode. Your messages will be hidden until a facilitator reveals them.
+              </div>
+              <div
+                v-if="shouldDisplayMessageHiddenMessageMode && !shouldDisplayMessageBoxLocked && isAdmin"
+                class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+              >
+                This thread is in hidden message mode. Participants will not see each others' messages until you reveal them.
+              </div>
             <div
               v-if="shouldDisplayMessageBoxLocked"
               class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
@@ -782,6 +795,19 @@ async function enterHiddenMessageMode() {
   }
 }
 
+async function exitHiddenMessageMode() {
+  try {
+    const payload = {
+      id: thread.value._id ?? thread.value.id,
+      hiddenMessageMode: false
+    }
+    await updateThread(payload)
+    shouldDisplayMessageHiddenMessageMode.value = false
+  } catch (error) {
+    console.error('Failed to exit hidden message mode:', error)
+  }
+}
+
 function openRevealModal() {
   revealMessage.value = ''
   window.scrollTo({ top: 0, left: 0 })
@@ -823,7 +849,7 @@ function checkIfAdmin() {
 
 const updateHiddenMessageCount = () => {
   hiddenMessageCount.value = messages.value.filter(
-    (msg) => msg.hiddenMessageModeHidden === true && msg.owner?.toString() !== getId.value
+    (msg) => msg.hiddenMessageModeHidden === true
   ).length
 }
 
