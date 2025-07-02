@@ -2,8 +2,8 @@
   <div class="flex flex-col flex-1 sm:p-4 bg-gray-50">
     <splitpanes class="hidden sm:flex flex-1 sm:gap-0 sm:rounded shadow" @resize="onPaneResize">
       <pane
-        :size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : sidebarSize"
-        :min-size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : 22"
+        :size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : isMedium ? 22 : sidebarSize"
+        :min-size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : isMedium ? 22 : 10"
         :max-size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : 50"
       >
         <div class="flex flex-col h-full bg-gray-100 border-r border-gray-300 shadow sm:bg-gray-100 sm:rounded-l">
@@ -145,6 +145,7 @@ const isLoggedIn = computed(() => getLoggedInStatus.value)
 
 const sidebarSize = ref(22)
 const isMobile = ref(false)
+const isMedium = ref(false)
 
 function openModal() {
   document.querySelector('body').classList.add('modal-open')
@@ -327,8 +328,8 @@ function onPaneResize(event) {
 }
 
 function checkMobile() {
-  isMobile.value = window.innerWidth < 768 // md breakpoint in Tailwind
-  // Don't modify sidebarSize based on mobile anymore since we're conditionally rendering
+  isMobile.value = window.innerWidth <= 641
+  isMedium.value = window.innerWidth <= 768
 }
 
 function handleResize() {
@@ -336,6 +337,8 @@ function handleResize() {
 }
 
 onMounted(async () => {
+  checkMobile()
+
   await loadConfig()
   await loadUserThreads()
   await loadThreads(route.params.channelId)
@@ -355,7 +358,6 @@ onMounted(async () => {
 
   setActiveChannel(channel.value)
 
-  checkMobile()
   window.addEventListener('resize', handleResize)
 })
 
