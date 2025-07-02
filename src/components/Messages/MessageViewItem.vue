@@ -24,14 +24,17 @@
             }}</span
           >
         </div>
-        <HiddenMessage v-if="item.body === null" />
+        <HiddenMessage v-if="item.body === null || item.body === '[Message hidden]'" />
         <div
-          v-else
-          v-linkified
-          :class="[item.pause ? 'bg-yellow-100' : '']"
-          :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
-          v-html="formattedBody"
+        v-else
+        v-linkified
+        :class="[item.pause ? 'bg-yellow-100' : '']"
+        :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
+        v-html="formattedBody"
         ></div>
+        <span v-if="item.visibilityLabel" class="text-xs text-gray-500 italic">
+          {{ item.visibilityLabel }}
+        </span>
       </div>
 
       <button

@@ -184,8 +184,8 @@ async function updateThread(payload) {
   }
 }
 
-async function revealHitTheButtonHiddenMessages(threadId) {
-  await ThreadService.revealHitTheButtonHiddenMessages(threadId)
+async function revealHiddenMessageModeMessages(threadId) {
+  await ThreadService.revealHiddenMessageModeMessages(threadId)
   await loadThreads(getActiveChannel.value.id)
   if (getActiveThread.value) {
     setActiveThread(getThread(getActiveThread.value.id))
@@ -641,5 +641,5 @@ export default {
   getAvailableAgents,
   loadConfig,
 
-  revealHitTheButtonHiddenMessages
+  revealHiddenMessageModeMessages
 }
