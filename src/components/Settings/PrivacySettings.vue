@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="getEnableExportOptOut">
     <div class="flex items-start justify-between mb-4">
       <h3 class="text-xl font-semibold mb-4">Data Export Settings</h3>
       <div v-if="saving" class="text-sm text-gray-500">Saving...</div>
@@ -44,7 +44,7 @@ import useStore from '../../composables/global/useStore'
 export default {
   name: 'PrivacySettings',
   setup() {
-    const { getId } = useStore
+    const { getId, getEnableExportOptOut } = useStore
     const dataExportOptOut = ref(false)
     const saving = ref(false)
     const saved = ref(false)
@@ -90,7 +90,8 @@ export default {
       saving,
       saved,
       error,
-      updatePreference
+      updatePreference,
+      getEnableExportOptOut
     }
   }
 }

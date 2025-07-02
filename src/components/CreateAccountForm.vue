@@ -27,7 +27,7 @@
       placeholder="Email (optional)"
     />
 
-    <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+    <div v-if="getEnableExportOptOut" class="mt-4 p-4 bg-gray-50 rounded-lg">
       <label class="flex items-start cursor-pointer">
         <input
           v-model="dataExportOptOut"
@@ -72,7 +72,7 @@
 import { ref, computed } from '@vue/reactivity'
 import { useRouter } from 'vue-router'
 import userStore from '../composables/global/useStore'
-const { registerUser } = userStore
+const { registerUser, getEnableExportOptOut } = userStore
 const router = useRouter()
 const path = import.meta.env.VITE_PATH ? import.meta.env.VITE_PATH : ''
 const username = ref('')

@@ -42,7 +42,7 @@
                   :disabled="exporting"
                   @click="exportThread('csv')"
                 >
-                  Export CSVs
+                  Export CSV
                 </button>
               </div>
             </div>
