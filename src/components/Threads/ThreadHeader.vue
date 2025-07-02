@@ -48,13 +48,7 @@
             </div>
           </div>
         </div>
-        <button
-          v-if="isAdmin && thread.hiddenMessageMode"
-          class="flex items-center justify-start gap-2 p-1 text-white bg-gray-500 text-sm rounded-md shadow-md"
-          @click="reveal"
-        >
-          Reveal Hidden
-        </button>
+
         <DeleteThread :show="isAdmin" :item="thread" />
         <EditThread :show="isAdmin" :item="thread" />
       </div>
@@ -104,7 +98,7 @@ const isThreadModalOpen = ref(false)
 const showExportMenu = ref(false)
 const exporting = ref(false)
 const exportMenuPosition = ref({ top: 0, right: 0 })
-const { revealHiddenMessageModeMessages, getId } = useStore
+const { getId } = useStore
 
 const isThreadOwner = computed(() => {
   return props.thread.owner && props.thread.owner.toString() === getId.value
@@ -118,10 +112,6 @@ function openThreadModal() {
 function closeThreadModal() {
   document.querySelector('body').classList.remove('modal-open')
   isThreadModalOpen.value = false
-}
-
-function reveal() {
-  revealHiddenMessageModeMessages(props.thread.id)
 }
 
 function toggleExportMenu(event) {
