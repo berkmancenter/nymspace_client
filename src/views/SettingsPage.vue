@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-bold mb-8">Account Settings</h1>
 
     <div class="grid gap-8 max-w-4xl">
-      <section class="bg-white rounded-lg shadow p-6">
+      <section v-if="getEnableExportOptOut" class="bg-white rounded-lg shadow p-6">
         <PrivacySettings />
       </section>
 
@@ -37,7 +37,7 @@ export default {
     ExportAuditLog
   },
   setup() {
-    const { getId } = useStore
+    const { getId, loadConfig, getEnableExportOptOut } = useStore
     const user = ref(null)
 
     const formatDate = (dateString) => {
@@ -46,6 +46,7 @@ export default {
     }
 
     onMounted(async () => {
+      await loadConfig()
       const userId = getId.value
       if (userId) {
         user.value = await api.getUser(userId)
@@ -54,7 +55,8 @@ export default {
 
     return {
       user,
-      formatDate
+      formatDate,
+      getEnableExportOptOut
     }
   }
 }

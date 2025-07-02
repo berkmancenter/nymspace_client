@@ -233,9 +233,12 @@ export default {
   },
 
   exportThread: async function (threadId, format = 'docx') {
+    // Get the user's timezone
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
     return await axios
       .get(`/export/thread/${threadId}`, {
-        params: { format },
+        params: { format, timezone },
         responseType: 'blob',
         timeout: 5 * 60 * 1000,
         headers: {

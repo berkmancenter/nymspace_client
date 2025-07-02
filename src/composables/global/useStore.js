@@ -33,6 +33,7 @@ const state = reactive({
   enablePolls: false,
   enablePublicChannelCreation: false,
   enableAutoDeletion: true,
+  enableExportOptOut: true,
   availableAgents: []
 })
 
@@ -55,6 +56,10 @@ function setEnablePublicChannelCreation(enablePublicChannelCreation) {
 
 function setEnableAutoDeletion(enableAutoDeletion) {
   state.enableAutoDeletion = enableAutoDeletion
+}
+
+function setEnableExportOptOut(enableExportOptOut) {
+  state.enableExportOptOut = enableExportOptOut
 }
 
 function setAvailableAgents(availableAgents) {
@@ -433,6 +438,7 @@ async function loadConfig() {
   setAvailableAgents(config.availableAgents)
   setEnablePublicChannelCreation(config.enablePublicChannelCreation)
   setEnableAutoDeletion(config.enableAutoDeletion)
+  setEnableExportOptOut(config.enableExportOptOut)
 }
 
 // Getters
@@ -442,6 +448,7 @@ const getEnableAgents = computed(() => state.enableAgents)
 const getEnablePolls = computed(() => state.enablePolls)
 const getEnablePublicChannelCreation = computed(() => state.enablePublicChannelCreation)
 const getEnableAutoDeletion = computed(() => state.enableAutoDeletion)
+const getEnableExportOptOut = computed(() => state.enableExportOptOut)
 const getUserThreads = computed(() => state.userThreads)
 const getUserChannels = computed(() => state.userChannels)
 
@@ -635,6 +642,7 @@ export default {
   getEnablePolls,
   getEnablePublicChannelCreation,
   getEnableAutoDeletion,
+  getEnableExportOptOut,
   setEnableAgents,
   setEnablePolls,
   setAvailableAgents,
