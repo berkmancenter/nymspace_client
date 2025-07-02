@@ -30,9 +30,11 @@
     <div class="p-4 mt-8 text-yellow-700 rounded-md bg-yellow-50">
       <div class="font-semibold text-yellow-800">Reminder:</div>
       <div class="mb-4">
-        Channels remain on the Threads interface for 90 days after their last use. At that time, channel owners can be
-        emailed a reminder, offering the option for the channel to permanently remain on the interface. Enter an email
-        address that will receive that reminder (optional):
+        <span v-if="getEnableAutoDeletion">
+          Channels remain on the Threads interface for 90 days after their last use. At that time, channel owners can be
+          emailed a reminder, offering the option for the channel to permanently remain on the interface. Enter an email
+          address that will receive that reminder (optional):
+        </span>
       </div>
       <div class="font-semibold text-yellow-800">
         Email address:
@@ -65,10 +67,10 @@
 
 <script setup>
 import { PencilIcon } from '@heroicons/vue/outline'
-import { computed, ref } from '@vue/reactivity'
+import { computed, ref, onMounted } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
 import ThemedModal from '../Shared/ThemedModal.vue'
-const { updateChannel } = useStore
+const { updateChannel, getEnableAutoDeletion, loadConfig } = useStore
 
 const isModalOpen = ref(false)
 const channelName = ref('')
@@ -91,6 +93,10 @@ const props = defineProps({
     type: Object,
     required: true
   }
+})
+
+onMounted(async () => {
+  await loadConfig()
 })
 
 function closeModal() {

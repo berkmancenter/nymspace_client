@@ -32,6 +32,7 @@ const state = reactive({
   enableAgents: false,
   enablePolls: false,
   enablePublicChannelCreation: false,
+  enableAutoDeletion: true,
   availableAgents: []
 })
 
@@ -50,6 +51,10 @@ function setEnablePolls(enablePolls) {
 
 function setEnablePublicChannelCreation(enablePublicChannelCreation) {
   state.enablePublicChannelCreation = enablePublicChannelCreation
+}
+
+function setEnableAutoDeletion(enableAutoDeletion) {
+  state.enableAutoDeletion = enableAutoDeletion
 }
 
 function setAvailableAgents(availableAgents) {
@@ -427,6 +432,7 @@ async function loadConfig() {
   setEnableAgents(config.enableAgents)
   setAvailableAgents(config.availableAgents)
   setEnablePublicChannelCreation(config.enablePublicChannelCreation)
+  setEnableAutoDeletion(config.enableAutoDeletion)
 }
 
 // Getters
@@ -435,6 +441,7 @@ const getAvailableAgents = computed(() => state.availableAgents)
 const getEnableAgents = computed(() => state.enableAgents)
 const getEnablePolls = computed(() => state.enablePolls)
 const getEnablePublicChannelCreation = computed(() => state.enablePublicChannelCreation)
+const getEnableAutoDeletion = computed(() => state.enableAutoDeletion)
 const getUserThreads = computed(() => state.userThreads)
 const getUserChannels = computed(() => state.userChannels)
 
@@ -627,6 +634,7 @@ export default {
   getEnableAgents,
   getEnablePolls,
   getEnablePublicChannelCreation,
+  getEnableAutoDeletion,
   setEnableAgents,
   setEnablePolls,
   setAvailableAgents,

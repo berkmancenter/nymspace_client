@@ -24,7 +24,7 @@ import { ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
 import { useRoute } from 'vue-router'
 
-const { createThread, getEnableAgents, getAvailableAgents } = useStore
+const { createThread, getEnableAgents, getAvailableAgents, getEnableAutoDeletion } = useStore
 const threadName = ref('')
 const message = ref('')
 const agentSelections = ref(new Array(getAvailableAgents.length).fill(false))
