@@ -12,7 +12,7 @@
         </h2>
       </div>
       <div class="flex items-center gap-2">
-        <div v-if="isThreadOwner" class="relative">
+        <div v-if="isChannelOwner" class="relative">
           <button
             class="flex items-center gap-1 px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
             @click="toggleExportMenu"
@@ -106,8 +106,8 @@ const exporting = ref(false)
 const exportMenuPosition = ref({ top: 0, right: 0 })
 const { revealHitTheButtonHiddenMessages, getId } = useStore
 
-const isThreadOwner = computed(() => {
-  return props.thread.owner && props.thread.owner.toString() === getId.value
+const isChannelOwner = computed(() => {
+  return props.channel.owner && props.channel.owner.toString() === getId.value
 })
 
 function openThreadModal() {
@@ -149,7 +149,7 @@ async function exportThread(format) {
     if (error.code === 'ECONNABORTED') {
       errorMessage += 'The request timed out. The thread might be too large to export.'
     } else if (error.response?.status === 403) {
-      errorMessage += 'You do not have permission to export this thread.'
+      errorMessage += 'You do not have permission to export this thread. Only channel owners can export threads.'
     } else if (error.response?.status === 404) {
       errorMessage += 'Thread not found.'
     } else {
