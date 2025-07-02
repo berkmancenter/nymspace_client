@@ -8,14 +8,13 @@
       >
         <div class="flex flex-col h-full bg-gray-100 border-r border-gray-300 shadow sm:bg-gray-100 sm:rounded-l">
           <div
-            class="flex items-center justify-between gap-6 px-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"
+            class="flex items-center justify-between gap-6 pl-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"
           >
             <h2 class="text-xl font-bold truncate threads-title">
               <button class="w-full truncate" @click="openModal">
                 {{ channel.name }}
               </button>
             </h2>
-
             <div class="flex items-center gap-2">
               <EditChannel :item="channel" :show="canEditDeleteChannel(channel)" />
               <DeleteChannel
@@ -23,6 +22,9 @@
                 :name="channel.name"
                 @delete-channel="processDeleteChannel"
               />
+              <button v-if="isMobile" class="sm:hidden" @click="toggleSideMenu">
+                <XIcon class="w-5 h-5" />
+              </button>
             </div>
           </div>
           <div class="flex-1 overflow-y-auto">
@@ -92,7 +94,7 @@ import { VueCookieNext } from 'vue-cookie-next'
 import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
 import ThemedModal from '../components/Shared/ThemedModal.vue'
-import { ViewListIcon } from '@heroicons/vue/outline'
+import { ViewListIcon, XIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
 
