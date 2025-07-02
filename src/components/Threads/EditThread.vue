@@ -30,12 +30,12 @@
     </div>
     <div>
       <input
-        id="hitTheButton"
-        v-model="hitTheButton"
+        id="hiddenMessageMode"
+        v-model="hiddenMessageMode"
         type="checkbox"
         class="w-4 h-4 mr-2 align-middle cursor-pointer"
-        data-testid="hit-the-button"
-      /><label class="font-semibold cursor-pointer" for="hitTheButton">Hit The Button</label>
+        data-testid="hidden-message-mode"
+      /><label class="font-semibold cursor-pointer" for="hiddenMessageMode">Hidden Message Mode</label>
     </div>
     <div class="text-harvard-red">{{ message }}</div>
     <template #actions>
@@ -66,7 +66,7 @@ const { updateThread } = useStore
 const isModalOpen = ref(false)
 const threadName = ref('')
 const locked = ref(false)
-const hitTheButton = ref(false)
+const hiddenMessageMode = ref(false)
 // const email = ref('')
 const message = ref('')
 
@@ -95,7 +95,7 @@ async function openModal() {
   message.value = ''
   threadName.value = props.item.name
   locked.value = props.item.locked
-  hitTheButton.value = props.item.hitTheButton
+  hiddenMessageMode.value = props.item.hiddenMessageMode
   window.scrollTo({ top: 0, left: 0 })
   isModalOpen.value = true
   document.querySelector('body').classList.add('modal-open')
@@ -110,7 +110,7 @@ async function processUpdate() {
     const payload = {
       id: props.item._id ?? props.item.id,
       locked: locked.value,
-      hitTheButton: hitTheButton.value,
+      hiddenMessageMode: hiddenMessageMode.value,
       name: threadName.value
     }
 

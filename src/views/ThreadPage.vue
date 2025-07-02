@@ -44,10 +44,10 @@
               You are over the character limit and cannot send this message.
             </div>
             <div
-              v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
+              v-if="shouldDisplayMessageHiddenMessageMode && !shouldDisplayMessageBoxLocked"
               class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
             >
-              This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread
+              This thread is in hidden message mode. Your messages will be hidden until revealed by the thread
               creator.
             </div>
             <div
@@ -187,7 +187,7 @@ const goodReputation = ref(false)
 
 const wsInstance = reactive({})
 const shouldDisplayMessageBoxLocked = ref(false)
-const shouldDisplayMessageHitTheButton = ref(false)
+const shouldDisplayMessageHiddenMessageMode = ref(false)
 const discussionPause = ref(0)
 const shouldDisplayUnableToSendMessage = ref(false)
 const unableToSendSpecialMessage = ref('')
@@ -287,14 +287,14 @@ watch(
       } else {
         shouldDisplayMessageBoxLocked.value = false
       }
-      if (now?.hitTheButton) {
-        shouldDisplayMessageHitTheButton.value = true
+      if (now?.hiddenMessageMode) {
+        shouldDisplayMessageHiddenMessageMode.value = true
       } else {
-        shouldDisplayMessageHitTheButton.value = false
+        shouldDisplayMessageHiddenMessageMode.value = false
       }
     } else {
       shouldDisplayMessageBoxLocked.value = now?.locked
-      shouldDisplayMessageHitTheButton.value = now?.hitTheButton
+      shouldDisplayMessageHiddenMessageMode.value = now?.hiddenMessageMode
     }
   },
   {
