@@ -1,21 +1,26 @@
 <template>
-  <div class="flex flex-col flex-1 sm:p-4 bg-gray-50">
-    <splitpanes class="hidden sm:flex flex-1 sm:gap-0 sm:rounded shadow" @resize="onPaneResize">
+  <div
+    class="fixed inset-0 sm:relative sm:inset-auto flex flex-col flex-1 sm:p-4 bg-gray-50 overflow-hidden h-screen max-h-screen"
+  >
+    <splitpanes class="flex flex-1 sm:gap-0 sm:rounded shadow overflow-hidden h-full" @resize="onPaneResize">
       <pane
         :size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : isMedium ? 22 : sidebarSize"
         :min-size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : isMedium ? 22 : 10"
         :max-size="isMobile && threadsMenuOpen ? 100 : isMobile ? 0 : 50"
+        class="overflow-hidden"
       >
-        <div class="flex flex-col h-full bg-gray-100 border-r border-gray-300 shadow sm:bg-gray-100 sm:rounded-l">
+        <div
+          class="flex flex-col h-full bg-gray-100 border-r border-gray-300 shadow sm:bg-gray-100 sm:rounded-l overflow-hidden"
+        >
           <div
-            class="flex items-center justify-between gap-6 pl-4 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11"
+            class="flex items-center justify-between gap-6 pl-2 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11 flex-shrink-0"
           >
             <h2 class="text-xl font-bold truncate threads-title">
               <button class="w-full truncate" @click="openModal">
                 {{ channel.name }}
               </button>
             </h2>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 pr-2">
               <EditChannel :item="channel" :show="canEditDeleteChannel(channel)" />
               <DeleteChannel
                 :show="canEditDeleteChannel(channel)"
@@ -27,10 +32,10 @@
               </button>
             </div>
           </div>
-          <div class="flex-1 overflow-y-auto">
+          <div class="flex-1 overflow-y-auto overflow-x-hidden">
             <SpaceList :items="sortedItems" :toggle-side-menu="toggleSideMenu" />
           </div>
-          <div class="flex flex-col gap-1 p-4">
+          <div class="flex flex-col gap-1 p-4 flex-shrink-0">
             <CreateSpace :show="canCreate" :is-logged-in="isLoggedIn" />
           </div>
         </div>
@@ -38,7 +43,7 @@
 
       <pane
         :size="isMobile && threadsMenuOpen ? 0 : isMobile ? 100 : 100 - sidebarSize"
-        class="main-content-pane flex flex-col"
+        class="main-content-pane flex flex-col overflow-hidden"
       >
         <ThreadHeader
           v-if="isThreadActive"
@@ -56,7 +61,7 @@
         />
 
         <div v-else class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
-          <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
+          <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5 flex-shrink-0">
             <div class="flex gap-2 truncate">
               <button class="sm:hidden" @click="toggleSideMenu">
                 <ViewListIcon class="w-6 text-black h-7" />
@@ -65,7 +70,7 @@
             </div>
             <div class="flex items-center gap-2"></div>
           </div>
-          <div class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500">
+          <div class="flex flex-col justify-center flex-1 w-full p-2 text-center text-gray-500 overflow-hidden">
             <p>Select or create a new space to get started.</p>
           </div>
         </div>
@@ -370,6 +375,14 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+:deep(.splitpanes) {
+  overflow: hidden !important;
+}
+
+:deep(.splitpanes__pane) {
+  overflow: hidden !important;
+}
+
 :deep(.splitpanes__splitter) {
   background-color: transparent;
   border: none;
@@ -399,5 +412,12 @@ onUnmounted(() => {
 
 .main-content-pane {
   overflow: hidden;
+}
+
+/* Mobile-specific fixes */
+@media (max-width: 640px) {
+  :deep(.splitpanes__splitter) {
+    display: none !important;
+  }
 }
 </style>
