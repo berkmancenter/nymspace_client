@@ -173,7 +173,7 @@ async function deleteChannel(id) {
 }
 
 async function createThread(payload) {
-  await ThreadService.createThread(payload)
+  return await ThreadService.createThread(payload)
 }
 
 async function followThread(payload) {

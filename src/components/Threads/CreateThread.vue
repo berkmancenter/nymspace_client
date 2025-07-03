@@ -22,13 +22,14 @@
 <script setup>
 import { ref } from '@vue/reactivity'
 import useStore from '../../composables/global/useStore'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
-const { createThread, getEnableAgents, getAvailableAgents, getEnableAutoDeletion } = useStore
+const { createThread, getEnableAgents, getAvailableAgents } = useStore
 const threadName = ref('')
 const message = ref('')
 const agentSelections = ref(new Array(getAvailableAgents.length).fill(false))
 const route = useRoute()
+const router = useRouter()
 
 defineExpose({
   processCreate
@@ -43,7 +44,16 @@ function processCreate() {
       topicId: route.params.channelId,
       agentTypes: agentSelections.value.map((s, i) => (s ? getAvailableAgents.value[i].agentType : false)).filter(Boolean)
     })
-      .then((x) => emit('createSuccess'))
+      .then((thread) => {
+        emit('createSuccess')
+        router.push({
+          name: 'home.threads',
+          params: {
+            channelId: route.params.channelId,
+            threadId: thread.id || thread._id
+          }
+        })
+      })
       .catch((err) => (message.value = err.response.data.message))
   } else {
     message.value = 'Name is required'
