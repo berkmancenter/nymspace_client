@@ -1,12 +1,17 @@
 <template>
   <div class="absolute inset-0 flex flex-col overflow-hidden">
     <div class="flex-shrink-0 p-4 border-b bg-gray-50 truncate">
+      <button class="sm:hidden text-md flex items-center gap-1" @click="$emit('close')">
+        <ReplyIcon class="w-5 h-5" />
+        Back
+      </button>
       <div class="flex items-center justify-between truncate">
-        <h3 class="font-semibold text-lg truncate">
+        <h3 class="font-semibold text-lg truncate sm:flex-1">
           <HiddenPseudonym v-if="parentMessage.pseudonym === null" />
           <span v-else class="font-semibold">{{ parentMessage.pseudonym }}</span>
         </h3>
-        <div class="">
+
+        <div class="hidden sm:block">
           <XIcon class="w-5 h-5 cursor-pointer text-gray-500 hover:text-gray-700" @click="$emit('close')" />
         </div>
       </div>
@@ -98,7 +103,7 @@
 
 <script setup>
 import { ref, computed, watch, nextTick, onMounted } from 'vue'
-import { XIcon } from '@heroicons/vue/outline'
+import { XIcon, ReplyIcon } from '@heroicons/vue/outline'
 import HiddenMessage from './HiddenMessage.vue'
 import HiddenPseudonym from './HiddenPseudonym.vue'
 import MessageInput from './MessageInput.vue'
