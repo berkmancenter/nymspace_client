@@ -754,16 +754,6 @@ onUnmounted(() => {
 
   window.removeEventListener('resize', handleResize)
 })
-
-function navigateBack() {
-  // Navigate back to channel view, closing the current thread
-  router.push({
-    name: 'home.channels',
-    params: {
-      channelId: route.params.channelId
-    }
-  })
-}
 </script>
 
 <style scoped>
