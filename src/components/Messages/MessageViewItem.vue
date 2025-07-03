@@ -5,7 +5,7 @@
     :class="item.hasDownvoted || item.hasUpvoted ? 'bg-yellow-50 hover:bg-yellow-100' : ''"
   >
     <div class="px-1 text-sm relative">
-      <div class="thread-message" :class="getMessageClass(item)" :title="item.createdAt">
+      <div class="thread-message" :class="getMessageClass(item)">
         <div class="font-bold flex items-center gap-1 truncate" @click="addToMessage(item.pseudonym)">
           <HiddenPseudonym v-if="item.pseudonym === null" />
           <span v-else>
@@ -26,11 +26,11 @@
         </div>
         <HiddenMessage v-if="item.body === null || item.body === '[Message hidden]'" />
         <div
-        v-else
-        v-linkified
-        :class="[item.pause ? 'bg-yellow-100' : '']"
-        :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
-        v-html="formattedBody"
+          v-else
+          v-linkified
+          :class="[item.pause ? 'bg-yellow-100' : '']"
+          :style="{ fontStyle: item.fromAgent ? 'italic' : 'normal' }"
+          v-html="formattedBody"
         ></div>
         <span v-if="item.visibilityLabel" class="text-xs text-gray-500 italic">
           {{ item.visibilityLabel }}
