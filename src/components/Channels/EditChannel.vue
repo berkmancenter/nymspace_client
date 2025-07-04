@@ -31,7 +31,7 @@
       <div class="font-semibold text-yellow-800">Reminder:</div>
       <div class="mb-4">
         <span v-if="getEnableAutoDeletion">
-          Channels remain on the Nymspace for 90 days after their last use. At that time, channel owners can be emailed a
+          Channels remain on Nymspace for 90 days after their last use. At that time, channel owners can be emailed a
           reminder, offering the option for the channel to permanently remain on the interface. Enter an email address that
           will receive that reminder (optional):
         </span>
