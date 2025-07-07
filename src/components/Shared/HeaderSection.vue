@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between gap-2 px-2 py-1 font-bold text-gray-500 bg-gray-50 hover:text-gray-900">
     <div class="flex items-center">
       <router-link :to="path" class="text-lg sm:text-2xl">
-        <p class="inline-block text-harvard-red">nymspace</p>
+        <p class="inline-block text-harvard-red">Nymspace</p>
       </router-link>
       <a v-if="showVersion" class="ml-4 text-sm" href="https://github.com/berkmancenter/threads_client">{{ version }}</a>
     </div>
