@@ -50,6 +50,7 @@
       </button>
 
       <div
+        v-if="!isMessageHidden"
         class="opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-1.5 px-3 py-0.5 absolute flex items-center gap-2"
       >
         <div v-if="isVoting">
@@ -63,7 +64,7 @@
           </svg>
         </div>
         <div
-          v-if="!isVoting && !item.hasDownvoted && showVoting && item.owner !== userId"
+          v-if="!isVoting && !item.hasDownvoted && showVoting && item.owner !== userId && !isMessageHidden"
           class="flex items-center"
           :class="getUpVoteClass(item)"
         >
@@ -74,7 +75,7 @@
           />
         </div>
         <div
-          v-if="!isVoting && !getGuestStatus && !item.hasUpvoted && showVoting && item.owner !== userId"
+          v-if="!isVoting && !getGuestStatus && !item.hasUpvoted && showVoting && item.owner !== userId && !isMessageHidden"
           class="flex items-center"
           :class="getDownVoteClass(item)"
         >
@@ -88,7 +89,12 @@
             @click="_downvote(item)"
           />
         </div>
-        <ReplyIcon class="w-4 h-4 cursor-pointer hover:text-blue-600" title="Reply to this message" @click="handleReply" />
+        <ReplyIcon
+          v-if="!isMessageHidden"
+          class="w-4 h-4 cursor-pointer hover:text-blue-600"
+          title="Reply to this message"
+          @click="handleReply"
+        />
       </div>
     </div>
     <div v-if="item.upVotes.length || item.downVotes.length" class="flex mt-1 mb-1 ml-1 text-gray-500">
@@ -153,6 +159,10 @@ const props = defineProps({
 const emits = defineEmits(['tag-click', 'reply-click', 'view-thread'])
 
 const showVoting = computed(() => getActiveChannel.value && getActiveChannel.value.votingAllowed)
+
+const isMessageHidden = computed(() => {
+  return props.item.body === null || props.item.body === '[Message hidden]' || props.item.hiddenMessageModeHidden === true
+})
 
 function checkOwner(votes, id, className) {
   if (votes && votes.length > 0) {

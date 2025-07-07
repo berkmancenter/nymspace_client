@@ -1,25 +1,25 @@
 <template>
   <div class="flex flex-col flex-1 overflow-hidden bg-white shadow sm:rounded-r shrink">
-    <div class="flex justify-between gap-6 p-2 bg-white border-b rounded-tl shadow-sm h-11 sm:pl-5">
+    <div
+      class="flex flex-wrap justify-between gap-2 p-2 bg-white border-b rounded-tl shadow-sm min-h-[2.75rem] sm:flex-nowrap sm:pl-5"
+    >
       <div class="flex gap-2 truncate">
         <button class="sm:hidden" @click="toggleSideMenu">
           <ViewListIcon class="w-6 text-black h-7" />
         </button>
         <h2 class="text-lg font-thin truncate threads-title">
-          <button class="w-full truncate" @click="openThreadModal">
-            {{ thread.name }}
-          </button>
+          {{ thread.name }}
         </h2>
       </div>
-      <div class="flex items-center gap-2">
-        <div v-if="isChannelOwner" class="flex items-center gap-2">
+      <div class="flex items-center gap-2 ml-auto">
+        <div v-if="isThreadOwner" class="flex items-center gap-2 flex-wrap">
           <button
             v-if="!thread.hiddenMessageMode"
             class="flex items-center gap-1 px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
             @click="toggleHiddenMessageMode"
           >
             <EyeOffIcon class="w-4 h-4" />
-            Enter Hidden Message Mode
+            Start hidden message
           </button>
 
           <button
@@ -28,7 +28,7 @@
             @click="leaveHiddenMessageMode"
           >
             <EyeIcon class="w-4 h-4" />
-            Leave Hidden Message Mode
+            Stop hidden messages
           </button>
 
           <button
@@ -39,40 +39,40 @@
             <EyeIcon class="w-4 h-4" />
             Reveal ({{ hiddenMessageCount }})
           </button>
+        </div>
 
-          <div class="relative">
-            <button
-              class="flex items-center gap-1 px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
-              @click="toggleExportMenu"
+        <div v-if="isChannelOwner" class="relative">
+          <button
+            class="flex items-center gap-1 px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+            @click="toggleExportMenu"
+          >
+            <DownloadIcon class="w-4 h-4" />
+            Export
+            <ChevronDownIcon class="w-3 h-3" />
+          </button>
+
+          <div class="fixed inset-0 z-10" :class="showExportMenu ? '' : 'hidden'" @click="showExportMenu = false">
+            <div
+              class="absolute right-0 z-0 mt-1 bg-white rounded-md shadow-lg w-36"
+              :style="{ top: exportMenuPosition.top + 'px', right: exportMenuPosition.right + 'px' }"
+              @click.stop
             >
-              <DownloadIcon class="w-4 h-4" />
-              Export
-              <ChevronDownIcon class="w-3 h-3" />
-            </button>
-
-            <div class="fixed inset-0 z-10" :class="showExportMenu ? '' : 'hidden'" @click="showExportMenu = false">
-              <div
-                class="absolute right-0 z-0 mt-1 bg-white rounded-md shadow-lg w-36"
-                :style="{ top: exportMenuPosition.top + 'px', right: exportMenuPosition.right + 'px' }"
-                @click.stop
-              >
-                <div v-if="exporting" class="px-4 py-2 text-sm text-gray-500">Exporting...</div>
-                <div v-else class="py-1">
-                  <button
-                    class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
-                    :disabled="exporting"
-                    @click="exportThread('docx')"
-                  >
-                    Export Docx
-                  </button>
-                  <button
-                    class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
-                    :disabled="exporting"
-                    @click="exportThread('csv')"
-                  >
-                    Export CSV
-                  </button>
-                </div>
+              <div v-if="exporting" class="px-4 py-2 text-sm text-gray-500">Exporting...</div>
+              <div v-else class="py-1">
+                <button
+                  class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+                  :disabled="exporting"
+                  @click="exportThread('docx')"
+                >
+                  Export Docx
+                </button>
+                <button
+                  class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+                  :disabled="exporting"
+                  @click="exportThread('csv')"
+                >
+                  Export CSV
+                </button>
               </div>
             </div>
           </div>
@@ -84,11 +84,6 @@
     </div>
     <router-view></router-view>
   </div>
-  <ThemedModal :is-open="isThreadModalOpen" @close-modal="closeThreadModal">
-    <template #title>{{ thread.name }}</template>
-    <div class="text-xl">in the {{ channel.name }} channel</div>
-    <div class="mt-3 text-lg">{{ thread.messageCount }} messages</div>
-  </ThemedModal>
 
   <ThemedModal :is-open="isRevealModalOpen" @close-modal="closeRevealModal">
     <template #title>Reveal Hidden Messages</template>
@@ -149,7 +144,6 @@ const props = defineProps({
   }
 })
 
-const isThreadModalOpen = ref(false)
 const showExportMenu = ref(false)
 const exporting = ref(false)
 const exportMenuPosition = ref({ top: 0, right: 0 })
@@ -160,6 +154,10 @@ const { getId, getMessages, updateThread, revealHiddenMessageModeMessages } = us
 
 const isChannelOwner = computed(() => {
   return props.channel.owner && props.channel.owner.toString() === getId.value
+})
+
+const isThreadOwner = computed(() => {
+  return props.thread.owner && props.thread.owner.toString() === getId.value
 })
 
 const hiddenMessageCount = computed(() => {
@@ -176,16 +174,6 @@ const hiddenMessageCount = computed(() => {
     return isHidden && !isFromFacilitator
   }).length
 })
-
-function openThreadModal() {
-  document.querySelector('body').classList.add('modal-open')
-  isThreadModalOpen.value = true
-}
-
-function closeThreadModal() {
-  document.querySelector('body').classList.remove('modal-open')
-  isThreadModalOpen.value = false
-}
 
 function toggleExportMenu(event) {
   if (!showExportMenu.value) {
