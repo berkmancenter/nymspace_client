@@ -19,7 +19,7 @@
             @click="toggleHiddenMessageMode"
           >
             <EyeOffIcon class="w-4 h-4" />
-            Start hidden message
+            Start hidden messages
           </button>
 
           <button
