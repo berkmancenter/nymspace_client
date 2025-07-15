@@ -2,7 +2,7 @@
   <div class="absolute inset-0 flex flex-col overflow-hidden">
     <div class="flex-shrink-0 p-4 border-b bg-gray-50 truncate">
       <button class="sm:hidden text-md flex items-center gap-1" @click="$emit('close')">
-        <ReplyIcon class="w-5 h-5" />
+        <ChevronLeftIcon class="w-5 h-5" />
         Back
       </button>
       <div class="flex items-center justify-between truncate">
@@ -103,7 +103,7 @@
 
 <script setup>
 import { ref, computed, watch, nextTick, onMounted } from 'vue'
-import { XIcon, ReplyIcon } from '@heroicons/vue/outline'
+import { ChevronLeftIcon, XIcon } from '@heroicons/vue/outline'
 import HiddenMessage from './HiddenMessage.vue'
 import HiddenPseudonym from './HiddenPseudonym.vue'
 import MessageInput from './MessageInput.vue'

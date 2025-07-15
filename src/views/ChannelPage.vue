@@ -16,9 +16,7 @@
             class="flex items-center justify-between gap-6 pl-2 pt-4 border-gray-300 rounded-tl rounded-tr sm:border-b sm:p-2 sm:shadow-sm h-11 flex-shrink-0"
           >
             <h2 class="text-xl font-bold truncate threads-title">
-              <button class="w-full truncate" @click="openModal">
-                {{ channel.name }}
-              </button>
+              {{ channel.name }}
             </h2>
             <div class="flex items-center gap-2 pr-2">
               <EditChannel :item="channel" :show="canEditDeleteChannel(channel)" />
@@ -76,11 +74,6 @@
         </div>
       </pane>
     </splitpanes>
-
-    <ThemedModal :is-open="isModalOpen" @close-modal="closeModal">
-      <template #title>{{ channel.name }}</template>
-      <div class="text-xl"></div>
-    </ThemedModal>
   </div>
 </template>
 
@@ -98,7 +91,6 @@ import SocketioService from '../service/socket.service'
 import { VueCookieNext } from 'vue-cookie-next'
 import DeleteChannel from '../components/Channels/DeleteChannel.vue'
 import EditChannel from '../components/Channels/EditChannel.vue'
-import ThemedModal from '../components/Shared/ThemedModal.vue'
 import { ViewListIcon, XIcon } from '@heroicons/vue/outline'
 
 const route = useRoute()
@@ -147,22 +139,11 @@ const isThreadActive = ref(false)
 const isPollActive = ref(false)
 const isChannelOwner = computed(() => getId.value === channel.value?.owner)
 const isChannelThreadCreationAllowed = computed(() => channel.value?.threadCreationAllowed)
-const isModalOpen = ref(false)
 const isLoggedIn = computed(() => getLoggedInStatus.value)
 
 const sidebarSize = ref(22)
 const isMobile = ref(false)
 const isMedium = ref(false)
-
-function openModal() {
-  document.querySelector('body').classList.add('modal-open')
-  isModalOpen.value = true
-}
-
-function closeModal() {
-  document.querySelector('body').classList.remove('modal-open')
-  isModalOpen.value = false
-}
 
 const threadsMenuOpen = ref(!route.params.threadId)
 function toggleSideMenu() {

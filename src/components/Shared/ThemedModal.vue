@@ -1,7 +1,7 @@
 <template>
   <teleport to="body">
     <!-- Background and position -->
-    <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 sm:p-0">
       <!-- Modal body -->
       <div
         class="bg-white flex flex-col rounded-lg shadow-lg max-h-screen w-full sm:w-11/12 md:w-3/4 lg:w-1/2 overflow-hidden"
