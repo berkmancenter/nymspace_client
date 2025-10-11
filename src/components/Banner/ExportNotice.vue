@@ -43,7 +43,7 @@ export default {
   },
   setup() {
     const { getGuestStatus, getEnableExportOptOut } = useStore
-    const showNotice = ref(true)
+    const showNotice = ref(false)
     const isGuest = computed(() => getGuestStatus.value)
 
     const dismissNotice = () => {

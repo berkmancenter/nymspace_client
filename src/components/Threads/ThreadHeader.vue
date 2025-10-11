@@ -12,6 +12,7 @@
         </h2>
       </div>
       <div class="flex items-center gap-2 ml-auto">
+        <!--
         <div v-if="isThreadOwner" class="flex items-center gap-2 flex-wrap">
           <button
             v-if="!thread.hiddenMessageMode"
@@ -40,7 +41,9 @@
             Reveal ({{ hiddenMessageCount }})
           </button>
         </div>
+        -->
 
+        <!--
         <div v-if="isChannelOwner" class="relative">
           <button
             class="flex items-center gap-1 px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
@@ -77,6 +80,7 @@
             </div>
           </div>
         </div>
+        -->
 
         <DeleteThread :show="isAdmin" :item="thread" />
         <EditThread :show="isAdmin" :item="thread" />

@@ -50,7 +50,7 @@
       </button>
 
       <div
-        v-if="!isMessageHidden"
+        v-if="!isMessageHidden && item.owner != userId"
         class="opacity-0 group-hover:opacity-100 bg-white rounded border -top-4 right-1.5 px-3 py-0.5 absolute flex items-center gap-2"
       >
         <div v-if="isVoting">
@@ -89,12 +89,14 @@
             @click="_downvote(item)"
           />
         </div>
+        <!--
         <ReplyIcon
           v-if="!isMessageHidden"
           class="w-4 h-4 cursor-pointer hover:text-blue-600"
           title="Reply to this message"
           @click="handleReply"
         />
+        -->
       </div>
     </div>
     <div v-if="item.upVotes.length || item.downVotes.length" class="flex mt-1 mb-1 ml-1 text-gray-500">
