@@ -52,7 +52,7 @@
       <div v-else class="space-y-4">
         <div v-for="reply in replies" :key="reply.id || reply._id" class="group">
           <div class="flex items-start gap-2">
-            <div class="flex-1 truncate">
+            <div class="flex-1">
               <div class="flex items-center gap-2 mb-1">
                 <HiddenPseudonym v-if="reply.pseudonym === null" />
                 <span v-else class="font-semibold text-sm truncate">{{ reply.pseudonym }}</span>

@@ -52,11 +52,21 @@
               You are over the character limit and cannot send this message.
             </div>
             <div
-              v-if="shouldDisplayMessageHitTheButton && !shouldDisplayMessageBoxLocked"
+              v-if="
+                shouldDisplayMessageHiddenMessageMode && !shouldDisplayMessageBoxLocked && !isChannelOwner && !isThreadOwner
+              "
               class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
             >
-              This thread is in hit the button mode. Your messages will not be sent until the button is hit by the thread
-              creator.
+              Hidden message mode is enabled. Participant messages will be visible after a facilitator reveals them.
+            </div>
+            <div
+              v-if="
+                shouldDisplayMessageHiddenMessageMode && !shouldDisplayMessageBoxLocked && (isChannelOwner || isThreadOwner)
+              "
+              class="z-50 w-full p-1 text-center text-yellow-800 transition-all bg-yellow-100 sm:rounded-t"
+            >
+              Hidden message mode is enabled. Participants cannot see each others’ messages until you or another facilitator
+              reveal them.
             </div>
             <div
               v-if="shouldDisplayMessageBoxLocked"
@@ -154,6 +164,7 @@ const {
   getMessages,
   clearMessages,
   loadThread,
+  getChannel,
   getLoggedInStatus,
   getMaxMessageLength,
   getThread,
@@ -176,6 +187,7 @@ const threadReplies = ref([])
 const loadingReplies = ref(false)
 const messageViewRef = ref(null)
 const messageInput = ref(null)
+const channel = ref(getChannel(route.params.channelId))
 const thread = ref(getThread(route.params.threadId))
 const pseudonymForThread = computed(() => {
   return getPseudonyms.value.filter((x) => {
@@ -195,7 +207,7 @@ const goodReputation = ref(false)
 
 const wsInstance = reactive({})
 const shouldDisplayMessageBoxLocked = ref(false)
-const shouldDisplayMessageHitTheButton = ref(false)
+const shouldDisplayMessageHiddenMessageMode = ref(false)
 const discussionPause = ref(0)
 const shouldDisplayUnableToSendMessage = ref(false)
 const unableToSendSpecialMessage = ref('')
@@ -204,6 +216,14 @@ const userId = ref('')
 const { newMessagesNotice, scrollToBottom, handleNewMessage, onNewMessagesClick } = useMessageScroll({
   containerRef: messageViewRef,
   userId: computed(() => getActivePseudonym.value?._id)
+})
+
+const isChannelOwner = computed(() => {
+  return channel.value.owner && channel.value.owner.toString() === getId.value
+})
+
+const isThreadOwner = computed(() => {
+  return thread.value.owner && thread.value.owner.toString() === getId.value
 })
 
 /**
@@ -295,14 +315,14 @@ watch(
       } else {
         shouldDisplayMessageBoxLocked.value = false
       }
-      if (now?.hitTheButton) {
-        shouldDisplayMessageHitTheButton.value = true
+      if (now?.hiddenMessageMode) {
+        shouldDisplayMessageHiddenMessageMode.value = true
       } else {
-        shouldDisplayMessageHitTheButton.value = false
+        shouldDisplayMessageHiddenMessageMode.value = false
       }
     } else {
       shouldDisplayMessageBoxLocked.value = now?.locked
-      shouldDisplayMessageHitTheButton.value = now?.hitTheButton
+      shouldDisplayMessageHiddenMessageMode.value = now?.hiddenMessageMode
     }
   },
   {

@@ -12,7 +12,7 @@
         </h2>
       </div>
       <div class="flex items-center gap-2 ml-auto">
-        <div v-if="isThreadOwner" class="flex items-center gap-2 flex-wrap">
+        <div v-if="isThreadOwner || isChannelOwner" class="flex items-center gap-2 flex-wrap">
           <button
             v-if="!thread.hiddenMessageMode"
             class="flex items-center gap-1 px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
