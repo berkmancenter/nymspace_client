@@ -27,7 +27,13 @@ export default defineConfig(({ command, mode }) => {
     define: {
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version)
     },
-    // eslint-disable-next-line
-    base: `${env.VITE_PATH}/` ? env.VITE_PATH : '/'
+    // Set base path based on VITE_PATH environment variable
+    base: (() => {
+      if (!env.VITE_PATH) return '/'
+      let basePath = env.VITE_PATH
+      if (!basePath.startsWith('/')) basePath = `/${basePath}`
+      if (!basePath.endsWith('/')) basePath = `${basePath}/`
+      return basePath
+    })()
   }
 })
