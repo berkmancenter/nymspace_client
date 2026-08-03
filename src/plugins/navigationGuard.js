@@ -20,6 +20,14 @@ function isChannelsPage(to) {
   return to.name === 'home.channels' && to.params.channelId !== null
 }
 
+function isPollsPage(to) {
+  return (
+    ['home.polls', 'home.polls.results'].includes(to.name) &&
+    to.params.pollId !== null &&
+    to.params.channelId !== null
+  )
+}
+
 function isLoginSignupPage(to) {
   return ['home.login', 'home.createAccount'].includes(to.name)
 }
@@ -38,7 +46,8 @@ export default async (to, from, next) => {
   // Home page
   // Allow accessing the threads page with a shared link
   // Allow accessing the channels page with a shared link
-  else if (to.name === 'home.channelspage' || isThreadsPage(to) || isChannelsPage(to)) {
+  // Allow accessing the polls page with a shared link
+  else if (to.name === 'home.channelspage' || isThreadsPage(to) || isChannelsPage(to) || isPollsPage(to)) {
     await checkAndLoadNewPseudonym(next)
   }
 
